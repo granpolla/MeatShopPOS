@@ -125,6 +125,42 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Forms\Admin\frmCustomer.Designer.vb">
+      <DependentUpon>frmCustomer.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Admin\frmCustomer.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Admin\frmDashboard.Designer.vb">
+      <DependentUpon>frmDashboard.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Admin\frmDashboard.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Admin\frmProduct.Designer.vb">
+      <DependentUpon>frmProduct.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Admin\frmProduct.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Admin\frmUser.Designer.vb">
+      <DependentUpon>frmUser.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Admin\frmUser.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmAdminDashboard.Designer.vb">
+      <DependentUpon>frmAdminDashboard.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmAdminDashboard.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmCashierDashboard.Designer.vb">
+      <DependentUpon>frmCashierDashboard.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmCashierDashboard.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\frmLogin.Designer.vb">
       <DependentUpon>frmLogin.vb</DependentUpon>
     </Compile>
@@ -161,6 +197,24 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Forms\Admin\frmCustomer.resx">
+      <DependentUpon>frmCustomer.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Admin\frmDashboard.resx">
+      <DependentUpon>frmDashboard.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Admin\frmProduct.resx">
+      <DependentUpon>frmProduct.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Admin\frmUser.resx">
+      <DependentUpon>frmUser.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmAdminDashboard.resx">
+      <DependentUpon>frmAdminDashboard.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmCashierDashboard.resx">
+      <DependentUpon>frmCashierDashboard.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmLogin.resx">
       <DependentUpon>frmLogin.vb</DependentUpon>
     </EmbeddedResource>

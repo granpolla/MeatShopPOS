@@ -41,7 +41,16 @@ Public Class frmLogin
                         MessageBox.Show("Welcome " & LoggedInFullName & "!", "Login Successful")
 
                         Me.Hide()
-                        frmMainMenu.Show()
+
+                        ' 🔹 Redirect by role
+                        If LoggedInRole.ToLower() = "admin" Then
+                            frmAdminDashboard.Show()
+                        ElseIf LoggedInRole.ToLower() = "cashier" Then
+                            frmCashierDashboard.Show()
+                        Else
+                            MessageBox.Show("Unknown role. Please contact system administrator.", "Login Error")
+                            Me.Show()
+                        End If
                     Else
                         MessageBox.Show("Invalid username or password.", "Login Failed")
                         txtPassword.Clear()

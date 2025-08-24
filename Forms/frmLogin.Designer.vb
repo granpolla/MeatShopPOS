@@ -29,13 +29,13 @@ Partial Class frmLogin
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.btnCancel = New System.Windows.Forms.Button()
         Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.Panel2 = New System.Windows.Forms.Panel()
         Me.PictureBox2 = New System.Windows.Forms.PictureBox()
+        Me.Panel2 = New System.Windows.Forms.Panel()
         Me.PictureBox3 = New System.Windows.Forms.PictureBox()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel1.SuspendLayout()
-        Me.Panel2.SuspendLayout()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.Panel2.SuspendLayout()
         CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -103,16 +103,6 @@ Partial Class frmLogin
         Me.Panel1.Size = New System.Drawing.Size(323, 58)
         Me.Panel1.TabIndex = 7
         '
-        'Panel2
-        '
-        Me.Panel2.BackColor = System.Drawing.Color.WhiteSmoke
-        Me.Panel2.Controls.Add(Me.PictureBox3)
-        Me.Panel2.Controls.Add(Me.txtPassword)
-        Me.Panel2.Location = New System.Drawing.Point(298, 112)
-        Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(323, 58)
-        Me.Panel2.TabIndex = 8
-        '
         'PictureBox2
         '
         Me.PictureBox2.Image = CType(resources.GetObject("PictureBox2.Image"), System.Drawing.Image)
@@ -122,6 +112,16 @@ Partial Class frmLogin
         Me.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.PictureBox2.TabIndex = 9
         Me.PictureBox2.TabStop = False
+        '
+        'Panel2
+        '
+        Me.Panel2.BackColor = System.Drawing.Color.WhiteSmoke
+        Me.Panel2.Controls.Add(Me.PictureBox3)
+        Me.Panel2.Controls.Add(Me.txtPassword)
+        Me.Panel2.Location = New System.Drawing.Point(298, 112)
+        Me.Panel2.Name = "Panel2"
+        Me.Panel2.Size = New System.Drawing.Size(323, 58)
+        Me.Panel2.TabIndex = 8
         '
         'PictureBox3
         '
@@ -154,9 +154,9 @@ Partial Class frmLogin
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
+        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout()
-        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
