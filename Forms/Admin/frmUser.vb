@@ -45,4 +45,12 @@ Public Class frmUser
         LoadUsers()
     End Sub
 
+    ' For adding new user
+    Private Sub btnAddUser_Click(sender As Object, e As EventArgs) Handles btnAddUser.Click
+        Dim f As New frmAddUser()
+        If f.ShowDialog() = DialogResult.OK Then
+            LoadUsers() ' Refresh grid after adding user
+        End If
+    End Sub
+
 End Class

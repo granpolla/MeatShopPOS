@@ -28,13 +28,16 @@ Partial Class frmAdminDashboard
         Me.btnCustomer = New System.Windows.Forms.Button()
         Me.btnProduct = New System.Windows.Forms.Button()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.PictureBox2 = New System.Windows.Forms.PictureBox()
+        Me.btnLogout = New System.Windows.Forms.Button()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.lblHeader = New System.Windows.Forms.Label()
         Me.pnlSidebar = New System.Windows.Forms.Panel()
         Me.btnUser = New System.Windows.Forms.Button()
-        Me.lblUserheader = New System.Windows.Forms.Label()
         Me.pnlContainer = New System.Windows.Forms.Panel()
+        Me.lblUserRole = New System.Windows.Forms.Label()
         Me.Panel2.SuspendLayout()
+        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.pnlSidebar.SuspendLayout()
         Me.SuspendLayout()
@@ -42,18 +45,18 @@ Partial Class frmAdminDashboard
         'lblUserFullName
         '
         Me.lblUserFullName.AutoSize = True
-        Me.lblUserFullName.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblUserFullName.Location = New System.Drawing.Point(94, 17)
+        Me.lblUserFullName.Font = New System.Drawing.Font("Segoe UI Semibold", 10.8!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblUserFullName.Location = New System.Drawing.Point(1061, 11)
         Me.lblUserFullName.Name = "lblUserFullName"
-        Me.lblUserFullName.Size = New System.Drawing.Size(39, 20)
+        Me.lblUserFullName.Size = New System.Drawing.Size(50, 25)
         Me.lblUserFullName.TabIndex = 0
-        Me.lblUserFullName.Text = "_____"
+        Me.lblUserFullName.Text = "User"
         '
         'btnDashboard
         '
         Me.btnDashboard.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnDashboard.Font = New System.Drawing.Font("Segoe UI Semibold", 10.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnDashboard.Location = New System.Drawing.Point(3, 82)
+        Me.btnDashboard.Location = New System.Drawing.Point(3, 6)
         Me.btnDashboard.Name = "btnDashboard"
         Me.btnDashboard.Size = New System.Drawing.Size(258, 54)
         Me.btnDashboard.TabIndex = 2
@@ -64,7 +67,7 @@ Partial Class frmAdminDashboard
         '
         Me.btnCustomer.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnCustomer.Font = New System.Drawing.Font("Segoe UI Semibold", 10.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnCustomer.Location = New System.Drawing.Point(3, 202)
+        Me.btnCustomer.Location = New System.Drawing.Point(3, 126)
         Me.btnCustomer.Name = "btnCustomer"
         Me.btnCustomer.Size = New System.Drawing.Size(258, 54)
         Me.btnCustomer.TabIndex = 3
@@ -75,7 +78,7 @@ Partial Class frmAdminDashboard
         '
         Me.btnProduct.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnProduct.Font = New System.Drawing.Font("Segoe UI Semibold", 10.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnProduct.Location = New System.Drawing.Point(3, 142)
+        Me.btnProduct.Location = New System.Drawing.Point(3, 66)
         Me.btnProduct.Name = "btnProduct"
         Me.btnProduct.Size = New System.Drawing.Size(258, 54)
         Me.btnProduct.TabIndex = 4
@@ -85,7 +88,11 @@ Partial Class frmAdminDashboard
         'Panel2
         '
         Me.Panel2.BackColor = System.Drawing.Color.White
+        Me.Panel2.Controls.Add(Me.lblUserRole)
+        Me.Panel2.Controls.Add(Me.PictureBox2)
+        Me.Panel2.Controls.Add(Me.btnLogout)
         Me.Panel2.Controls.Add(Me.PictureBox1)
+        Me.Panel2.Controls.Add(Me.lblUserFullName)
         Me.Panel2.Controls.Add(Me.lblHeader)
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel2.Location = New System.Drawing.Point(0, 0)
@@ -93,12 +100,35 @@ Partial Class frmAdminDashboard
         Me.Panel2.Size = New System.Drawing.Size(1383, 61)
         Me.Panel2.TabIndex = 5
         '
+        'PictureBox2
+        '
+        Me.PictureBox2.Image = CType(resources.GetObject("PictureBox2.Image"), System.Drawing.Image)
+        Me.PictureBox2.Location = New System.Drawing.Point(1017, 14)
+        Me.PictureBox2.Name = "PictureBox2"
+        Me.PictureBox2.Size = New System.Drawing.Size(38, 38)
+        Me.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.PictureBox2.TabIndex = 10
+        Me.PictureBox2.TabStop = False
+        '
+        'btnLogout
+        '
+        Me.btnLogout.BackColor = System.Drawing.Color.Red
+        Me.btnLogout.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnLogout.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnLogout.ForeColor = System.Drawing.Color.WhiteSmoke
+        Me.btnLogout.Location = New System.Drawing.Point(1281, 14)
+        Me.btnLogout.Name = "btnLogout"
+        Me.btnLogout.Size = New System.Drawing.Size(90, 33)
+        Me.btnLogout.TabIndex = 0
+        Me.btnLogout.Text = "Logout"
+        Me.btnLogout.UseVisualStyleBackColor = False
+        '
         'PictureBox1
         '
         Me.PictureBox1.Image = CType(resources.GetObject("PictureBox1.Image"), System.Drawing.Image)
-        Me.PictureBox1.Location = New System.Drawing.Point(12, 9)
+        Me.PictureBox1.Location = New System.Drawing.Point(0, 0)
         Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(47, 44)
+        Me.PictureBox1.Size = New System.Drawing.Size(61, 61)
         Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.PictureBox1.TabIndex = 7
         Me.PictureBox1.TabStop = False
@@ -106,10 +136,10 @@ Partial Class frmAdminDashboard
         'lblHeader
         '
         Me.lblHeader.AutoSize = True
-        Me.lblHeader.Font = New System.Drawing.Font("Segoe UI", 13.8!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblHeader.Location = New System.Drawing.Point(65, 15)
+        Me.lblHeader.Font = New System.Drawing.Font("Segoe UI", 16.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblHeader.Location = New System.Drawing.Point(67, 11)
         Me.lblHeader.Name = "lblHeader"
-        Me.lblHeader.Size = New System.Drawing.Size(235, 31)
+        Me.lblHeader.Size = New System.Drawing.Size(288, 38)
         Me.lblHeader.TabIndex = 7
         Me.lblHeader.Text = "LASH FROZEN MEAT"
         '
@@ -118,9 +148,7 @@ Partial Class frmAdminDashboard
         Me.pnlSidebar.BackColor = System.Drawing.Color.WhiteSmoke
         Me.pnlSidebar.Controls.Add(Me.btnUser)
         Me.pnlSidebar.Controls.Add(Me.btnCustomer)
-        Me.pnlSidebar.Controls.Add(Me.lblUserheader)
         Me.pnlSidebar.Controls.Add(Me.btnDashboard)
-        Me.pnlSidebar.Controls.Add(Me.lblUserFullName)
         Me.pnlSidebar.Controls.Add(Me.btnProduct)
         Me.pnlSidebar.Dock = System.Windows.Forms.DockStyle.Left
         Me.pnlSidebar.Location = New System.Drawing.Point(0, 61)
@@ -132,22 +160,12 @@ Partial Class frmAdminDashboard
         '
         Me.btnUser.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnUser.Font = New System.Drawing.Font("Segoe UI Semibold", 10.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnUser.Location = New System.Drawing.Point(3, 262)
+        Me.btnUser.Location = New System.Drawing.Point(3, 186)
         Me.btnUser.Name = "btnUser"
         Me.btnUser.Size = New System.Drawing.Size(258, 54)
         Me.btnUser.TabIndex = 8
         Me.btnUser.Text = "User"
         Me.btnUser.UseVisualStyleBackColor = True
-        '
-        'lblUserheader
-        '
-        Me.lblUserheader.AutoSize = True
-        Me.lblUserheader.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblUserheader.Location = New System.Drawing.Point(12, 17)
-        Me.lblUserheader.Name = "lblUserheader"
-        Me.lblUserheader.Size = New System.Drawing.Size(76, 20)
-        Me.lblUserheader.TabIndex = 7
-        Me.lblUserheader.Text = "Welcome,"
         '
         'pnlContainer
         '
@@ -157,6 +175,15 @@ Partial Class frmAdminDashboard
         Me.pnlContainer.Size = New System.Drawing.Size(1119, 625)
         Me.pnlContainer.TabIndex = 7
         '
+        'lblUserRole
+        '
+        Me.lblUserRole.AutoSize = True
+        Me.lblUserRole.Location = New System.Drawing.Point(1063, 36)
+        Me.lblUserRole.Name = "lblUserRole"
+        Me.lblUserRole.Size = New System.Drawing.Size(30, 16)
+        Me.lblUserRole.TabIndex = 11
+        Me.lblUserRole.Text = "role"
+        '
         'frmAdminDashboard
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
@@ -165,7 +192,7 @@ Partial Class frmAdminDashboard
         Me.Controls.Add(Me.pnlContainer)
         Me.Controls.Add(Me.pnlSidebar)
         Me.Controls.Add(Me.Panel2)
-        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
+        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.Name = "frmAdminDashboard"
@@ -173,9 +200,9 @@ Partial Class frmAdminDashboard
         Me.Text = "Admin"
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout()
+        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.pnlSidebar.ResumeLayout(False)
-        Me.pnlSidebar.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -188,7 +215,9 @@ Partial Class frmAdminDashboard
     Friend WithEvents pnlSidebar As Panel
     Friend WithEvents lblHeader As Label
     Friend WithEvents PictureBox1 As PictureBox
-    Friend WithEvents lblUserheader As Label
     Friend WithEvents pnlContainer As Panel
     Friend WithEvents btnUser As Button
+    Friend WithEvents PictureBox2 As PictureBox
+    Friend WithEvents btnLogout As Button
+    Friend WithEvents lblUserRole As Label
 End Class

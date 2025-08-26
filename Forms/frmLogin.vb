@@ -1,4 +1,5 @@
 ﻿Imports MySql.Data.MySqlClient
+Imports BCrypt.Net
 
 Public Class frmLogin
 
@@ -10,7 +11,6 @@ Public Class frmLogin
         txtPassword.ForeColor = Color.DarkGray
     End Sub
 
-
     'For login button
     Private Sub btnLogin_Click(sender As Object, e As EventArgs) Handles btnLogin.Click
         ' 🔎 Validate input first
@@ -19,37 +19,45 @@ Public Class frmLogin
             Return
         End If
 
-        Dim query As String = "SELECT u.id, u.full_name, r.role_name 
-                               FROM USER u 
-                               INNER JOIN ROLE r ON u.role_id = r.id 
-                               WHERE u.username = @username AND u.password_hash = @password"
+        Dim query As String = "SELECT u.id, u.full_name, u.password_hash, r.role_name
+                               FROM USER u
+                               INNER JOIN ROLE r ON u.role_id = r.id
+                               WHERE u.username = @username"
 
         Try
             Using conn As New MySqlConnection(My.Settings.DBConnection)
                 Using cmd As New MySqlCommand(query, conn)
                     cmd.Parameters.AddWithValue("@username", txtUsername.Text.Trim())
-                    cmd.Parameters.AddWithValue("@password", ComputeSHA256Hash(txtPassword.Text.Trim())) ' 🔐 hash
 
                     conn.Open()
                     Dim reader As MySqlDataReader = cmd.ExecuteReader()
                     If reader.Read() Then
-                        ' ✅ Login success: store in session
-                        LoggedInUserID = reader("id")
-                        LoggedInFullName = reader("full_name").ToString()
-                        LoggedInRole = reader("role_name").ToString()
+                        Dim storedHash As String = reader("password_hash").ToString()
 
-                        MessageBox.Show("Welcome " & LoggedInFullName & "!", "Login Successful")
+                        ' 🔑 Verify password using BCrypt
+                        If BCrypt.Net.BCrypt.Verify(txtPassword.Text.Trim(), storedHash) Then
+                            ' ✅ Login success: store in session
+                            LoggedInUserID = reader("id")
+                            LoggedInFullName = reader("full_name").ToString()
+                            LoggedInRole = reader("role_name").ToString()
 
-                        Me.Hide()
+                            MessageBox.Show("Welcome " & LoggedInFullName & "!", "Login Successful")
 
-                        ' 🔹 Redirect by role
-                        If LoggedInRole.ToLower() = "admin" Then
-                            frmAdminDashboard.Show()
-                        ElseIf LoggedInRole.ToLower() = "cashier" Then
-                            frmCashierDashboard.Show()
+                            Me.Hide()
+
+                            ' 🔹 Redirect by role
+                            If LoggedInRole.ToLower() = "admin" Then
+                                frmAdminDashboard.Show()
+                            ElseIf LoggedInRole.ToLower() = "cashier" Then
+                                frmCashierDashboard.Show()
+                            Else
+                                MessageBox.Show("Unknown role. Please contact system administrator.", "Login Error")
+                                Me.Show()
+                            End If
                         Else
-                            MessageBox.Show("Unknown role. Please contact system administrator.", "Login Error")
-                            Me.Show()
+                            MessageBox.Show("Invalid username or password.", "Login Failed")
+                            txtPassword.Clear()
+                            txtPassword.Focus()
                         End If
                     Else
                         MessageBox.Show("Invalid username or password.", "Login Failed")
@@ -63,13 +71,10 @@ Public Class frmLogin
         End Try
     End Sub
 
-
     'For cancel button
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
         Application.Exit()
     End Sub
-
-
 
     'For login UI
     Private Sub txtUsername_GotFocus(sender As Object, e As EventArgs) Handles txtUsername.GotFocus

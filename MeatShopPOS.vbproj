@@ -48,6 +48,9 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BCrypt.Net-Next, Version=4.0.3.0, Culture=neutral, PublicKeyToken=1e11be04b6288443, processorArchitecture=MSIL">
+      <HintPath>packages\BCrypt.Net-Next.4.0.3\lib\net472\BCrypt.Net-Next.dll</HintPath>
+    </Reference>
     <Reference Include="BouncyCastle.Cryptography, Version=2.0.0.0, Culture=neutral, PublicKeyToken=072edcf4a5328938, processorArchitecture=MSIL">
       <HintPath>packages\BouncyCastle.Cryptography.2.5.1\lib\net461\BouncyCastle.Cryptography.dll</HintPath>
     </Reference>
@@ -149,6 +152,18 @@
     <Compile Include="Forms\Admin\frmUser.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\Admin\User Forms\frmAddUser.Designer.vb">
+      <DependentUpon>frmAddUser.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Admin\User Forms\frmAddUser.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Admin\User Forms\frmEditUser.Designer.vb">
+      <DependentUpon>frmEditUser.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Admin\User Forms\frmEditUser.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\frmAdminDashboard.Designer.vb">
       <DependentUpon>frmAdminDashboard.vb</DependentUpon>
     </Compile>
@@ -208,6 +223,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Admin\frmUser.resx">
       <DependentUpon>frmUser.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Admin\User Forms\frmAddUser.resx">
+      <DependentUpon>frmAddUser.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Admin\User Forms\frmEditUser.resx">
+      <DependentUpon>frmEditUser.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmAdminDashboard.resx">
       <DependentUpon>frmAdminDashboard.vb</DependentUpon>
