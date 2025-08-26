@@ -28,6 +28,7 @@ Partial Class frmAdminDashboard
         Me.btnCustomer = New System.Windows.Forms.Button()
         Me.btnProduct = New System.Windows.Forms.Button()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.lblUserRole = New System.Windows.Forms.Label()
         Me.PictureBox2 = New System.Windows.Forms.PictureBox()
         Me.btnLogout = New System.Windows.Forms.Button()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
@@ -35,7 +36,6 @@ Partial Class frmAdminDashboard
         Me.pnlSidebar = New System.Windows.Forms.Panel()
         Me.btnUser = New System.Windows.Forms.Button()
         Me.pnlContainer = New System.Windows.Forms.Panel()
-        Me.lblUserRole = New System.Windows.Forms.Label()
         Me.Panel2.SuspendLayout()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -99,6 +99,15 @@ Partial Class frmAdminDashboard
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(1383, 61)
         Me.Panel2.TabIndex = 5
+        '
+        'lblUserRole
+        '
+        Me.lblUserRole.AutoSize = True
+        Me.lblUserRole.Location = New System.Drawing.Point(1063, 36)
+        Me.lblUserRole.Name = "lblUserRole"
+        Me.lblUserRole.Size = New System.Drawing.Size(30, 16)
+        Me.lblUserRole.TabIndex = 11
+        Me.lblUserRole.Text = "role"
         '
         'PictureBox2
         '
@@ -174,15 +183,6 @@ Partial Class frmAdminDashboard
         Me.pnlContainer.Name = "pnlContainer"
         Me.pnlContainer.Size = New System.Drawing.Size(1119, 625)
         Me.pnlContainer.TabIndex = 7
-        '
-        'lblUserRole
-        '
-        Me.lblUserRole.AutoSize = True
-        Me.lblUserRole.Location = New System.Drawing.Point(1063, 36)
-        Me.lblUserRole.Name = "lblUserRole"
-        Me.lblUserRole.Size = New System.Drawing.Size(30, 16)
-        Me.lblUserRole.TabIndex = 11
-        Me.lblUserRole.Text = "role"
         '
         'frmAdminDashboard
         '

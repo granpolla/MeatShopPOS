@@ -152,6 +152,18 @@
     <Compile Include="Forms\Admin\frmUser.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\Admin\Product Forms\frmAddProduct.Designer.vb">
+      <DependentUpon>frmAddProduct.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Admin\Product Forms\frmAddProduct.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Admin\Product Forms\frmEditProduct.Designer.vb">
+      <DependentUpon>frmEditProduct.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Admin\Product Forms\frmEditProduct.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Admin\User Forms\frmAddUser.Designer.vb">
       <DependentUpon>frmAddUser.vb</DependentUpon>
     </Compile>
@@ -223,6 +235,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Admin\frmUser.resx">
       <DependentUpon>frmUser.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Admin\Product Forms\frmAddProduct.resx">
+      <DependentUpon>frmAddProduct.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Admin\Product Forms\frmEditProduct.resx">
+      <DependentUpon>frmEditProduct.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Admin\User Forms\frmAddUser.resx">
       <DependentUpon>frmAddUser.vb</DependentUpon>
