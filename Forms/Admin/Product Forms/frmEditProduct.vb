@@ -68,11 +68,37 @@ Public Class frmEditProduct
                     End If
                 End Using
 
+                ' 🔹 Safeguard: check if product is already used in transactions
+                Dim refCheckQuery As String = "SELECT COUNT(*) FROM SALES_TRANSACTION WHERE id=@id"
+                Using refCmd As New MySqlCommand(refCheckQuery, conn)
+                    refCmd.Parameters.AddWithValue("@id", ProductID)
+                    Dim count As Integer = Convert.ToInt32(refCmd.ExecuteScalar())
+                    If count > 0 Then
+                        ' If referenced, block changes to Name and Brand
+                        ' (We compare with original values in DB)
+                        Dim getOriginalQuery As String = "SELECT product_name, brand FROM PRODUCT WHERE id=@id"
+                        Using getCmd As New MySqlCommand(getOriginalQuery, conn)
+                            getCmd.Parameters.AddWithValue("@id", ProductID)
+                            Using reader As MySqlDataReader = getCmd.ExecuteReader()
+                                If reader.Read() Then
+                                    Dim originalName As String = reader("product_name").ToString()
+                                    Dim originalBrand As String = reader("brand").ToString()
+
+                                    If productName <> originalName OrElse brand <> originalBrand Then
+                                        MessageBox.Show("This product is already used in transactions. You cannot change its Name or Brand.", "Restriction", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                                        Return
+                                    End If
+                                End If
+                            End Using
+                        End Using
+                    End If
+                End Using
+
                 ' 🔹 Update product
                 Dim updateQuery As String = "
-                    UPDATE PRODUCT
-                    SET product_name=@name, brand=@brand, unit_weight_kg=@weight, unit_price_php=@price, updated_at=NOW()
-                    WHERE id=@id"
+                UPDATE PRODUCT
+                SET product_name=@name, brand=@brand, unit_weight_kg=@weight, unit_price_php=@price, updated_at=NOW()
+                WHERE id=@id"
                 Using cmd As New MySqlCommand(updateQuery, conn)
                     cmd.Parameters.AddWithValue("@name", productName)
                     cmd.Parameters.AddWithValue("@brand", brand)

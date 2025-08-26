@@ -63,7 +63,30 @@ Public Class frmEditUser
         Dim firstName As String = properFullName.Split(" "c)(0).ToLower()
         Dim newUsername As String = rolePrefix & firstName
 
-        ' --- Password handling ---
+        ' --- 🔹 Restriction Check: prevent fullname/role change if user already in SALES ---
+        Try
+            Using conn As New MySqlConnection(My.Settings.DBConnection)
+                conn.Open()
+
+                Dim refCheckQuery As String = "SELECT COUNT(*) FROM SALES_TRANSACTION WHERE user_id=@id"
+                Using refCmd As New MySqlCommand(refCheckQuery, conn)
+                    refCmd.Parameters.AddWithValue("@id", userId)
+                    Dim count As Integer = Convert.ToInt32(refCmd.ExecuteScalar())
+                    If count > 0 Then
+                        ' If referenced, block fullname/role changes
+                        If properFullName <> txtFullName.Text.Trim() OrElse cmbRole.Text <> originalRole Then
+                            MessageBox.Show("This user is already referenced in transactions. You can only reset their password.", "Restriction", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                            Return
+                        End If
+                    End If
+                End Using
+            End Using
+        Catch ex As Exception
+            MessageBox.Show("Error checking references: " & ex.Message)
+            Return
+        End Try
+        ' --- 🔹 End Restriction Check ---
+
         Dim updatePassword As Boolean = False
         Dim hashedPassword As String = ""
 
@@ -143,6 +166,8 @@ Public Class frmEditUser
         Catch ex As Exception
             MessageBox.Show("Error updating user: " & ex.Message)
         End Try
+
+
     End Sub
 
 
