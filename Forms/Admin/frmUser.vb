@@ -91,8 +91,8 @@ Public Class frmUser
 
         ' Confirmation
         Dim confirmMsg As String = $"Are you sure you want to delete this user?" & vbCrLf &
-                               $"Full Name: {fullName}" & vbCrLf &
-                               $"Username: {username}"
+                                   $"Full Name: {fullName}" & vbCrLf &
+                                   $"Username: {username}"
         If MessageBox.Show(confirmMsg, "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
             Return
         End If
@@ -111,8 +111,15 @@ Public Class frmUser
             MessageBox.Show("User deleted successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
             LoadUsers() ' Refresh grid
 
+        Catch ex As MySqlException
+            ' ✅ Handle foreign key error
+            If ex.Number = 1451 Then
+                MessageBox.Show("This user cannot be deleted because they are already linked to transactions or records.", "Delete Blocked", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Else
+                MessageBox.Show("Database error while deleting user: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End If
         Catch ex As Exception
-            MessageBox.Show("Error deleting user: " & ex.Message)
+            MessageBox.Show("Unexpected error: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
