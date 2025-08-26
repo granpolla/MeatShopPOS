@@ -45,6 +45,7 @@ Public Class frmUser
         LoadUsers()
     End Sub
 
+
     ' For adding new user
     Private Sub btnAddUser_Click(sender As Object, e As EventArgs) Handles btnAddUser.Click
         Dim f As New frmAddUser()
@@ -52,5 +53,68 @@ Public Class frmUser
             LoadUsers() ' Refresh grid after adding user
         End If
     End Sub
+
+
+    ' Edit user
+    Private Sub btnEditUser_Click(sender As Object, e As EventArgs) Handles btnEditUser.Click
+        If dgvUsers.SelectedRows.Count = 0 Then
+            MessageBox.Show("Please select a user to edit.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End If
+
+        ' Get selected row values
+        Dim selectedRow As DataGridViewRow = dgvUsers.SelectedRows(0)
+        Dim userId As Integer = Convert.ToInt32(selectedRow.Cells("id").Value)
+        Dim fullName As String = selectedRow.Cells("Full Name").Value.ToString()
+        Dim role As String = selectedRow.Cells("Role").Value.ToString()
+
+        ' Open Edit User form
+        Dim f As New frmEditUser(userId, fullName, role)
+        If f.ShowDialog() = DialogResult.OK Then
+            LoadUsers() ' Refresh grid after editing
+        End If
+    End Sub
+
+
+    ' Delete user
+    Private Sub btnDeleteUser_Click(sender As Object, e As EventArgs) Handles btnDeleteUser.Click
+        If dgvUsers.SelectedRows.Count = 0 Then
+            MessageBox.Show("Please select a user to delete.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End If
+
+        ' Get selected row
+        Dim selectedRow As DataGridViewRow = dgvUsers.SelectedRows(0)
+        Dim userId As Integer = Convert.ToInt32(selectedRow.Cells("id").Value)
+        Dim fullName As String = selectedRow.Cells("Full Name").Value.ToString()
+        Dim username As String = selectedRow.Cells("Username").Value.ToString()
+
+        ' Confirmation
+        Dim confirmMsg As String = $"Are you sure you want to delete this user?" & vbCrLf &
+                               $"Full Name: {fullName}" & vbCrLf &
+                               $"Username: {username}"
+        If MessageBox.Show(confirmMsg, "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
+            Return
+        End If
+
+        ' Delete from DB
+        Try
+            Using conn As New MySqlConnection(My.Settings.DBConnection)
+                conn.Open()
+                Dim query As String = "DELETE FROM USER WHERE id = @UserID"
+                Using cmd As New MySqlCommand(query, conn)
+                    cmd.Parameters.AddWithValue("@UserID", userId)
+                    cmd.ExecuteNonQuery()
+                End Using
+            End Using
+
+            MessageBox.Show("User deleted successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            LoadUsers() ' Refresh grid
+
+        Catch ex As Exception
+            MessageBox.Show("Error deleting user: " & ex.Message)
+        End Try
+    End Sub
+
 
 End Class

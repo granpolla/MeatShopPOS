@@ -162,6 +162,7 @@ Partial Class frmAddUser
         Me.Controls.Add(Me.txtFullName)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.Name = "frmAddUser"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "frmAddUser"
         Me.ResumeLayout(False)
         Me.PerformLayout()
