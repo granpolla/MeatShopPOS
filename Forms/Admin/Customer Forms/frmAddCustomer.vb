@@ -25,7 +25,7 @@ Public Class frmAddCustomer
 
         ' 🔹 Clean values
         Dim customerName As String = CleanName(rawName)
-        Dim address As String = Regex.Replace(rawAddress.Trim(), "\s+", " ") ' just collapse spaces
+        Dim address As String = CleanName(Regex.Replace(rawAddress.Trim(), "\s+", " ")) ' just collapse spaces
 
         ' 🔹 Confirm add
         Dim confirmMsg As String = $"Add this customer?" & vbCrLf & vbCrLf &

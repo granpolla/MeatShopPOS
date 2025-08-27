@@ -59,6 +59,14 @@ Public Class frmEditCustomer
             Return
         End If
 
+        ' 🔹 Ask confirmation before proceeding
+        Dim confirmMsg As String = $"Update this customer?" & vbCrLf & vbCrLf &
+                                $"Customer Name: {customerName}" & vbCrLf &
+                                $"Address: {address}"
+        If MessageBox.Show(confirmMsg, "Confirm Update", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
+            Return
+        End If
+
         Try
             Using conn As New MySqlConnection(My.Settings.DBConnection)
                 conn.Open()
