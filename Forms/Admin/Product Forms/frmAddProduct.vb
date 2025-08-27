@@ -1,25 +1,27 @@
 ﻿Imports MySql.Data.MySqlClient
 Imports System.Globalization
+Imports System.Text.RegularExpressions
 
 Public Class frmAddProduct
 
-    ' ✅ Capitalize words (e.g., "my meat" → "My Meat")
-    Private Function ToTitleCase(input As String) As String
-        Return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(input.ToLower())
+    ' ✅ Clean input: trim, collapse multiple spaces → one, and Title Case
+    Private Function CleanText(input As String) As String
+        Dim cleaned As String = Regex.Replace(input.Trim(), "\s+", " ")
+        Return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(cleaned.ToLower())
     End Function
 
     ' ✅ Save product
     Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
-        Dim productName As String = txtProductName.Text.Trim()
-        Dim brand As String = txtBrand.Text.Trim()
-        Dim weight As String = txtWeight.Text.Trim()
-        Dim price As String = txtPrice.Text.Trim()
+        Dim rawProductName As String = txtProductName.Text
+        Dim rawBrand As String = txtBrand.Text
+        Dim rawWeight As String = txtWeight.Text
+        Dim rawPrice As String = txtPrice.Text
 
         ' 🔹 Validation
-        If String.IsNullOrWhiteSpace(productName) OrElse
-           String.IsNullOrWhiteSpace(brand) OrElse
-           String.IsNullOrWhiteSpace(weight) OrElse
-           String.IsNullOrWhiteSpace(price) Then
+        If String.IsNullOrWhiteSpace(rawProductName) OrElse
+           String.IsNullOrWhiteSpace(rawBrand) OrElse
+           String.IsNullOrWhiteSpace(rawWeight) OrElse
+           String.IsNullOrWhiteSpace(rawPrice) Then
             MessageBox.Show("All fields are required.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
@@ -27,18 +29,18 @@ Public Class frmAddProduct
         ' 🔹 Validate numeric fields
         Dim weightValue As Decimal
         Dim priceValue As Decimal
-        If Not Decimal.TryParse(weight, weightValue) OrElse weightValue <= 0 Then
+        If Not Decimal.TryParse(rawWeight, weightValue) OrElse weightValue <= 0 Then
             MessageBox.Show("Weight must be a valid positive number.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
-        If Not Decimal.TryParse(price, priceValue) OrElse priceValue <= 0 Then
+        If Not Decimal.TryParse(rawPrice, priceValue) OrElse priceValue <= 0 Then
             MessageBox.Show("Price must be a valid positive number.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
-        ' 🔹 Format names
-        productName = ToTitleCase(productName)
-        brand = ToTitleCase(brand)
+        ' 🔹 Clean text fields
+        Dim productName As String = CleanText(rawProductName)
+        Dim brand As String = CleanText(rawBrand)
 
         ' 🔹 Confirm popup
         Dim confirmMsg As String = $"Please confirm product details before saving:" & vbCrLf & vbCrLf &

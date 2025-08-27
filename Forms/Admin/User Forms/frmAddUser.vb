@@ -1,5 +1,7 @@
 ﻿Imports MySql.Data.MySqlClient
 Imports BCrypt.Net
+Imports System.Globalization
+Imports System.Text.RegularExpressions
 
 Public Class frmAddUser
 
@@ -26,6 +28,15 @@ Public Class frmAddUser
         End Try
     End Sub
 
+    ' ✅ Normalize spaces (turns "San     Juan" → "San Juan")
+    Private Function NormalizeSpaces(input As String) As String
+        Return Regex.Replace(input.Trim(), "\s+", " ")
+    End Function
+
+    ' ✅ Title case names
+    Private Function ToTitleCase(input As String) As String
+        Return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(input.ToLower())
+    End Function
 
     ' ✅ Save button
     Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
@@ -40,8 +51,8 @@ Public Class frmAddUser
             Return
         End If
 
-        ' 2. Proper-case full name
-        Dim properFullName As String = Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(txtFullName.Text.Trim().ToLower())
+        ' 2. Clean & format Full Name
+        Dim properFullName As String = ToTitleCase(NormalizeSpaces(txtFullName.Text))
 
         ' Extract first name for username generation
         Dim firstName As String = properFullName.Split(" "c)(0).ToLower()

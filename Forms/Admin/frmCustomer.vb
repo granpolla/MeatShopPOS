@@ -66,4 +66,22 @@ Public Class frmCustomer
             LoadCustomers() ' Refresh grid after adding product
         End If
     End Sub
+
+
+    Private Sub btnEditCustomer_Click(sender As Object, e As EventArgs) Handles btnEditCustomer.Click
+        If dgvCustomer.SelectedRows.Count = 0 Then
+            MessageBox.Show("Please select a customer to edit.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End If
+
+        ' Get selected Customer ID
+        Dim customerId As Integer = Convert.ToInt32(dgvCustomer.SelectedRows(0).Cells("id").Value)
+
+        ' Open edit form
+        Dim editForm As New frmEditCustomer(customerId)
+        If editForm.ShowDialog() = DialogResult.OK Then
+            LoadCustomers() ' 🔄 Refresh DataGridView after update
+        End If
+    End Sub
+
 End Class
