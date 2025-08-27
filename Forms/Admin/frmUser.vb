@@ -77,6 +77,7 @@ Public Class frmUser
 
 
     ' Delete user
+    ' Delete user (with manual check)
     Private Sub btnDeleteUser_Click(sender As Object, e As EventArgs) Handles btnDeleteUser.Click
         If dgvUsers.SelectedRows.Count = 0 Then
             MessageBox.Show("Please select a user to delete.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
@@ -97,31 +98,39 @@ Public Class frmUser
             Return
         End If
 
-        ' Delete from DB
         Try
             Using conn As New MySqlConnection(My.Settings.DBConnection)
                 conn.Open()
-                Dim query As String = "DELETE FROM USER WHERE id = @UserID"
-                Using cmd As New MySqlCommand(query, conn)
-                    cmd.Parameters.AddWithValue("@UserID", userId)
-                    cmd.ExecuteNonQuery()
+
+                ' 🔹 Step 1: Check if user is referenced in sales_transaction
+                Dim checkQuery As String = "SELECT COUNT(*) FROM sales_transaction WHERE user_id = @id"
+                Using checkCmd As New MySqlCommand(checkQuery, conn)
+                    checkCmd.Parameters.AddWithValue("@id", userId)
+                    Dim refCount As Integer = Convert.ToInt32(checkCmd.ExecuteScalar())
+
+                    If refCount > 0 Then
+                        MessageBox.Show("This user cannot be deleted because they are already referenced in transactions.",
+                                        "Delete Restricted", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                        Return
+                    End If
+                End Using
+
+                ' 🔹 Step 2: Safe to delete
+                Dim delQuery As String = "DELETE FROM USER WHERE id = @UserID"
+                Using delCmd As New MySqlCommand(delQuery, conn)
+                    delCmd.Parameters.AddWithValue("@UserID", userId)
+                    delCmd.ExecuteNonQuery()
                 End Using
             End Using
 
             MessageBox.Show("User deleted successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
             LoadUsers() ' Refresh grid
 
-        Catch ex As MySqlException
-            ' ✅ Handle foreign key error
-            If ex.Number = 1451 Then
-                MessageBox.Show("This user cannot be deleted because they are already linked to transactions or records.", "Delete Blocked", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            Else
-                MessageBox.Show("Database error while deleting user: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            End If
         Catch ex As Exception
             MessageBox.Show("Unexpected error: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
+
 
 
 End Class
