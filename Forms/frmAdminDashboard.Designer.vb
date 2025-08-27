@@ -36,10 +36,12 @@ Partial Class frmAdminDashboard
         Me.pnlSidebar = New System.Windows.Forms.Panel()
         Me.btnUser = New System.Windows.Forms.Button()
         Me.pnlContainer = New System.Windows.Forms.Panel()
+        Me.Label1 = New System.Windows.Forms.Label()
         Me.Panel2.SuspendLayout()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.pnlSidebar.SuspendLayout()
+        Me.pnlContainer.SuspendLayout()
         Me.SuspendLayout()
         '
         'lblUserFullName
@@ -178,11 +180,22 @@ Partial Class frmAdminDashboard
         '
         'pnlContainer
         '
+        Me.pnlContainer.Controls.Add(Me.Label1)
         Me.pnlContainer.Dock = System.Windows.Forms.DockStyle.Fill
         Me.pnlContainer.Location = New System.Drawing.Point(264, 61)
         Me.pnlContainer.Name = "pnlContainer"
         Me.pnlContainer.Size = New System.Drawing.Size(1119, 625)
         Me.pnlContainer.TabIndex = 7
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Font = New System.Drawing.Font("Segoe UI Semibold", 10.8!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label1.Location = New System.Drawing.Point(475, 247)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(238, 25)
+        Me.Label1.TabIndex = 12
+        Me.Label1.Text = "simulate in workbench first"
         '
         'frmAdminDashboard
         '
@@ -203,6 +216,8 @@ Partial Class frmAdminDashboard
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.pnlSidebar.ResumeLayout(False)
+        Me.pnlContainer.ResumeLayout(False)
+        Me.pnlContainer.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -220,4 +235,5 @@ Partial Class frmAdminDashboard
     Friend WithEvents PictureBox2 As PictureBox
     Friend WithEvents btnLogout As Button
     Friend WithEvents lblUserRole As Label
+    Friend WithEvents Label1 As Label
 End Class
