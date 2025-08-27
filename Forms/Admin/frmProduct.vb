@@ -120,6 +120,19 @@ Public Class frmProduct
             Try
                 Using conn As New MySqlConnection(My.Settings.DBConnection)
                     conn.Open()
+
+                    ' 🔹 Check if product is referenced in transaction_item
+                    Dim refCheckQuery As String = "SELECT COUNT(*) FROM transaction_item WHERE product_id=@id"
+                    Using refCmd As New MySqlCommand(refCheckQuery, conn)
+                        refCmd.Parameters.AddWithValue("@id", productId)
+                        Dim count As Integer = Convert.ToInt32(refCmd.ExecuteScalar())
+                        If count > 0 Then
+                            MessageBox.Show("This product cannot be deleted because it is already used in a transaction.", "Delete Blocked", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                            Return
+                        End If
+                    End Using
+
+                    ' ✅ Proceed with delete only if not referenced
                     Dim query As String = "DELETE FROM PRODUCT WHERE id=@id"
                     Using cmd As New MySqlCommand(query, conn)
                         cmd.Parameters.AddWithValue("@id", productId)
@@ -130,17 +143,13 @@ Public Class frmProduct
                 MessageBox.Show("Product deleted successfully.", "Delete Product", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 LoadProducts() ' ✅ Refresh grid
             Catch ex As MySqlException
-                ' Check if error is due to foreign key constraint
-                If ex.Number = 1451 Then ' Cannot delete or update a parent row: a foreign key constraint fails
-                    MessageBox.Show("This product cannot be deleted because it is already used in a transaction.", "Delete Blocked", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                Else
-                    MessageBox.Show("Error deleting product: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                End If
+                MessageBox.Show("Error deleting product: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Catch ex As Exception
                 MessageBox.Show("Unexpected error: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         End If
     End Sub
+
 
 
 

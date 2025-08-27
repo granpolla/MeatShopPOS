@@ -5,8 +5,11 @@ Public Class frmEditProduct
     Public Property ProductID As Integer
 
     ' ✅ Capitalize words
-    Private Function ToTitleCase(input As String) As String
-        Return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(input.ToLower())
+    ' ✅ Normalize spaces (replace multiple spaces with one, trim, TitleCase)
+    Private Function CleanText(input As String) As String
+        Dim normalized As String = System.Text.RegularExpressions.Regex.Replace(input, "\s+", " ") ' collapse spaces
+        normalized = normalized.Trim()
+        Return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(normalized.ToLower())
     End Function
 
     ' ✅ Save changes
@@ -38,8 +41,8 @@ Public Class frmEditProduct
         End If
 
         ' 🔹 Format names
-        productName = ToTitleCase(productName)
-        brand = ToTitleCase(brand)
+        productName = CleanText(productName)
+        brand = CleanText(brand)
 
         ' 🔹 Confirm update
         Dim confirmMsg As String = $"Update this product?" & vbCrLf & vbCrLf &
@@ -69,13 +72,15 @@ Public Class frmEditProduct
                 End Using
 
                 ' 🔹 Safeguard: check if product is already used in transactions
-                Dim refCheckQuery As String = "SELECT COUNT(*) FROM SALES_TRANSACTION WHERE id=@id"
+                Dim refCheckQuery As String = "
+                SELECT COUNT(*) 
+                FROM transaction_item 
+                WHERE product_id=@id"
                 Using refCmd As New MySqlCommand(refCheckQuery, conn)
                     refCmd.Parameters.AddWithValue("@id", ProductID)
                     Dim count As Integer = Convert.ToInt32(refCmd.ExecuteScalar())
                     If count > 0 Then
-                        ' If referenced, block changes to Name and Brand
-                        ' (We compare with original values in DB)
+                        ' Restrict changes to Name and Brand
                         Dim getOriginalQuery As String = "SELECT product_name, brand FROM PRODUCT WHERE id=@id"
                         Using getCmd As New MySqlCommand(getOriginalQuery, conn)
                             getCmd.Parameters.AddWithValue("@id", ProductID)
