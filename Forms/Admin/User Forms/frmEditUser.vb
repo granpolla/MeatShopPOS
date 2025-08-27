@@ -1,15 +1,18 @@
 ﻿Imports MySql.Data.MySqlClient
 Imports BCrypt.Net
+Imports System.Text.RegularExpressions
 
 Public Class frmEditUser
     Private userId As Integer
     Private originalRole As String
+    Private originalFullName As String
 
     ' Constructor to receive values from frmUser
     Public Sub New(id As Integer, fullName As String, role As String)
         InitializeComponent()
         userId = id
         txtFullName.Text = fullName
+        originalFullName = fullName
         originalRole = role
     End Sub
 
@@ -37,33 +40,30 @@ Public Class frmEditUser
         End Try
     End Sub
 
-
     ' ✅ Save changes
     Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
-        ' Validation for fullname & role
+        ' Validation for fullname
         If txtFullName.Text.Trim() = "" Then
             MessageBox.Show("Please enter a full name.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
-        ' Proper-case the full name
-        Dim properFullName As String = Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(txtFullName.Text.Trim().ToLower())
+        ' --- 🔹 Normalize Full Name ---
+        Dim collapsedName As String = Regex.Replace(txtFullName.Text.Trim(), "\s+", " ") ' collapse multiple spaces
+        Dim properFullName As String = Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(collapsedName.ToLower())
 
         ' Generate new username based on role + firstname
         Dim rolePrefix As String = ""
         Select Case cmbRole.Text.ToLower()
-            Case "admin"
-                rolePrefix = "adm"
-            Case "cashier"
-                rolePrefix = "csh"
-            Case Else
-                rolePrefix = "usr"
+            Case "admin" : rolePrefix = "adm"
+            Case "cashier" : rolePrefix = "csh"
+            Case Else : rolePrefix = "usr"
         End Select
 
         Dim firstName As String = properFullName.Split(" "c)(0).ToLower()
         Dim newUsername As String = rolePrefix & firstName
 
-        ' --- 🔹 Restriction Check: prevent fullname/role change if user already in SALES ---
+        ' --- 🔹 Restriction Check ---
         Try
             Using conn As New MySqlConnection(My.Settings.DBConnection)
                 conn.Open()
@@ -73,8 +73,8 @@ Public Class frmEditUser
                     refCmd.Parameters.AddWithValue("@id", userId)
                     Dim count As Integer = Convert.ToInt32(refCmd.ExecuteScalar())
                     If count > 0 Then
-                        ' If referenced, block fullname/role changes
-                        If properFullName <> txtFullName.Text.Trim() OrElse cmbRole.Text <> originalRole Then
+                        ' If user is referenced → block fullname & role change
+                        If properFullName <> originalFullName OrElse cmbRole.Text <> originalRole Then
                             MessageBox.Show("This user is already referenced in transactions. You can only reset their password.", "Restriction", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                             Return
                         End If
@@ -87,11 +87,11 @@ Public Class frmEditUser
         End Try
         ' --- 🔹 End Restriction Check ---
 
+        ' --- 🔹 Handle password update ---
         Dim updatePassword As Boolean = False
         Dim hashedPassword As String = ""
 
-        If txtPassword.Text.Trim() <> "" Or txtConfirmPassword.Text.Trim() <> "" Then
-            ' If either field has text, require both + match
+        If txtPassword.Text.Trim() <> "" OrElse txtConfirmPassword.Text.Trim() <> "" Then
             If txtPassword.Text.Trim() = "" Or txtConfirmPassword.Text.Trim() = "" Then
                 MessageBox.Show("Please fill in both password fields.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
@@ -107,11 +107,11 @@ Public Class frmEditUser
 
         ' Confirmation message
         Dim msg As String = $"Full Name: {properFullName}{vbCrLf}" &
-                        $"Username: {newUsername}{vbCrLf}" &
-                        $"Role: {cmbRole.Text}"
+                            $"Username: {newUsername}{vbCrLf}" &
+                            $"Role: {cmbRole.Text}"
 
         If updatePassword Then
-            msg &= vbCrLf & $"Password: {txtPassword.Text}"
+            msg &= vbCrLf & $"Password: (will be changed)"
         Else
             msg &= vbCrLf & "(Password unchanged)"
         End If
@@ -124,21 +124,21 @@ Public Class frmEditUser
         Dim updateQuery As String
         If updatePassword Then
             updateQuery = "
-            UPDATE USER
-            SET full_name = @FullName,
-                username = @Username,
-                password_hash = @Password,
-                role_id = @RoleID,
-                updated_at = NOW()
-            WHERE id = @UserID"
+                UPDATE USER
+                SET full_name = @FullName,
+                    username = @Username,
+                    password_hash = @Password,
+                    role_id = @RoleID,
+                    updated_at = NOW()
+                WHERE id = @UserID"
         Else
             updateQuery = "
-            UPDATE USER
-            SET full_name = @FullName,
-                username = @Username,
-                role_id = @RoleID,
-                updated_at = NOW()
-            WHERE id = @UserID"
+                UPDATE USER
+                SET full_name = @FullName,
+                    username = @Username,
+                    role_id = @RoleID,
+                    updated_at = NOW()
+                WHERE id = @UserID"
         End If
 
         ' --- Run update ---
@@ -166,10 +166,7 @@ Public Class frmEditUser
         Catch ex As Exception
             MessageBox.Show("Error updating user: " & ex.Message)
         End Try
-
-
     End Sub
-
 
     ' ✅ Cancel button
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
