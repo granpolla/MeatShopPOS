@@ -3,11 +3,13 @@ Imports System.Text.RegularExpressions
 
 Public Class frmCashierAddCustomer
 
+    ' 👉 Properties to return to parent form
+    Public Property SavedCustomerName As String
+    Public Property SavedCustomerAddress As String
+
     ' ✅ Normalize name/address (remove extra spaces + proper case)
     Private Function NormalizeText(input As String, Optional properCase As Boolean = True) As String
-        ' Remove extra spaces
         Dim cleaned As String = Regex.Replace(input.Trim(), "\s+", " ")
-        ' Convert to Proper Case (e.g., "mark jones" -> "Mark Jones")
         If properCase Then
             cleaned = StrConv(cleaned, VbStrConv.ProperCase)
         End If
@@ -16,8 +18,8 @@ Public Class frmCashierAddCustomer
 
     ' ✅ Save Button
     Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
-        Dim name As String = NormalizeText(txtCustomerName.Text, True)    ' proper case
-        Dim address As String = NormalizeText(txtAddress.Text, True)      ' proper case too (optional, you can set False if you want all caps or raw)
+        Dim name As String = NormalizeText(txtCustomerName.Text, True)
+        Dim address As String = NormalizeText(txtAddress.Text, True)
 
         If String.IsNullOrWhiteSpace(name) OrElse String.IsNullOrWhiteSpace(address) Then
             MessageBox.Show("Please enter both name and address.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
@@ -34,6 +36,10 @@ Public Class frmCashierAddCustomer
                     cmd.ExecuteNonQuery()
                 End Using
             End Using
+
+            ' 👉 Store saved values before closing
+            SavedCustomerName = name
+            SavedCustomerAddress = address
 
             MessageBox.Show("Customer saved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
             Me.DialogResult = DialogResult.OK

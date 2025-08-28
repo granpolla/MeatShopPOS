@@ -8,6 +8,9 @@ Public Class frmCashierDashboard
     End Sub
 
 
+
+
+
     ' ✅ Normalize name (remove extra spaces + proper case)
     Private Function NormalizeName(input As String) As String
         Dim cleaned As String = Regex.Replace(input.Trim(), "\s+", " ")
@@ -15,10 +18,14 @@ Public Class frmCashierDashboard
     End Function
 
 
-    ' ✅ Load all customers (fullname + address only)
+
+
+
+    ' ✅ Load all customers
     Private Sub LoadCustomers()
         Dim query As String = "
-        SELECT customer_name AS 'Full Name',
+        SELECT id AS 'CustomerID',
+               customer_name AS 'Full Name',
                address AS 'Address'
         FROM customer
         ORDER BY customer_name ASC"
@@ -37,6 +44,50 @@ Public Class frmCashierDashboard
         End Try
     End Sub
 
+    ' ✅ Load customer balance preview
+    Private Sub LoadCustomerBalance(customerID As Integer)
+        Dim query As String = "
+        SELECT cl.entry_date AS 'Date',
+               cl.description AS 'Description',
+               cl.amount AS 'Balance'
+        FROM customer_ledger cl
+        WHERE cl.customer_id = @custID
+          AND cl.amount > 0
+        ORDER BY cl.entry_date DESC"
+
+        Try
+            Using conn As New MySqlConnection(My.Settings.DBConnection)
+                Using cmd As New MySqlCommand(query, conn)
+                    cmd.Parameters.AddWithValue("@custID", customerID)
+
+                    Dim adapter As New MySqlDataAdapter(cmd)
+                    Dim dt As New DataTable()
+                    adapter.Fill(dt)
+
+                    dgvCustomerBalancePreview.DataSource = dt
+
+                    ' If no rows → show empty table
+                    If dt.Rows.Count = 0 Then
+                        dgvCustomerBalancePreview.DataSource = Nothing
+                    End If
+
+                    ' format
+                    With dgvCustomerBalancePreview
+                        .AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+                        .SelectionMode = DataGridViewSelectionMode.FullRowSelect
+                        .MultiSelect = False
+                        .ReadOnly = True
+                    End With
+                End Using
+            End Using
+        Catch ex As Exception
+            MessageBox.Show("Error loading balance: " & ex.Message)
+        End Try
+    End Sub
+
+
+
+
 
     ' ✅ Format dgvCustomer
     Private Sub FormatCustomerGrid()
@@ -45,21 +96,34 @@ Public Class frmCashierDashboard
             .SelectionMode = DataGridViewSelectionMode.FullRowSelect
             .MultiSelect = False
             .ReadOnly = True
+
+            If .Columns.Contains("CustomerID") Then
+                .Columns("CustomerID").Visible = False
+            End If
         End With
     End Sub
 
 
+
+
+
     ' ✅ Search Button
     Private Sub btnSearch_Click(sender As Object, e As EventArgs) Handles btnSearch.Click
-        Dim searchName As String = NormalizeName(txtCustomerName.Text)
+        Dim firstName As String = NormalizeName(txtFirstName.Text)
+        Dim lastName As String = NormalizeName(txtLastName.Text)
 
-        If String.IsNullOrWhiteSpace(searchName) Then
-            MessageBox.Show("Please enter a customer name to search.", "Search", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        ' Check if both are filled
+        If String.IsNullOrWhiteSpace(firstName) OrElse String.IsNullOrWhiteSpace(lastName) Then
+            MessageBox.Show("Please input both First Name and Last Name to search.", "Search", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
+        ' Combine into full name
+        Dim fullName As String = firstName & " " & lastName
+
         Dim query As String = "
-    SELECT customer_name AS 'Full Name',
+    SELECT id AS 'CustomerID',
+           customer_name AS 'Full Name',
            address AS 'Address'
     FROM customer
     WHERE LOWER(REPLACE(customer_name, ' ', '')) = LOWER(REPLACE(@name, ' ', ''))"
@@ -67,34 +131,56 @@ Public Class frmCashierDashboard
         Try
             Using conn As New MySqlConnection(My.Settings.DBConnection)
                 Using cmd As New MySqlCommand(query, conn)
-                    cmd.Parameters.AddWithValue("@name", searchName.Replace(" ", ""))
+                    cmd.Parameters.AddWithValue("@name", fullName.Replace(" ", ""))
 
                     Dim adapter As New MySqlDataAdapter(cmd)
                     Dim dt As New DataTable()
                     adapter.Fill(dt)
 
                     If dt.Rows.Count > 0 Then
-                        ' ✅ Found customer → show in grid
                         dgvCustomer.DataSource = dt
                         FormatCustomerGrid()
                     Else
-                        ' ❌ Not found → Ask cashier to insert
                         Dim result As DialogResult = MessageBox.Show(
-                        $"Customer ""{searchName}"" is not saved in our database. Do you want to insert this customer?",
+                        $"Customer ""{fullName}"" is not saved in our database. Do you want to insert this customer?",
                         "Customer Not Found",
                         MessageBoxButtons.YesNo,
                         MessageBoxIcon.Question
                     )
 
                         If result = DialogResult.Yes Then
-                            ' ✅ Open AddCustomer form with name prefilled
                             Dim addForm As New frmCashierAddCustomer()
-                            addForm.txtCustomerName.Text = searchName
+                            addForm.txtCustomerName.Text = fullName
                             addForm.txtAddress.Clear()
-                            addForm.ShowDialog()
 
-                            ' After closing addForm, refresh list
-                            LoadCustomers()
+                            If addForm.ShowDialog() = DialogResult.OK Then
+                                ' 🔹 Query the newly added customer back
+                                Dim dtNew As New DataTable()
+                                Using cmdNew As New MySqlCommand(query, conn)
+                                    cmdNew.Parameters.AddWithValue("@name", fullName.Replace(" ", ""))
+                                    Dim adapterNew As New MySqlDataAdapter(cmdNew)
+                                    dtNew.Clear()
+                                    adapterNew.Fill(dtNew)
+                                End Using
+
+                                If dtNew.Rows.Count > 0 Then
+                                    dgvCustomer.DataSource = dtNew
+                                    FormatCustomerGrid()
+
+                                    ' 🔹 Auto-fill textboxes (like dgv click)
+                                    Dim row As DataRow = dtNew.Rows(0)
+                                    Dim nameParts() As String = row("Full Name").ToString().Split(New Char() {" "c}, 2, StringSplitOptions.RemoveEmptyEntries)
+
+                                    If nameParts.Length > 0 Then txtFirstName.Text = nameParts(0)
+                                    If nameParts.Length > 1 Then txtLastName.Text = nameParts(1)
+
+                                    txtCustomerAddress.Text = row("Address").ToString()
+
+                                    ' Load balance preview as well
+                                    Dim customerID As Integer = Convert.ToInt32(row("CustomerID"))
+                                    LoadCustomerBalance(customerID)
+                                End If
+                            End If
                         End If
                     End If
                 End Using
@@ -105,29 +191,52 @@ Public Class frmCashierDashboard
     End Sub
 
 
-
-    ' ✅ Refresh Button
     Private Sub btnRefresh_Click(sender As Object, e As EventArgs) Handles btnRefresh.Click
         LoadCustomers()
+        txtFirstName.Clear()
+        txtLastName.Clear()
+        txtCustomerAddress.Clear()
+        dgvCustomerBalancePreview.DataSource = Nothing
     End Sub
 
-
-    ' ✅ Clear Button
     Private Sub btnClear_Click(sender As Object, e As EventArgs) Handles btnClear.Click
-        txtCustomerName.Clear()
+        txtFirstName.Clear()
+        txtLastName.Clear()
         txtCustomerAddress.Clear()
-        dgvCustomer.DataSource = Nothing
         dgvCustomerBalancePreview.DataSource = Nothing
     End Sub
 
 
-    ' ✅ Select row in dgvCustomer → autofill textboxes
+
+
+
+    ' ✅ When selecting customer → autofill + load balances
     Private Sub dgvCustomer_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvCustomer.CellClick
         If e.RowIndex >= 0 Then
             Dim row As DataGridViewRow = dgvCustomer.Rows(e.RowIndex)
-            txtCustomerName.Text = row.Cells("Full Name").Value.ToString()
+
+            Dim fullName As String = row.Cells("Full Name").Value.ToString()
+            ' Use a space separator and max 2 parts
+            Dim nameParts() As String = fullName.Split(New Char() {" "c}, 2, StringSplitOptions.RemoveEmptyEntries)
+
+            ' Split into First and Last Name
+            If nameParts.Length > 0 Then
+                txtFirstName.Text = nameParts(0) ' First word
+            End If
+            If nameParts.Length > 1 Then
+                txtLastName.Text = nameParts(1) ' Everything after the first space
+            Else
+                txtLastName.Clear()
+            End If
+
             txtCustomerAddress.Text = row.Cells("Address").Value.ToString()
+
+            ' get the ID for balance lookup
+            Dim customerID As Integer = Convert.ToInt32(row.Cells("CustomerID").Value)
+            LoadCustomerBalance(customerID)
         End If
     End Sub
+
+
 
 End Class
