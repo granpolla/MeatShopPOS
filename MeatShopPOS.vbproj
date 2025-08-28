@@ -105,6 +105,7 @@
     </Reference>
     <Reference Include="System.Transactions" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -188,6 +189,12 @@
     <Compile Include="Forms\Admin\User Forms\frmEditUser.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\Cashier\frmCashierAddCustomer.Designer.vb">
+      <DependentUpon>frmCashierAddCustomer.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Cashier\frmCashierAddCustomer.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\frmAdminDashboard.Designer.vb">
       <DependentUpon>frmAdminDashboard.vb</DependentUpon>
     </Compile>
@@ -265,6 +272,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Admin\User Forms\frmEditUser.resx">
       <DependentUpon>frmEditUser.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Cashier\frmCashierAddCustomer.resx">
+      <DependentUpon>frmCashierAddCustomer.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmAdminDashboard.resx">
       <DependentUpon>frmAdminDashboard.vb</DependentUpon>
