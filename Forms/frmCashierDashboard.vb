@@ -58,15 +58,36 @@ Public Class frmCashierDashboard
     End Sub
 
     Private Sub UpdateGrandTotal()
-        Dim grandTotal As Decimal = 0
+        UpdateTotals()
+    End Sub
+
+    Private Sub UpdateTotals()
+        Dim orderTotal As Decimal = 0
+        Dim balanceTotal As Decimal = 0
+
+        ' 🔹 Sum from OrderItemPreview
         If dgvOrderItemPreview.DataSource IsNot Nothing Then
             Dim orderTable As DataTable = CType(dgvOrderItemPreview.DataSource, DataTable)
             For Each row As DataRow In orderTable.Rows
-                grandTotal += Convert.ToDecimal(row("Total"))
+                orderTotal += Convert.ToDecimal(row("Total"))
             Next
         End If
-        txtGrandTotal.Text = grandTotal.ToString("N2")
+
+        ' 🔹 Sum from selected rows in BalancePreview
+        For Each row As DataGridViewRow In dgvCustomerBalancePreview.SelectedRows
+            balanceTotal += Convert.ToDecimal(row.Cells("Balance").Value)
+        Next
+
+        ' Show totals
+        txtCustomerBalanceTotal.Text = balanceTotal.ToString("N2")
+        txtGrandTotal.Text = (orderTotal + balanceTotal).ToString("N2")
     End Sub
+
+    ' ✅ Whenever user changes balance selection → recalc totals
+    Private Sub dgvCustomerBalancePreview_SelectionChanged(sender As Object, e As EventArgs) Handles dgvCustomerBalancePreview.SelectionChanged
+        UpdateTotals()
+    End Sub
+
 
 
 
@@ -90,6 +111,10 @@ Public Class frmCashierDashboard
                     adapter.Fill(dt)
                     dgvCustomer.DataSource = dt
                     FormatCustomerGrid()
+
+                    ' ✅ Prevent auto-selecting the first row
+                    dgvCustomer.ClearSelection()
+                    dgvCustomer.CurrentCell = Nothing
                 End Using
             End Using
         Catch ex As Exception
@@ -128,9 +153,13 @@ Public Class frmCashierDashboard
                     With dgvCustomerBalancePreview
                         .AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
                         .SelectionMode = DataGridViewSelectionMode.FullRowSelect
-                        .MultiSelect = False
+                        .MultiSelect = True
                         .ReadOnly = True
                     End With
+
+                    ' ✅ Prevent auto-selecting the first row
+                    dgvCustomerBalancePreview.ClearSelection()
+                    dgvCustomerBalancePreview.CurrentCell = Nothing
                 End Using
             End Using
         Catch ex As Exception
@@ -156,6 +185,10 @@ Public Class frmCashierDashboard
                     adapter.Fill(dt)
                     dgvProductsPreview.DataSource = dt
                     FormatProductsGrid()
+
+                    ' ✅ Prevent auto-selecting the first row
+                    dgvProductsPreview.ClearSelection()
+                    dgvProductsPreview.CurrentCell = Nothing
                 End Using
             End Using
         Catch ex As Exception
