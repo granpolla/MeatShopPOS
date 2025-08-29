@@ -118,47 +118,67 @@
 
     ' ✅ btnAddItem → show values for now
     Private Sub btnAddItem_Click(sender As Object, e As EventArgs) Handles btnAddItem.Click
-        ' Check empty fields
+        ' ✅ Empty field validation
         If String.IsNullOrWhiteSpace(txtProductName.Text) OrElse
-       String.IsNullOrWhiteSpace(txtProductBrand.Text) OrElse
-       String.IsNullOrWhiteSpace(txtUnitWeight.Text) OrElse
-       String.IsNullOrWhiteSpace(txtUnitPrice.Text) OrElse
-       String.IsNullOrWhiteSpace(txtTotalBox.Text) OrElse
-       String.IsNullOrWhiteSpace(txtTotalWeightPurchase.Text) OrElse
-       String.IsNullOrWhiteSpace(txtTotal.Text) Then
+           String.IsNullOrWhiteSpace(txtProductBrand.Text) OrElse
+           String.IsNullOrWhiteSpace(txtUnitWeight.Text) OrElse
+           String.IsNullOrWhiteSpace(txtUnitPrice.Text) OrElse
+           String.IsNullOrWhiteSpace(txtTotalBox.Text) OrElse
+           String.IsNullOrWhiteSpace(txtTotalWeightPurchase.Text) OrElse
+           String.IsNullOrWhiteSpace(txtTotal.Text) Then
 
-            MessageBox.Show("You cannot add an item with empty values. Please fill all required fields.",
-                        "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            MessageBox.Show("You cannot add empty values.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
-        ' Validate numeric fields
+        ' ✅ Must be > 0 validation
         Dim totalBox As Decimal
-        Dim weightPurchase As Decimal
+        Dim totalWeight As Decimal
 
         If Not Decimal.TryParse(txtTotalBox.Text, totalBox) OrElse totalBox <= 0 Then
             MessageBox.Show("Enter a valid quantity greater than 0.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
-        If Not Decimal.TryParse(txtTotalWeightPurchase.Text, weightPurchase) OrElse weightPurchase <= 0 Then
+        If Not Decimal.TryParse(txtTotalWeightPurchase.Text, totalWeight) OrElse totalWeight <= 0 Then
             MessageBox.Show("Enter a valid weight greater than 0.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
-        ' ✅ Just pop-up values for now
+        ' ✅ Convert remaining fields
+        Dim unitWeight As Decimal = Convert.ToDecimal(txtUnitWeight.Text)
+        Dim unitPrice As Decimal = Convert.ToDecimal(txtUnitPrice.Text)
+        Dim total As Decimal = Convert.ToDecimal(txtTotal.Text)
+
+        ' ✅ Popup preview
         MessageBox.Show(
-        $"Product: {txtProductName.Text}" & Environment.NewLine &
-        $"Brand: {txtProductBrand.Text}" & Environment.NewLine &
-        $"Unit Weight: {txtUnitWeight.Text}" & Environment.NewLine &
-        $"Unit Price: {txtUnitPrice.Text}" & Environment.NewLine &
-        $"Weight Purchased: {txtTotalWeightPurchase.Text}" & Environment.NewLine &
-        $"Total Box: {txtTotalBox.Text}" & Environment.NewLine &
-        $"Total: {txtTotal.Text}",
-        "Added Item Preview",
-        MessageBoxButtons.OK,
-        MessageBoxIcon.Information
-    )
+            $"Product: {txtProductName.Text}" & Environment.NewLine &
+            $"Brand: {txtProductBrand.Text}" & Environment.NewLine &
+            $"Unit Weight: {unitWeight}" & Environment.NewLine &
+            $"Unit Price: {unitPrice:N2}" & Environment.NewLine &
+            $"Weight Purchased: {totalWeight}" & Environment.NewLine &
+            $"Total Box: {totalBox}" & Environment.NewLine &
+            $"Total: {total:N2}",
+            "Added Item Preview",
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Information
+        )
+
+        ' ✅ Pass data back to Dashboard
+        Dim parentForm As frmCashierDashboard = CType(Me.ParentForm, frmCashierDashboard)
+        parentForm.AddOrderItem(txtProductName.Text, txtProductBrand.Text, unitWeight, unitPrice, totalBox, totalWeight, total)
+
+        ' ✅ Clear input fields after adding
+        txtProductName.Clear()
+        txtProductBrand.Clear()
+        txtUnitWeight.Clear()
+        txtUnitPrice.Clear()
+        txtTotalBox.Clear()
+        txtTotalWeightPurchase.Clear()
+        txtTotal.Clear()
+        txtProductName.ReadOnly = False  ' allow searching again
+        txtProductName.Focus()           ' focus back for faster cashier entry
     End Sub
+
 
 End Class

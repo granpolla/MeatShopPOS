@@ -46,7 +46,7 @@ Partial Class frmCashierDashboard
         Me.Label2 = New System.Windows.Forms.Label()
         Me.txtCustomerAddress = New System.Windows.Forms.TextBox()
         Me.pnl2 = New System.Windows.Forms.Panel()
-        Me.DataGridView3 = New System.Windows.Forms.DataGridView()
+        Me.dgvOrderItemPreview = New System.Windows.Forms.DataGridView()
         Me.Panel2.SuspendLayout()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -56,7 +56,7 @@ Partial Class frmCashierDashboard
         CType(Me.dgvCustomer, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.pnlTransactionHeader.SuspendLayout()
         Me.pnl2.SuspendLayout()
-        CType(Me.DataGridView3, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.dgvOrderItemPreview, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Panel2
@@ -281,22 +281,22 @@ Partial Class frmCashierDashboard
         '
         'pnl2
         '
-        Me.pnl2.Controls.Add(Me.DataGridView3)
+        Me.pnl2.Controls.Add(Me.dgvOrderItemPreview)
         Me.pnl2.Dock = System.Windows.Forms.DockStyle.Right
         Me.pnl2.Location = New System.Drawing.Point(1011, 61)
         Me.pnl2.Name = "pnl2"
         Me.pnl2.Size = New System.Drawing.Size(526, 770)
         Me.pnl2.TabIndex = 10
         '
-        'DataGridView3
+        'dgvOrderItemPreview
         '
-        Me.DataGridView3.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridView3.Location = New System.Drawing.Point(3, 6)
-        Me.DataGridView3.Name = "DataGridView3"
-        Me.DataGridView3.RowHeadersWidth = 51
-        Me.DataGridView3.RowTemplate.Height = 24
-        Me.DataGridView3.Size = New System.Drawing.Size(511, 334)
-        Me.DataGridView3.TabIndex = 16
+        Me.dgvOrderItemPreview.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvOrderItemPreview.Location = New System.Drawing.Point(3, 6)
+        Me.dgvOrderItemPreview.Name = "dgvOrderItemPreview"
+        Me.dgvOrderItemPreview.RowHeadersWidth = 51
+        Me.dgvOrderItemPreview.RowTemplate.Height = 24
+        Me.dgvOrderItemPreview.Size = New System.Drawing.Size(511, 334)
+        Me.dgvOrderItemPreview.TabIndex = 16
         '
         'frmCashierDashboard
         '
@@ -322,7 +322,7 @@ Partial Class frmCashierDashboard
         Me.pnlTransactionHeader.ResumeLayout(False)
         Me.pnlTransactionHeader.PerformLayout()
         Me.pnl2.ResumeLayout(False)
-        CType(Me.DataGridView3, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.dgvOrderItemPreview, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -345,7 +345,7 @@ Partial Class frmCashierDashboard
     Friend WithEvents dgvCustomer As DataGridView
     Friend WithEvents btnRefresh As Button
     Friend WithEvents dgvCustomerBalancePreview As DataGridView
-    Friend WithEvents DataGridView3 As DataGridView
+    Friend WithEvents dgvOrderItemPreview As DataGridView
     Friend WithEvents btnClear As Button
     Friend WithEvents dgvProductsPreview As DataGridView
     Friend WithEvents pnlInputOrderItem As Panel

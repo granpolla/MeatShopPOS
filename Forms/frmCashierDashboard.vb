@@ -15,6 +15,46 @@ Public Class frmCashierDashboard
         Return StrConv(cleaned, VbStrConv.ProperCase)
     End Function
 
+    ' ✅ Add order item row to dgvOrderItemPreview
+    Public Sub AddOrderItem(productName As String, brand As String, unitWeight As Decimal, unitPrice As Decimal,
+                        totalBox As Decimal, totalWeight As Decimal, total As Decimal)
+
+        ' Create DataTable if dgvOrderItemPreview is empty
+        If dgvOrderItemPreview.DataSource Is Nothing Then
+            Dim dt As New DataTable()
+            dt.Columns.Add("Product Name", GetType(String))
+            dt.Columns.Add("Brand", GetType(String))
+            dt.Columns.Add("Unit Weight", GetType(Decimal))
+            dt.Columns.Add("Unit Price", GetType(Decimal))
+            dt.Columns.Add("Total Box", GetType(Decimal))
+            dt.Columns.Add("Total Weight", GetType(Decimal))
+            dt.Columns.Add("Total", GetType(Decimal))
+            dgvOrderItemPreview.DataSource = dt
+        End If
+
+        ' Cast DataSource back to DataTable
+        Dim orderTable As DataTable = CType(dgvOrderItemPreview.DataSource, DataTable)
+
+        ' Add the new row
+        orderTable.Rows.Add(productName, brand, unitWeight, unitPrice, totalBox, totalWeight, total)
+
+        ' Optional formatting
+        With dgvOrderItemPreview
+            .AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+            .SelectionMode = DataGridViewSelectionMode.FullRowSelect
+            .MultiSelect = False
+            .ReadOnly = True
+
+            ' Format numeric columns
+            .Columns("Unit Price").DefaultCellStyle.Format = "N2"
+            .Columns("Unit Weight").DefaultCellStyle.Format = "N2"
+            .Columns("Total Box").DefaultCellStyle.Format = "N2"
+            .Columns("Total Weight").DefaultCellStyle.Format = "N2"
+            .Columns("Total").DefaultCellStyle.Format = "N2"
+        End With
+    End Sub
+
+
 
 
 
