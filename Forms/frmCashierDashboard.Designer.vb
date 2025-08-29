@@ -44,7 +44,7 @@ Partial Class frmCashierDashboard
         Me.btnSearch = New System.Windows.Forms.Button()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.txtCustomerAddress = New System.Windows.Forms.TextBox()
-        Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.pnlCashierPaymentInput = New System.Windows.Forms.Panel()
         Me.txtCustomerBalanceTotal = New System.Windows.Forms.TextBox()
         Me.txtGrandTotal = New System.Windows.Forms.TextBox()
         Me.Label4 = New System.Windows.Forms.Label()
@@ -149,11 +149,11 @@ Partial Class frmCashierDashboard
         'dgvCustomerBalancePreview
         '
         Me.dgvCustomerBalancePreview.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvCustomerBalancePreview.Location = New System.Drawing.Point(478, 321)
+        Me.dgvCustomerBalancePreview.Location = New System.Drawing.Point(478, 275)
         Me.dgvCustomerBalancePreview.Name = "dgvCustomerBalancePreview"
         Me.dgvCustomerBalancePreview.RowHeadersWidth = 51
         Me.dgvCustomerBalancePreview.RowTemplate.Height = 24
-        Me.dgvCustomerBalancePreview.Size = New System.Drawing.Size(638, 197)
+        Me.dgvCustomerBalancePreview.Size = New System.Drawing.Size(638, 243)
         Me.dgvCustomerBalancePreview.TabIndex = 14
         '
         'dgvProductsPreview
@@ -183,7 +183,7 @@ Partial Class frmCashierDashboard
         Me.dgvOrderItemPreview.Name = "dgvOrderItemPreview"
         Me.dgvOrderItemPreview.RowHeadersWidth = 51
         Me.dgvOrderItemPreview.RowTemplate.Height = 24
-        Me.dgvOrderItemPreview.Size = New System.Drawing.Size(1041, 248)
+        Me.dgvOrderItemPreview.Size = New System.Drawing.Size(1041, 202)
         Me.dgvOrderItemPreview.TabIndex = 16
         '
         'pnlTransactionHeader
@@ -268,23 +268,23 @@ Partial Class frmCashierDashboard
         Me.txtCustomerAddress.Size = New System.Drawing.Size(316, 22)
         Me.txtCustomerAddress.TabIndex = 10
         '
-        'Panel1
+        'pnlCashierPaymentInput
         '
-        Me.Panel1.Location = New System.Drawing.Point(1122, 524)
-        Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(400, 295)
-        Me.Panel1.TabIndex = 17
+        Me.pnlCashierPaymentInput.Location = New System.Drawing.Point(1122, 394)
+        Me.pnlCashierPaymentInput.Name = "pnlCashierPaymentInput"
+        Me.pnlCashierPaymentInput.Size = New System.Drawing.Size(400, 425)
+        Me.pnlCashierPaymentInput.TabIndex = 17
         '
         'txtCustomerBalanceTotal
         '
-        Me.txtCustomerBalanceTotal.Location = New System.Drawing.Point(1251, 408)
+        Me.txtCustomerBalanceTotal.Location = New System.Drawing.Point(1246, 321)
         Me.txtCustomerBalanceTotal.Name = "txtCustomerBalanceTotal"
         Me.txtCustomerBalanceTotal.Size = New System.Drawing.Size(187, 22)
         Me.txtCustomerBalanceTotal.TabIndex = 18
         '
         'txtGrandTotal
         '
-        Me.txtGrandTotal.Location = New System.Drawing.Point(1251, 436)
+        Me.txtGrandTotal.Location = New System.Drawing.Point(1246, 352)
         Me.txtGrandTotal.Name = "txtGrandTotal"
         Me.txtGrandTotal.Size = New System.Drawing.Size(187, 22)
         Me.txtGrandTotal.TabIndex = 19
@@ -292,7 +292,7 @@ Partial Class frmCashierDashboard
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(1185, 411)
+        Me.Label4.Location = New System.Drawing.Point(1180, 324)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(60, 16)
         Me.Label4.TabIndex = 20
@@ -301,7 +301,7 @@ Partial Class frmCashierDashboard
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(1156, 439)
+        Me.Label5.Location = New System.Drawing.Point(1151, 355)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(89, 16)
         Me.Label5.TabIndex = 21
@@ -309,7 +309,7 @@ Partial Class frmCashierDashboard
         '
         'btnRemoveItem
         '
-        Me.btnRemoveItem.Location = New System.Drawing.Point(1387, 321)
+        Me.btnRemoveItem.Location = New System.Drawing.Point(1387, 275)
         Me.btnRemoveItem.Name = "btnRemoveItem"
         Me.btnRemoveItem.Size = New System.Drawing.Size(132, 23)
         Me.btnRemoveItem.TabIndex = 22
@@ -318,7 +318,7 @@ Partial Class frmCashierDashboard
         '
         'btnClearBalanceTxt
         '
-        Me.btnClearBalanceTxt.Location = New System.Drawing.Point(1444, 408)
+        Me.btnClearBalanceTxt.Location = New System.Drawing.Point(1444, 321)
         Me.btnClearBalanceTxt.Name = "btnClearBalanceTxt"
         Me.btnClearBalanceTxt.Size = New System.Drawing.Size(75, 23)
         Me.btnClearBalanceTxt.TabIndex = 23
@@ -336,7 +336,7 @@ Partial Class frmCashierDashboard
         Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.txtGrandTotal)
         Me.Controls.Add(Me.txtCustomerBalanceTotal)
-        Me.Controls.Add(Me.Panel1)
+        Me.Controls.Add(Me.pnlCashierPaymentInput)
         Me.Controls.Add(Me.pnlTransactionHeader)
         Me.Controls.Add(Me.pnlInputOrderItem)
         Me.Controls.Add(Me.dgvOrderItemPreview)
@@ -385,7 +385,7 @@ Partial Class frmCashierDashboard
     Friend WithEvents btnSearch As Button
     Friend WithEvents Label2 As Label
     Friend WithEvents txtCustomerAddress As TextBox
-    Friend WithEvents Panel1 As Panel
+    Friend WithEvents pnlCashierPaymentInput As Panel
     Friend WithEvents txtCustomerBalanceTotal As TextBox
     Friend WithEvents txtGrandTotal As TextBox
     Friend WithEvents Label4 As Label

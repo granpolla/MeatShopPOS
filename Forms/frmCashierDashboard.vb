@@ -7,6 +7,7 @@ Public Class frmCashierDashboard
         LoadCustomers()
         LoadProducts()
         LoadInputOrderItemForm()
+        LoadPaymentInput()
     End Sub
 
     ' ✅ Normalize name (remove extra spaces + proper case)
@@ -229,6 +230,18 @@ Public Class frmCashierDashboard
         inputForm.Dock = DockStyle.Fill
 
         pnlInputOrderItem.Controls.Add(inputForm)
+        inputForm.Show()
+    End Sub
+
+    Private Sub LoadPaymentInput()
+        pnlCashierPaymentInput.Controls.Clear()
+
+        Dim inputForm As New frmCashierPaymentInput()
+        inputForm.TopLevel = False
+        inputForm.FormBorderStyle = FormBorderStyle.None
+        inputForm.Dock = DockStyle.Fill
+
+        pnlCashierPaymentInput.Controls.Add(inputForm)
         inputForm.Show()
     End Sub
 

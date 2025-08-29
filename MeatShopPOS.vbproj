@@ -201,6 +201,12 @@
     <Compile Include="Forms\Cashier\frmCashierInputOrderItem.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\Cashier\frmCashierPaymentInput.Designer.vb">
+      <DependentUpon>frmCashierPaymentInput.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Cashier\frmCashierPaymentInput.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\frmAdminDashboard.Designer.vb">
       <DependentUpon>frmAdminDashboard.vb</DependentUpon>
     </Compile>
@@ -284,6 +290,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Cashier\frmCashierInputOrderItem.resx">
       <DependentUpon>frmCashierInputOrderItem.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Cashier\frmCashierPaymentInput.resx">
+      <DependentUpon>frmCashierPaymentInput.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmAdminDashboard.resx">
       <DependentUpon>frmAdminDashboard.vb</DependentUpon>
