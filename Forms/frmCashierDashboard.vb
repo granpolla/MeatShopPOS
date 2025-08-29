@@ -110,13 +110,15 @@ Public Class frmCashierDashboard
 
     ' ✅ Filter products (prefix search)
     Public Sub LoadProductsPreview(searchText As String)
-        Dim query As String = "SELECT id AS product_id, 
-                                  product_name, 
-                                  brand AS product_brand, 
-                                  unit_weight_kg AS unit_weight, 
-                                  unit_price_php AS unit_price
-                           FROM product
-                           WHERE product_name LIKE @searchText"
+        Dim query As String = "
+        SELECT id AS 'ProductID',
+               product_name AS 'Product Name',
+               brand AS 'Brand',
+               unit_weight_kg AS 'Unit Weight',
+               unit_price_php AS 'Unit Price'
+        FROM product
+        WHERE product_name LIKE @searchText
+        ORDER BY product_name ASC"
 
         Using conn As New MySqlConnection(My.Settings.DBConnection)
             Using cmd As New MySqlCommand(query, conn)
@@ -125,11 +127,10 @@ Public Class frmCashierDashboard
                 Dim dt As New DataTable()
                 adapter.Fill(dt)
                 dgvProductsPreview.DataSource = dt
+                FormatProductsGrid() ' ✅ keep formatting consistent
             End Using
         End Using
     End Sub
-
-
 
     Private Sub LoadInputOrderItemForm()
         pnlInputOrderItem.Controls.Clear()
@@ -170,20 +171,21 @@ Public Class frmCashierDashboard
             .MultiSelect = False
             .ReadOnly = True
 
-            ' Hide the ProductID column (used later for lookups)
+            ' Hide ProductID
             If .Columns.Contains("ProductID") Then
                 .Columns("ProductID").Visible = False
             End If
 
-            ' Optional: Format numeric columns
-            If .Columns.Contains("Unit Price (₱)") Then
-                .Columns("Unit Price (₱)").DefaultCellStyle.Format = "N2"
+            ' Format numeric columns
+            If .Columns.Contains("Unit Price") Then
+                .Columns("Unit Price").DefaultCellStyle.Format = "N2"
             End If
-            If .Columns.Contains("Unit Weight (kg)") Then
-                .Columns("Unit Weight (kg)").DefaultCellStyle.Format = "N2"
+            If .Columns.Contains("Unit Weight") Then
+                .Columns("Unit Weight").DefaultCellStyle.Format = "N2"
             End If
         End With
     End Sub
+
 
 
 
@@ -343,10 +345,10 @@ Public Class frmCashierDashboard
             Dim row As DataGridViewRow = dgvProductsPreview.Rows(e.RowIndex)
 
             ' Get product details
-            Dim productName As String = StrConv(row.Cells("product_name").Value.ToString().Trim(), VbStrConv.ProperCase)
-            Dim productBrand As String = StrConv(row.Cells("product_brand").Value.ToString().Trim(), VbStrConv.ProperCase)
-            Dim unitWeight As Decimal = Convert.ToDecimal(row.Cells("unit_weight").Value)
-            Dim unitPrice As Decimal = Convert.ToDecimal(row.Cells("unit_price").Value)
+            Dim productName As String = row.Cells("Product Name").Value.ToString()
+            Dim productBrand As String = row.Cells("Brand").Value.ToString()
+            Dim unitWeight As Decimal = Convert.ToDecimal(row.Cells("Unit Weight").Value)
+            Dim unitPrice As Decimal = Convert.ToDecimal(row.Cells("Unit Price").Value)
 
             ' Find frmCashierInputOrderItem inside pnlInputOrderItem
             For Each ctrl As Control In pnlInputOrderItem.Controls
