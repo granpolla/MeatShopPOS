@@ -401,6 +401,19 @@ Public Class frmCashierDashboard
         End If
     End Sub
 
+    ' ✅ Clear selected balances + reset totals
+    Private Sub btnClearBalanceTxt_Click(sender As Object, e As EventArgs) Handles btnClearBalanceTxt.Click
+        ' Clear selection
+        dgvCustomerBalancePreview.ClearSelection()
+        dgvCustomerBalancePreview.CurrentCell = Nothing
+
+        ' Reset text
+        txtCustomerBalanceTotal.Clear()
+
+        ' Recalculate grand total (only order items remain)
+        UpdateGrandTotal()
+    End Sub
+
 
 
 
@@ -436,26 +449,6 @@ Public Class frmCashierDashboard
             LoadCustomerBalance(customerID)
         End If
     End Sub
-
-
-    ' ✅ When clicking a row in dgvCustomerBalancePreview → show popup
-    Private Sub dgvCustomerBalancePreview_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvCustomerBalancePreview.CellClick
-        If e.RowIndex >= 0 Then
-            Dim row As DataGridViewRow = dgvCustomerBalancePreview.Rows(e.RowIndex)
-
-            Dim entryDate As String = row.Cells("Date").Value.ToString()
-            Dim description As String = row.Cells("Description").Value.ToString()
-            Dim balance As Decimal = Convert.ToDecimal(row.Cells("Balance").Value)
-
-            MessageBox.Show($"Date: {entryDate}" & vbCrLf &
-                        $"Description: {description}" & vbCrLf &
-                        $"Balance: ₱{balance:N2}",
-                        "Customer Balance Click",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Information)
-        End If
-    End Sub
-
 
     Private Sub dgvProductsPreview_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvProductsPreview.CellClick
         If e.RowIndex >= 0 Then
