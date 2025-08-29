@@ -40,7 +40,7 @@ Partial Class frmCashierInputOrderItem
         'Label7
         '
         Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(266, 223)
+        Me.Label7.Location = New System.Drawing.Point(41, 135)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(67, 16)
         Me.Label7.TabIndex = 25
@@ -48,37 +48,37 @@ Partial Class frmCashierInputOrderItem
         '
         'txtTotalBox
         '
-        Me.txtTotalBox.Location = New System.Drawing.Point(339, 220)
+        Me.txtTotalBox.Location = New System.Drawing.Point(114, 132)
         Me.txtTotalBox.Name = "txtTotalBox"
         Me.txtTotalBox.Size = New System.Drawing.Size(264, 22)
         Me.txtTotalBox.TabIndex = 24
         '
         'btnSearchProduct
         '
-        Me.btnSearchProduct.Location = New System.Drawing.Point(620, 108)
+        Me.btnSearchProduct.Location = New System.Drawing.Point(384, 19)
         Me.btnSearchProduct.Name = "btnSearchProduct"
         Me.btnSearchProduct.Size = New System.Drawing.Size(133, 23)
         Me.btnSearchProduct.TabIndex = 23
-        Me.btnSearchProduct.Text = "Search"
+        Me.btnSearchProduct.Text = "Search Product"
         Me.btnSearchProduct.UseVisualStyleBackColor = True
         '
         'txtProductName
         '
-        Me.txtProductName.Location = New System.Drawing.Point(339, 108)
+        Me.txtProductName.Location = New System.Drawing.Point(114, 20)
         Me.txtProductName.Name = "txtProductName"
         Me.txtProductName.Size = New System.Drawing.Size(264, 22)
         Me.txtProductName.TabIndex = 22
         '
         'txtUnitWeight
         '
-        Me.txtUnitWeight.Location = New System.Drawing.Point(339, 136)
+        Me.txtUnitWeight.Location = New System.Drawing.Point(114, 48)
         Me.txtUnitWeight.Name = "txtUnitWeight"
         Me.txtUnitWeight.Size = New System.Drawing.Size(264, 22)
         Me.txtUnitWeight.TabIndex = 21
         '
         'txtUnitPrice
         '
-        Me.txtUnitPrice.Location = New System.Drawing.Point(339, 164)
+        Me.txtUnitPrice.Location = New System.Drawing.Point(114, 76)
         Me.txtUnitPrice.Name = "txtUnitPrice"
         Me.txtUnitPrice.Size = New System.Drawing.Size(264, 22)
         Me.txtUnitPrice.TabIndex = 20
@@ -86,7 +86,7 @@ Partial Class frmCashierInputOrderItem
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(293, 195)
+        Me.Label6.Location = New System.Drawing.Point(67, 107)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(41, 16)
         Me.Label6.TabIndex = 19
@@ -95,7 +95,7 @@ Partial Class frmCashierInputOrderItem
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(267, 167)
+        Me.Label5.Location = New System.Drawing.Point(41, 78)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(67, 16)
         Me.Label5.TabIndex = 18
@@ -104,7 +104,7 @@ Partial Class frmCashierInputOrderItem
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(256, 139)
+        Me.Label4.Location = New System.Drawing.Point(30, 51)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(78, 16)
         Me.Label4.TabIndex = 17
@@ -113,7 +113,7 @@ Partial Class frmCashierInputOrderItem
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(238, 111)
+        Me.Label3.Location = New System.Drawing.Point(12, 23)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(96, 16)
         Me.Label3.TabIndex = 16
@@ -121,23 +121,23 @@ Partial Class frmCashierInputOrderItem
         '
         'txtTotal
         '
-        Me.txtTotal.Location = New System.Drawing.Point(339, 192)
+        Me.txtTotal.Location = New System.Drawing.Point(114, 104)
         Me.txtTotal.Name = "txtTotal"
         Me.txtTotal.Size = New System.Drawing.Size(264, 22)
         Me.txtTotal.TabIndex = 15
         '
         'btnRefreshProduct
         '
-        Me.btnRefreshProduct.Location = New System.Drawing.Point(620, 136)
+        Me.btnRefreshProduct.Location = New System.Drawing.Point(384, 48)
         Me.btnRefreshProduct.Name = "btnRefreshProduct"
         Me.btnRefreshProduct.Size = New System.Drawing.Size(133, 23)
         Me.btnRefreshProduct.TabIndex = 26
-        Me.btnRefreshProduct.Text = "Refresh"
+        Me.btnRefreshProduct.Text = "Refresh Products"
         Me.btnRefreshProduct.UseVisualStyleBackColor = True
         '
         'btnAddItem
         '
-        Me.btnAddItem.Location = New System.Drawing.Point(259, 272)
+        Me.btnAddItem.Location = New System.Drawing.Point(12, 254)
         Me.btnAddItem.Name = "btnAddItem"
         Me.btnAddItem.Size = New System.Drawing.Size(352, 29)
         Me.btnAddItem.TabIndex = 27
@@ -148,7 +148,7 @@ Partial Class frmCashierInputOrderItem
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(990, 350)
+        Me.ClientSize = New System.Drawing.Size(581, 295)
         Me.Controls.Add(Me.btnAddItem)
         Me.Controls.Add(Me.btnRefreshProduct)
         Me.Controls.Add(Me.Label7)

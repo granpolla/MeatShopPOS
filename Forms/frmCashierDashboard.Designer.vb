@@ -35,9 +35,11 @@ Partial Class frmCashierDashboard
         Me.pnl1 = New System.Windows.Forms.Panel()
         Me.pnlInputOrderItem = New System.Windows.Forms.Panel()
         Me.dgvCustomerBalancePreview = New System.Windows.Forms.DataGridView()
-        Me.dgvProducts = New System.Windows.Forms.DataGridView()
+        Me.dgvProductsPreview = New System.Windows.Forms.DataGridView()
         Me.dgvCustomer = New System.Windows.Forms.DataGridView()
         Me.pnlTransactionHeader = New System.Windows.Forms.Panel()
+        Me.txtLastName = New System.Windows.Forms.TextBox()
+        Me.Label3 = New System.Windows.Forms.Label()
         Me.btnClear = New System.Windows.Forms.Button()
         Me.btnRefresh = New System.Windows.Forms.Button()
         Me.btnSearch = New System.Windows.Forms.Button()
@@ -45,14 +47,12 @@ Partial Class frmCashierDashboard
         Me.txtCustomerAddress = New System.Windows.Forms.TextBox()
         Me.pnl2 = New System.Windows.Forms.Panel()
         Me.DataGridView3 = New System.Windows.Forms.DataGridView()
-        Me.Label3 = New System.Windows.Forms.Label()
-        Me.txtLastName = New System.Windows.Forms.TextBox()
         Me.Panel2.SuspendLayout()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.pnl1.SuspendLayout()
         CType(Me.dgvCustomerBalancePreview, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.dgvProducts, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.dgvProductsPreview, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgvCustomer, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.pnlTransactionHeader.SuspendLayout()
         Me.pnl2.SuspendLayout()
@@ -140,7 +140,7 @@ Partial Class frmCashierDashboard
         '
         Me.txtFirstName.Location = New System.Drawing.Point(129, 14)
         Me.txtFirstName.Name = "txtFirstName"
-        Me.txtFirstName.Size = New System.Drawing.Size(220, 22)
+        Me.txtFirstName.Size = New System.Drawing.Size(249, 22)
         Me.txtFirstName.TabIndex = 7
         '
         'Label1
@@ -156,21 +156,21 @@ Partial Class frmCashierDashboard
         '
         Me.pnl1.Controls.Add(Me.pnlInputOrderItem)
         Me.pnl1.Controls.Add(Me.dgvCustomerBalancePreview)
-        Me.pnl1.Controls.Add(Me.dgvProducts)
+        Me.pnl1.Controls.Add(Me.dgvProductsPreview)
         Me.pnl1.Controls.Add(Me.dgvCustomer)
         Me.pnl1.Controls.Add(Me.pnlTransactionHeader)
         Me.pnl1.Dock = System.Windows.Forms.DockStyle.Left
         Me.pnl1.Location = New System.Drawing.Point(0, 61)
         Me.pnl1.Name = "pnl1"
-        Me.pnl1.Size = New System.Drawing.Size(1005, 742)
+        Me.pnl1.Size = New System.Drawing.Size(1005, 770)
         Me.pnl1.TabIndex = 9
         '
         'pnlInputOrderItem
         '
         Me.pnlInputOrderItem.BackColor = System.Drawing.SystemColors.GradientActiveCaption
-        Me.pnlInputOrderItem.Location = New System.Drawing.Point(12, 538)
+        Me.pnlInputOrderItem.Location = New System.Drawing.Point(12, 463)
         Me.pnlInputOrderItem.Name = "pnlInputOrderItem"
-        Me.pnlInputOrderItem.Size = New System.Drawing.Size(393, 192)
+        Me.pnlInputOrderItem.Size = New System.Drawing.Size(460, 295)
         Me.pnlInputOrderItem.TabIndex = 15
         '
         'dgvCustomerBalancePreview
@@ -180,18 +180,18 @@ Partial Class frmCashierDashboard
         Me.dgvCustomerBalancePreview.Name = "dgvCustomerBalancePreview"
         Me.dgvCustomerBalancePreview.RowHeadersWidth = 51
         Me.dgvCustomerBalancePreview.RowTemplate.Height = 24
-        Me.dgvCustomerBalancePreview.Size = New System.Drawing.Size(591, 166)
+        Me.dgvCustomerBalancePreview.Size = New System.Drawing.Size(591, 248)
         Me.dgvCustomerBalancePreview.TabIndex = 14
         '
-        'dgvProducts
+        'dgvProductsPreview
         '
-        Me.dgvProducts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvProducts.Location = New System.Drawing.Point(411, 178)
-        Me.dgvProducts.Name = "dgvProducts"
-        Me.dgvProducts.RowHeadersWidth = 51
-        Me.dgvProducts.RowTemplate.Height = 24
-        Me.dgvProducts.Size = New System.Drawing.Size(591, 236)
-        Me.dgvProducts.TabIndex = 0
+        Me.dgvProductsPreview.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvProductsPreview.Location = New System.Drawing.Point(478, 260)
+        Me.dgvProductsPreview.Name = "dgvProductsPreview"
+        Me.dgvProductsPreview.RowHeadersWidth = 51
+        Me.dgvProductsPreview.RowTemplate.Height = 24
+        Me.dgvProductsPreview.Size = New System.Drawing.Size(524, 498)
+        Me.dgvProductsPreview.TabIndex = 0
         '
         'dgvCustomer
         '
@@ -217,14 +217,30 @@ Partial Class frmCashierDashboard
         Me.pnlTransactionHeader.Controls.Add(Me.txtCustomerAddress)
         Me.pnlTransactionHeader.Location = New System.Drawing.Point(12, 260)
         Me.pnlTransactionHeader.Name = "pnlTransactionHeader"
-        Me.pnlTransactionHeader.Size = New System.Drawing.Size(393, 216)
+        Me.pnlTransactionHeader.Size = New System.Drawing.Size(460, 197)
         Me.pnlTransactionHeader.TabIndex = 12
+        '
+        'txtLastName
+        '
+        Me.txtLastName.Location = New System.Drawing.Point(129, 42)
+        Me.txtLastName.Name = "txtLastName"
+        Me.txtLastName.Size = New System.Drawing.Size(249, 22)
+        Me.txtLastName.TabIndex = 16
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(45, 45)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(75, 16)
+        Me.Label3.TabIndex = 15
+        Me.Label3.Text = "Last Name:"
         '
         'btnClear
         '
         Me.btnClear.Location = New System.Drawing.Point(201, 160)
         Me.btnClear.Name = "btnClear"
-        Me.btnClear.Size = New System.Drawing.Size(148, 23)
+        Me.btnClear.Size = New System.Drawing.Size(177, 23)
         Me.btnClear.TabIndex = 14
         Me.btnClear.Text = "Clear"
         Me.btnClear.UseVisualStyleBackColor = True
@@ -235,16 +251,16 @@ Partial Class frmCashierDashboard
         Me.btnRefresh.Name = "btnRefresh"
         Me.btnRefresh.Size = New System.Drawing.Size(176, 23)
         Me.btnRefresh.TabIndex = 13
-        Me.btnRefresh.Text = "Refresh"
+        Me.btnRefresh.Text = "Refresh Customer"
         Me.btnRefresh.UseVisualStyleBackColor = True
         '
         'btnSearch
         '
         Me.btnSearch.Location = New System.Drawing.Point(19, 131)
         Me.btnSearch.Name = "btnSearch"
-        Me.btnSearch.Size = New System.Drawing.Size(330, 23)
+        Me.btnSearch.Size = New System.Drawing.Size(359, 23)
         Me.btnSearch.TabIndex = 11
-        Me.btnSearch.Text = "Search"
+        Me.btnSearch.Text = "Search Customer"
         Me.btnSearch.UseVisualStyleBackColor = True
         '
         'Label2
@@ -260,7 +276,7 @@ Partial Class frmCashierDashboard
         '
         Me.txtCustomerAddress.Location = New System.Drawing.Point(129, 70)
         Me.txtCustomerAddress.Name = "txtCustomerAddress"
-        Me.txtCustomerAddress.Size = New System.Drawing.Size(220, 22)
+        Me.txtCustomerAddress.Size = New System.Drawing.Size(249, 22)
         Me.txtCustomerAddress.TabIndex = 10
         '
         'pnl2
@@ -269,7 +285,7 @@ Partial Class frmCashierDashboard
         Me.pnl2.Dock = System.Windows.Forms.DockStyle.Right
         Me.pnl2.Location = New System.Drawing.Point(1011, 61)
         Me.pnl2.Name = "pnl2"
-        Me.pnl2.Size = New System.Drawing.Size(526, 742)
+        Me.pnl2.Size = New System.Drawing.Size(526, 770)
         Me.pnl2.TabIndex = 10
         '
         'DataGridView3
@@ -282,27 +298,11 @@ Partial Class frmCashierDashboard
         Me.DataGridView3.Size = New System.Drawing.Size(511, 334)
         Me.DataGridView3.TabIndex = 16
         '
-        'Label3
-        '
-        Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(45, 45)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(75, 16)
-        Me.Label3.TabIndex = 15
-        Me.Label3.Text = "Last Name:"
-        '
-        'txtLastName
-        '
-        Me.txtLastName.Location = New System.Drawing.Point(129, 42)
-        Me.txtLastName.Name = "txtLastName"
-        Me.txtLastName.Size = New System.Drawing.Size(220, 22)
-        Me.txtLastName.TabIndex = 16
-        '
         'frmCashierDashboard
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1537, 803)
+        Me.ClientSize = New System.Drawing.Size(1537, 831)
         Me.Controls.Add(Me.pnl2)
         Me.Controls.Add(Me.pnl1)
         Me.Controls.Add(Me.Panel2)
@@ -317,7 +317,7 @@ Partial Class frmCashierDashboard
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.pnl1.ResumeLayout(False)
         CType(Me.dgvCustomerBalancePreview, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.dgvProducts, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.dgvProductsPreview, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.dgvCustomer, System.ComponentModel.ISupportInitialize).EndInit()
         Me.pnlTransactionHeader.ResumeLayout(False)
         Me.pnlTransactionHeader.PerformLayout()
@@ -347,7 +347,7 @@ Partial Class frmCashierDashboard
     Friend WithEvents dgvCustomerBalancePreview As DataGridView
     Friend WithEvents DataGridView3 As DataGridView
     Friend WithEvents btnClear As Button
-    Friend WithEvents dgvProducts As DataGridView
+    Friend WithEvents dgvProductsPreview As DataGridView
     Friend WithEvents pnlInputOrderItem As Panel
     Friend WithEvents txtLastName As TextBox
     Friend WithEvents Label3 As Label

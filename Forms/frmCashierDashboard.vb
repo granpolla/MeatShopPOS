@@ -4,12 +4,9 @@ Imports System.Text.RegularExpressions
 Public Class frmCashierDashboard
 
     Private Sub frmCashierDashboard_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        LoadCustomers() ' optional: preload all customers on load
+        LoadCustomers()
+        LoadProducts()
     End Sub
-
-
-
-
 
     ' ✅ Normalize name (remove extra spaces + proper case)
     Private Function NormalizeName(input As String) As String
@@ -85,6 +82,31 @@ Public Class frmCashierDashboard
         End Try
     End Sub
 
+    ' ✅ Load all products into dgvProductsPreview
+    Private Sub LoadProducts()
+        Dim query As String = "
+        SELECT id AS 'ProductID',
+               product_name AS 'Product Name',
+               brand AS 'Brand',
+               unit_weight_kg AS 'Unit Weight (kg)',
+               unit_price_php AS 'Unit Price (₱)'
+        FROM product
+        ORDER BY product_name ASC"
+        Try
+            Using conn As New MySqlConnection(My.Settings.DBConnection)
+                Using cmd As New MySqlCommand(query, conn)
+                    Dim adapter As New MySqlDataAdapter(cmd)
+                    Dim dt As New DataTable()
+                    adapter.Fill(dt)
+                    dgvProductsPreview.DataSource = dt
+                    FormatProductsGrid()
+                End Using
+            End Using
+        Catch ex As Exception
+            MessageBox.Show("Error loading products: " & ex.Message)
+        End Try
+    End Sub
+
 
 
 
@@ -99,6 +121,29 @@ Public Class frmCashierDashboard
 
             If .Columns.Contains("CustomerID") Then
                 .Columns("CustomerID").Visible = False
+            End If
+        End With
+    End Sub
+
+    ' ✅ Format dgvProductsPreview
+    Private Sub FormatProductsGrid()
+        With dgvProductsPreview
+            .AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+            .SelectionMode = DataGridViewSelectionMode.FullRowSelect
+            .MultiSelect = False
+            .ReadOnly = True
+
+            ' Hide the ProductID column (used later for lookups)
+            If .Columns.Contains("ProductID") Then
+                .Columns("ProductID").Visible = False
+            End If
+
+            ' Optional: Format numeric columns
+            If .Columns.Contains("Unit Price (₱)") Then
+                .Columns("Unit Price (₱)").DefaultCellStyle.Format = "N2"
+            End If
+            If .Columns.Contains("Unit Weight (kg)") Then
+                .Columns("Unit Weight (kg)").DefaultCellStyle.Format = "N2"
             End If
         End With
     End Sub
@@ -237,6 +282,36 @@ Public Class frmCashierDashboard
         End If
     End Sub
 
+    ' ✅ When clicking a row in dgvCustomerBalancePreview → show popup
+    Private Sub dgvCustomerBalancePreview_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvCustomerBalancePreview.CellClick
+        If e.RowIndex >= 0 Then
+            Dim row As DataGridViewRow = dgvCustomerBalancePreview.Rows(e.RowIndex)
 
+            Dim entryDate As String = row.Cells("Date").Value.ToString()
+            Dim description As String = row.Cells("Description").Value.ToString()
+            Dim balance As Decimal = Convert.ToDecimal(row.Cells("Balance").Value)
+
+            MessageBox.Show($"Date: {entryDate}" & vbCrLf &
+                        $"Description: {description}" & vbCrLf &
+                        $"Balance: ₱{balance:N2}",
+                        "Customer Balance Click",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information)
+        End If
+    End Sub
+
+
+    Private Sub dgvProductsPreview_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvProductsPreview.CellClick
+        If e.RowIndex >= 0 Then
+            Dim row As DataGridViewRow = dgvProductsPreview.Rows(e.RowIndex)
+
+            ' Example: get values
+            Dim productID As Integer = Convert.ToInt32(row.Cells("ProductID").Value)
+            Dim productName As String = row.Cells("Product Name").Value.ToString()
+            Dim unitPrice As Decimal = Convert.ToDecimal(row.Cells("Unit Price (₱)").Value)
+
+            MessageBox.Show($"Selected: {productName} (₱{unitPrice})", "Product Click")
+        End If
+    End Sub
 
 End Class
