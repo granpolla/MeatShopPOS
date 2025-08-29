@@ -6,6 +6,7 @@ Public Class frmCashierDashboard
     Private Sub frmCashierDashboard_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         LoadCustomers()
         LoadProducts()
+        LoadInputOrderItemForm()
     End Sub
 
     ' ✅ Normalize name (remove extra spaces + proper case)
@@ -106,6 +107,42 @@ Public Class frmCashierDashboard
             MessageBox.Show("Error loading products: " & ex.Message)
         End Try
     End Sub
+
+    ' ✅ Filter products (prefix search)
+    Public Sub LoadProductsPreview(searchText As String)
+        Dim query As String = "SELECT id AS product_id, 
+                                  product_name, 
+                                  brand AS product_brand, 
+                                  unit_weight_kg AS unit_weight, 
+                                  unit_price_php AS unit_price
+                           FROM product
+                           WHERE product_name LIKE @searchText"
+
+        Using conn As New MySqlConnection(My.Settings.DBConnection)
+            Using cmd As New MySqlCommand(query, conn)
+                cmd.Parameters.AddWithValue("@searchText", searchText & "%")
+                Dim adapter As New MySqlDataAdapter(cmd)
+                Dim dt As New DataTable()
+                adapter.Fill(dt)
+                dgvProductsPreview.DataSource = dt
+            End Using
+        End Using
+    End Sub
+
+
+
+    Private Sub LoadInputOrderItemForm()
+        pnlInputOrderItem.Controls.Clear()
+
+        Dim inputForm As New frmCashierInputOrderItem()
+        inputForm.TopLevel = False
+        inputForm.FormBorderStyle = FormBorderStyle.None
+        inputForm.Dock = DockStyle.Fill
+
+        pnlInputOrderItem.Controls.Add(inputForm)
+        inputForm.Show()
+    End Sub
+
 
 
 
@@ -305,13 +342,23 @@ Public Class frmCashierDashboard
         If e.RowIndex >= 0 Then
             Dim row As DataGridViewRow = dgvProductsPreview.Rows(e.RowIndex)
 
-            ' Example: get values
-            Dim productID As Integer = Convert.ToInt32(row.Cells("ProductID").Value)
-            Dim productName As String = row.Cells("Product Name").Value.ToString()
-            Dim unitPrice As Decimal = Convert.ToDecimal(row.Cells("Unit Price (₱)").Value)
+            ' Get product details
+            Dim productName As String = StrConv(row.Cells("product_name").Value.ToString().Trim(), VbStrConv.ProperCase)
+            Dim productBrand As String = StrConv(row.Cells("product_brand").Value.ToString().Trim(), VbStrConv.ProperCase)
+            Dim unitWeight As Decimal = Convert.ToDecimal(row.Cells("unit_weight").Value)
+            Dim unitPrice As Decimal = Convert.ToDecimal(row.Cells("unit_price").Value)
 
-            MessageBox.Show($"Selected: {productName} (₱{unitPrice})", "Product Click")
+            ' Find frmCashierInputOrderItem inside pnlInputOrderItem
+            For Each ctrl As Control In pnlInputOrderItem.Controls
+                If TypeOf ctrl Is frmCashierInputOrderItem Then
+                    Dim inputForm As frmCashierInputOrderItem = CType(ctrl, frmCashierInputOrderItem)
+                    inputForm.FillProductDetails(productName, productBrand, unitWeight, unitPrice)
+                    Exit For
+                End If
+            Next
         End If
     End Sub
+
+
 
 End Class
