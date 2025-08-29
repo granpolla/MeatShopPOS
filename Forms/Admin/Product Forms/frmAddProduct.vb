@@ -56,14 +56,24 @@ Public Class frmAddProduct
             Using conn As New MySqlConnection(My.Settings.DBConnection)
                 conn.Open()
 
-                ' 🔹 Check duplicate (same Product Name + Brand)
-                Dim checkQuery As String = "SELECT COUNT(*) FROM PRODUCT WHERE product_name=@name AND brand=@brand"
+                ' 🔹 Check duplicate (Product Name + Brand + Weight + Price)
+                Dim checkQuery As String = "SELECT COUNT(*) 
+                            FROM PRODUCT 
+                            WHERE product_name=@name 
+                              AND brand=@brand 
+                              AND unit_weight_kg=@weight 
+                              AND unit_price_php=@price"
+
                 Using checkCmd As New MySqlCommand(checkQuery, conn)
                     checkCmd.Parameters.AddWithValue("@name", productName)
                     checkCmd.Parameters.AddWithValue("@brand", brand)
+                    checkCmd.Parameters.AddWithValue("@weight", weightValue)
+                    checkCmd.Parameters.AddWithValue("@price", priceValue)
+
                     Dim exists As Integer = Convert.ToInt32(checkCmd.ExecuteScalar())
                     If exists > 0 Then
-                        MessageBox.Show("This product already exists.", "Duplicate Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        MessageBox.Show("This product already exists with the same weight and price.",
+                        "Duplicate Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                         Return
                     End If
                 End Using
