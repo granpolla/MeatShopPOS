@@ -89,8 +89,8 @@ Public Class frmCashierDashboard
         SELECT id AS 'ProductID',
                product_name AS 'Product Name',
                brand AS 'Brand',
-               unit_weight_kg AS 'Unit Weight (kg)',
-               unit_price_php AS 'Unit Price (₱)'
+               unit_weight_kg AS 'Unit Weight',
+               unit_price_php AS 'Unit Price'
         FROM product
         ORDER BY product_name ASC"
         Try

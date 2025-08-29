@@ -8,6 +8,8 @@
         txtTotal.ReadOnly = True
     End Sub
 
+
+
     ' ✅ Called by Dashboard when product row is clicked
     Public Sub FillProductDetails(pName As String, pBrand As String, weight As Decimal, price As Decimal)
         txtProductName.Text = pName
@@ -15,7 +17,15 @@
         txtUnitWeight.Text = weight.ToString()
         txtUnitPrice.Text = price.ToString("N2")
         txtTotal.Text = price.ToString("N2") ' default for 1 weight
+
+        ' ✅ Lock ProductName after product is chosen
+        txtProductName.ReadOnly = True
     End Sub
+
+
+
+
+
 
     ' ✅ Auto-calc total when weight changes
     Private Sub txtTotalWeightPurchase_TextChanged(sender As Object, e As EventArgs) Handles txtTotalWeightPurchase.TextChanged
@@ -33,6 +43,11 @@
         End If
     End Sub
 
+
+
+
+
+
     ' ✅ Allow only positive numbers (no 0, no letters) in numeric inputs
     Private Sub txtTotalBox_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtTotalBox.KeyPress
         ValidateNumericInput(e, txtTotalBox)
@@ -41,6 +56,11 @@
     Private Sub txtTotalWeightPurchase_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtTotalWeightPurchase.KeyPress
         ValidateNumericInput(e, txtTotalWeightPurchase)
     End Sub
+
+
+
+
+
 
     Private Sub ValidateNumericInput(e As KeyPressEventArgs, txt As TextBox)
         ' Allow control keys (e.g., Backspace)
@@ -58,6 +78,11 @@
             Return
         End If
     End Sub
+
+
+
+
+
 
     ' ✅ btnSearchProduct → call frmCashierDashboard
     Private Sub btnSearchProduct_Click(sender As Object, e As EventArgs) Handles btnSearchProduct.Click
@@ -83,6 +108,9 @@
         txtTotalBox.Clear()
         txtTotalWeightPurchase.Clear()
 
+        ' ✅ Unlock ProductName again so cashier can search another product
+        txtProductName.ReadOnly = False
+
         ' Refresh DataGridView in frmCashierDashboard
         Dim parentForm As frmCashierDashboard = CType(Me.ParentForm, frmCashierDashboard)
         parentForm.LoadProductsPreview("") ' empty string = load all products
@@ -90,7 +118,21 @@
 
     ' ✅ btnAddItem → show values for now
     Private Sub btnAddItem_Click(sender As Object, e As EventArgs) Handles btnAddItem.Click
-        ' Validation: must have numbers > 0
+        ' Check empty fields
+        If String.IsNullOrWhiteSpace(txtProductName.Text) OrElse
+       String.IsNullOrWhiteSpace(txtProductBrand.Text) OrElse
+       String.IsNullOrWhiteSpace(txtUnitWeight.Text) OrElse
+       String.IsNullOrWhiteSpace(txtUnitPrice.Text) OrElse
+       String.IsNullOrWhiteSpace(txtTotalBox.Text) OrElse
+       String.IsNullOrWhiteSpace(txtTotalWeightPurchase.Text) OrElse
+       String.IsNullOrWhiteSpace(txtTotal.Text) Then
+
+            MessageBox.Show("You cannot add an item with empty values. Please fill all required fields.",
+                        "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End If
+
+        ' Validate numeric fields
         Dim totalBox As Decimal
         Dim weightPurchase As Decimal
 
@@ -106,17 +148,17 @@
 
         ' ✅ Just pop-up values for now
         MessageBox.Show(
-            $"Product: {txtProductName.Text}" & Environment.NewLine &
-            $"Brand: {txtProductBrand.Text}" & Environment.NewLine &
-            $"Unit Weight: {txtUnitWeight.Text}" & Environment.NewLine &
-            $"Unit Price: {txtUnitPrice.Text}" & Environment.NewLine &
-            $"Weight Purchased: {txtTotalWeightPurchase.Text}" & Environment.NewLine &
-            $"Quantity: {txtTotalBox.Text}" & Environment.NewLine &
-            $"Total: {txtTotal.Text}",
-            "Added Item Preview",
-            MessageBoxButtons.OK,
-            MessageBoxIcon.Information
-        )
+        $"Product: {txtProductName.Text}" & Environment.NewLine &
+        $"Brand: {txtProductBrand.Text}" & Environment.NewLine &
+        $"Unit Weight: {txtUnitWeight.Text}" & Environment.NewLine &
+        $"Unit Price: {txtUnitPrice.Text}" & Environment.NewLine &
+        $"Weight Purchased: {txtTotalWeightPurchase.Text}" & Environment.NewLine &
+        $"Total Box: {txtTotalBox.Text}" & Environment.NewLine &
+        $"Total: {txtTotal.Text}",
+        "Added Item Preview",
+        MessageBoxButtons.OK,
+        MessageBoxIcon.Information
+    )
     End Sub
 
 End Class
