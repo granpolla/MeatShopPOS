@@ -17,7 +17,7 @@ Public Class frmCashierDashboard
 
     ' ✅ Add order item row to dgvOrderItemPreview
     Public Sub AddOrderItem(productName As String, brand As String, unitWeight As Decimal, unitPrice As Decimal,
-                        totalBox As Decimal, totalWeight As Decimal, total As Decimal)
+                    totalBox As Decimal, totalWeight As Decimal, total As Decimal)
 
         ' Create DataTable if dgvOrderItemPreview is empty
         If dgvOrderItemPreview.DataSource Is Nothing Then
@@ -52,6 +52,13 @@ Public Class frmCashierDashboard
             .Columns("Total Weight").DefaultCellStyle.Format = "N2"
             .Columns("Total").DefaultCellStyle.Format = "N2"
         End With
+
+        ' ✅ Update Grand Total
+        Dim grandTotal As Decimal = 0
+        For Each row As DataRow In orderTable.Rows
+            grandTotal += Convert.ToDecimal(row("Total"))
+        Next
+        txtGrandTotal.Text = grandTotal.ToString("N2")
     End Sub
 
 

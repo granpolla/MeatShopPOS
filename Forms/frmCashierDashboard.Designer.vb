@@ -45,8 +45,10 @@ Partial Class frmCashierDashboard
         Me.Label2 = New System.Windows.Forms.Label()
         Me.txtCustomerAddress = New System.Windows.Forms.TextBox()
         Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.TextBox1 = New System.Windows.Forms.TextBox()
-        Me.TextBox2 = New System.Windows.Forms.TextBox()
+        Me.txtCustomerBalanceTotal = New System.Windows.Forms.TextBox()
+        Me.txtGrandTotal = New System.Windows.Forms.TextBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.Label5 = New System.Windows.Forms.Label()
         Me.Panel2.SuspendLayout()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -271,27 +273,47 @@ Partial Class frmCashierDashboard
         Me.Panel1.Size = New System.Drawing.Size(400, 295)
         Me.Panel1.TabIndex = 17
         '
-        'TextBox1
+        'txtCustomerBalanceTotal
         '
-        Me.TextBox1.Location = New System.Drawing.Point(1332, 388)
-        Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.Size = New System.Drawing.Size(187, 22)
-        Me.TextBox1.TabIndex = 18
+        Me.txtCustomerBalanceTotal.Location = New System.Drawing.Point(1332, 388)
+        Me.txtCustomerBalanceTotal.Name = "txtCustomerBalanceTotal"
+        Me.txtCustomerBalanceTotal.Size = New System.Drawing.Size(187, 22)
+        Me.txtCustomerBalanceTotal.TabIndex = 18
         '
-        'TextBox2
+        'txtGrandTotal
         '
-        Me.TextBox2.Location = New System.Drawing.Point(1332, 416)
-        Me.TextBox2.Name = "TextBox2"
-        Me.TextBox2.Size = New System.Drawing.Size(187, 22)
-        Me.TextBox2.TabIndex = 19
+        Me.txtGrandTotal.Location = New System.Drawing.Point(1332, 416)
+        Me.txtGrandTotal.Name = "txtGrandTotal"
+        Me.txtGrandTotal.Size = New System.Drawing.Size(187, 22)
+        Me.txtGrandTotal.TabIndex = 19
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(1266, 391)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(60, 16)
+        Me.Label4.TabIndex = 20
+        Me.Label4.Text = "Balance:"
+        '
+        'Label5
+        '
+        Me.Label5.AutoSize = True
+        Me.Label5.Location = New System.Drawing.Point(1237, 419)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(89, 16)
+        Me.Label5.TabIndex = 21
+        Me.Label5.Text = "Total Amount:"
         '
         'frmCashierDashboard
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1531, 831)
-        Me.Controls.Add(Me.TextBox2)
-        Me.Controls.Add(Me.TextBox1)
+        Me.Controls.Add(Me.Label5)
+        Me.Controls.Add(Me.Label4)
+        Me.Controls.Add(Me.txtGrandTotal)
+        Me.Controls.Add(Me.txtCustomerBalanceTotal)
         Me.Controls.Add(Me.Panel1)
         Me.Controls.Add(Me.pnlTransactionHeader)
         Me.Controls.Add(Me.pnlInputOrderItem)
@@ -342,6 +364,8 @@ Partial Class frmCashierDashboard
     Friend WithEvents Label2 As Label
     Friend WithEvents txtCustomerAddress As TextBox
     Friend WithEvents Panel1 As Panel
-    Friend WithEvents TextBox1 As TextBox
-    Friend WithEvents TextBox2 As TextBox
+    Friend WithEvents txtCustomerBalanceTotal As TextBox
+    Friend WithEvents txtGrandTotal As TextBox
+    Friend WithEvents Label4 As Label
+    Friend WithEvents Label5 As Label
 End Class
