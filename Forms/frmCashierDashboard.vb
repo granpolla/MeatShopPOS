@@ -321,14 +321,13 @@ Public Class frmCashierDashboard
         txtLastName.Clear()
         txtCustomerAddress.Clear()
         dgvCustomerBalancePreview.DataSource = Nothing
+
+        ' ✅ Reset readonly to editable
+        txtFirstName.ReadOnly = False
+        txtLastName.ReadOnly = False
+        txtCustomerAddress.ReadOnly = False
     End Sub
 
-    Private Sub btnClear_Click(sender As Object, e As EventArgs) Handles btnClear.Click
-        txtFirstName.Clear()
-        txtLastName.Clear()
-        txtCustomerAddress.Clear()
-        dgvCustomerBalancePreview.DataSource = Nothing
-    End Sub
 
 
 
@@ -340,26 +339,30 @@ Public Class frmCashierDashboard
             Dim row As DataGridViewRow = dgvCustomer.Rows(e.RowIndex)
 
             Dim fullName As String = row.Cells("Full Name").Value.ToString()
-            ' Use a space separator and max 2 parts
             Dim nameParts() As String = fullName.Split(New Char() {" "c}, 2, StringSplitOptions.RemoveEmptyEntries)
 
-            ' Split into First and Last Name
             If nameParts.Length > 0 Then
-                txtFirstName.Text = nameParts(0) ' First word
+                txtFirstName.Text = nameParts(0)
             End If
             If nameParts.Length > 1 Then
-                txtLastName.Text = nameParts(1) ' Everything after the first space
+                txtLastName.Text = nameParts(1)
             Else
                 txtLastName.Clear()
             End If
 
             txtCustomerAddress.Text = row.Cells("Address").Value.ToString()
 
-            ' get the ID for balance lookup
+            ' ✅ Make textboxes readonly after selecting customer
+            txtFirstName.ReadOnly = True
+            txtLastName.ReadOnly = True
+            txtCustomerAddress.ReadOnly = True
+
+            ' Get the ID for balance lookup
             Dim customerID As Integer = Convert.ToInt32(row.Cells("CustomerID").Value)
             LoadCustomerBalance(customerID)
         End If
     End Sub
+
 
     ' ✅ When clicking a row in dgvCustomerBalancePreview → show popup
     Private Sub dgvCustomerBalancePreview_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvCustomerBalancePreview.CellClick

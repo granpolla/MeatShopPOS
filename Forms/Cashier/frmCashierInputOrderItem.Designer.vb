@@ -186,6 +186,7 @@ Partial Class frmCashierInputOrderItem
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.BackColor = System.Drawing.SystemColors.ActiveCaption
         Me.ClientSize = New System.Drawing.Size(460, 295)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.txtProductBrand)
