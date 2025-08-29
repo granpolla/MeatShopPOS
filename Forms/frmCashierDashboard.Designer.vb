@@ -49,6 +49,7 @@ Partial Class frmCashierDashboard
         Me.txtGrandTotal = New System.Windows.Forms.TextBox()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
+        Me.btnRemoveItem = New System.Windows.Forms.Button()
         Me.Panel2.SuspendLayout()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -275,14 +276,14 @@ Partial Class frmCashierDashboard
         '
         'txtCustomerBalanceTotal
         '
-        Me.txtCustomerBalanceTotal.Location = New System.Drawing.Point(1332, 388)
+        Me.txtCustomerBalanceTotal.Location = New System.Drawing.Point(1332, 406)
         Me.txtCustomerBalanceTotal.Name = "txtCustomerBalanceTotal"
         Me.txtCustomerBalanceTotal.Size = New System.Drawing.Size(187, 22)
         Me.txtCustomerBalanceTotal.TabIndex = 18
         '
         'txtGrandTotal
         '
-        Me.txtGrandTotal.Location = New System.Drawing.Point(1332, 416)
+        Me.txtGrandTotal.Location = New System.Drawing.Point(1332, 434)
         Me.txtGrandTotal.Name = "txtGrandTotal"
         Me.txtGrandTotal.Size = New System.Drawing.Size(187, 22)
         Me.txtGrandTotal.TabIndex = 19
@@ -290,7 +291,7 @@ Partial Class frmCashierDashboard
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(1266, 391)
+        Me.Label4.Location = New System.Drawing.Point(1266, 409)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(60, 16)
         Me.Label4.TabIndex = 20
@@ -299,17 +300,27 @@ Partial Class frmCashierDashboard
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(1237, 419)
+        Me.Label5.Location = New System.Drawing.Point(1237, 437)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(89, 16)
         Me.Label5.TabIndex = 21
         Me.Label5.Text = "Total Amount:"
+        '
+        'btnRemoveItem
+        '
+        Me.btnRemoveItem.Location = New System.Drawing.Point(1387, 321)
+        Me.btnRemoveItem.Name = "btnRemoveItem"
+        Me.btnRemoveItem.Size = New System.Drawing.Size(132, 23)
+        Me.btnRemoveItem.TabIndex = 22
+        Me.btnRemoveItem.Text = "Remove Item"
+        Me.btnRemoveItem.UseVisualStyleBackColor = True
         '
         'frmCashierDashboard
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1531, 831)
+        Me.Controls.Add(Me.btnRemoveItem)
         Me.Controls.Add(Me.Label5)
         Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.txtGrandTotal)
@@ -368,4 +379,5 @@ Partial Class frmCashierDashboard
     Friend WithEvents txtGrandTotal As TextBox
     Friend WithEvents Label4 As Label
     Friend WithEvents Label5 As Label
+    Friend WithEvents btnRemoveItem As Button
 End Class

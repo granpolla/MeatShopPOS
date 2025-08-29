@@ -54,12 +54,20 @@ Public Class frmCashierDashboard
         End With
 
         ' ✅ Update Grand Total
+        UpdateGrandTotal()
+    End Sub
+
+    Private Sub UpdateGrandTotal()
         Dim grandTotal As Decimal = 0
-        For Each row As DataRow In orderTable.Rows
-            grandTotal += Convert.ToDecimal(row("Total"))
-        Next
+        If dgvOrderItemPreview.DataSource IsNot Nothing Then
+            Dim orderTable As DataTable = CType(dgvOrderItemPreview.DataSource, DataTable)
+            For Each row As DataRow In orderTable.Rows
+                grandTotal += Convert.ToDecimal(row("Total"))
+            Next
+        End If
         txtGrandTotal.Text = grandTotal.ToString("N2")
     End Sub
+
 
 
 
@@ -334,6 +342,32 @@ Public Class frmCashierDashboard
         txtLastName.ReadOnly = False
         txtCustomerAddress.ReadOnly = False
     End Sub
+
+    Private Sub btnRemoveItem_Click(sender As Object, e As EventArgs) Handles btnRemoveItem.Click
+        ' Validate selection
+        If dgvOrderItemPreview.SelectedRows.Count = 0 Then
+            MessageBox.Show("Please select an item to remove.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End If
+
+        ' Confirm removal
+        Dim result As DialogResult = MessageBox.Show("Are you sure you want to remove the selected item?",
+                                                 "Remove Item",
+                                                 MessageBoxButtons.YesNo,
+                                                 MessageBoxIcon.Question)
+
+        If result = DialogResult.Yes Then
+            Dim selectedRow As DataGridViewRow = dgvOrderItemPreview.SelectedRows(0)
+
+            ' Remove from DataTable (since DataGridView is bound to it)
+            Dim orderTable As DataTable = CType(dgvOrderItemPreview.DataSource, DataTable)
+            orderTable.Rows.RemoveAt(selectedRow.Index)
+
+            ' ✅ Update Grand Total
+            UpdateGrandTotal()
+        End If
+    End Sub
+
 
 
 
