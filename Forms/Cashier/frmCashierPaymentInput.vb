@@ -114,9 +114,9 @@ Public Class frmCashierPaymentInput
     End Sub
 
     Private Sub btnSaveAndPrint_Click(sender As Object, e As EventArgs) Handles btnSaveAndPrint.Click
-        ' ✅ Get grand total + customer info from Dashboard
         Dim parentForm As frmCashierDashboard = CType(Me.ParentForm, frmCashierDashboard)
 
+        ' ✅ Order + payment validations
         If parentForm.dgvOrderItemPreview.DataSource Is Nothing OrElse
        CType(parentForm.dgvOrderItemPreview.DataSource, DataTable).Rows.Count = 0 Then
             MessageBox.Show("No order items added. Please add products before saving and printing.",
@@ -129,39 +129,35 @@ Public Class frmCashierPaymentInput
             Return
         End If
 
-        ' ✅ Get grand total + customer info
         Dim grandTotal As Decimal = 0
         Decimal.TryParse(parentForm.txtGrandTotal.Text, grandTotal)
 
-        Dim firstName As String = ParentForm.txtFirstName.Text.Trim()
-        Dim lastName As String = ParentForm.txtLastName.Text.Trim()
+        Dim firstName As String = parentForm.txtFirstName.Text.Trim()
+        Dim lastName As String = parentForm.txtLastName.Text.Trim()
         Dim address As String = parentForm.txtCustomerAddress.Text.Trim()
 
-        ' 🔹 Validate customer fields
+        ' 🔹 Validate customer info
         If String.IsNullOrWhiteSpace(firstName) OrElse String.IsNullOrWhiteSpace(lastName) OrElse String.IsNullOrWhiteSpace(address) Then
             MessageBox.Show("Customer information is incomplete. Please make sure First Name, Last Name, and Address are filled.",
-                    "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                        "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
-        ' 🔹 Check if this customer exists in the database
+        ' 🔹 Check if this customer exists in DB
         Dim exists As Boolean = False
         Dim customerID As Integer = -1
         Try
             Using conn As New MySqlConnection(My.Settings.DBConnection)
                 conn.Open()
-
                 Dim query As String = "
-            SELECT id 
-            FROM customer 
-            WHERE LOWER(TRIM(REPLACE(customer_name,' ',''))) = LOWER(REPLACE(@name,' ','')) 
-              AND LOWER(TRIM(address)) = LOWER(@address)
-            LIMIT 1"
-
+                SELECT id 
+                FROM customer 
+                WHERE LOWER(TRIM(REPLACE(customer_name,' ',''))) = LOWER(REPLACE(@name,' ','')) 
+                  AND LOWER(TRIM(address)) = LOWER(@address)
+                LIMIT 1"
                 Using cmd As New MySqlCommand(query, conn)
                     cmd.Parameters.AddWithValue("@name", (firstName & " " & lastName).Replace(" ", ""))
                     cmd.Parameters.AddWithValue("@address", address.Trim().ToLower())
-
                     Dim result = cmd.ExecuteScalar()
                     If result IsNot Nothing Then
                         exists = True
@@ -188,11 +184,32 @@ Public Class frmCashierPaymentInput
             End If
         Next
 
-        ' 🔹 Validate sufficiency
-        If totalPaid < grandTotal Then
-            MessageBox.Show($"Insufficient payment! Grand Total is {grandTotal:N2}, but only {totalPaid:N2} was paid.",
-                        "Payment Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        ' 🔹 Require at least 100 minimum payment to proceed
+        If totalPaid < 100 Then
+            MessageBox.Show("Minimum payment required is 100. Please enter a valid payment before saving.",
+                    "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
+        End If
+
+        ' 🔹 Check payment status
+        Dim status As String = "Fully Paid"
+        Dim unpaidBalance As Decimal = 0
+
+        If totalPaid < grandTotal Then
+            unpaidBalance = grandTotal - totalPaid
+            Dim confirmResult = MessageBox.Show(
+        $"Payment is insufficient!" & Environment.NewLine &
+        $"Grand Total: {grandTotal:N2}" & Environment.NewLine &
+        $"Paid: {totalPaid:N2}" & Environment.NewLine &
+        $"Unpaid Balance: {unpaidBalance:N2}" & Environment.NewLine &
+        Environment.NewLine & "Do you want to proceed and mark this as PARTIAL?",
+        "Partial Payment Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+
+            If confirmResult = DialogResult.No Then
+                Return
+            End If
+
+            status = "Partial"
         End If
 
         ' ✅ Passed all validations → simulate Save + Print
@@ -202,39 +219,44 @@ Public Class frmCashierPaymentInput
         Dim orderTable As DataTable = CType(parentForm.dgvOrderItemPreview.DataSource, DataTable)
         For Each row As DataRow In orderTable.Rows
             details &= $"{row("Product Name")} | {row("Brand")} | " &
-               $"Unit: {Convert.ToDecimal(row("Unit Weight")):N2}kg @ {Convert.ToDecimal(row("Unit Price")):N2} | " &
-               $"Box: {Convert.ToDecimal(row("Total Box")):N0} | " &
-               $"Weight: {Convert.ToDecimal(row("Total Weight")):N2}kg | " &
-               $"Total: {Convert.ToDecimal(row("Total")):N2}" & Environment.NewLine
+                   $"Unit: {Convert.ToDecimal(row("Unit Weight")):N2}kg @ {Convert.ToDecimal(row("Unit Price")):N2} | " &
+                   $"Box: {Convert.ToDecimal(row("Total Box")):N0} | " &
+                   $"Weight: {Convert.ToDecimal(row("Total Weight")):N2}kg | " &
+                   $"Total: {Convert.ToDecimal(row("Total")):N2}" & Environment.NewLine
         Next
 
-        ' 🔹 Show Settled Balances (if any were selected)
+        ' 🔹 Show Settled Balances
         Dim balanceTotal As Decimal = 0
         details &= Environment.NewLine & "=== SETTLED BALANCES ===" & Environment.NewLine
         If parentForm.dgvCustomerBalancePreview.SelectedRows.Count > 0 Then
             For Each row As DataGridViewRow In parentForm.dgvCustomerBalancePreview.SelectedRows
                 details &= $"{CDate(row.Cells("Date").Value):yyyy-MM-dd} | " &
-                   $"{row.Cells("Description").Value} | " &
-                   $"{Convert.ToDecimal(row.Cells("Balance").Value):N2}" & Environment.NewLine
-
+                       $"{row.Cells("Description").Value} | " &
+                       $"{Convert.ToDecimal(row.Cells("Balance").Value):N2}" & Environment.NewLine
                 balanceTotal += Convert.ToDecimal(row.Cells("Balance").Value)
             Next
         Else
             details &= "No balances settled (0.00)" & Environment.NewLine
         End If
 
+        ' 🔹 Payments section
         details &= Environment.NewLine & "=== PAYMENTS ENTERED ===" & Environment.NewLine
         For Each row As DataGridViewRow In dgvPaymentEntries.Rows
             details &= $"{row.Cells("Method").Value} | {row.Cells("RefNum").Value} | {row.Cells("Amount").Value}" & Environment.NewLine
         Next
 
-        ' 🔹 Customer + Totals
+        ' 🔹 Customer + Totals + Status
         details &= Environment.NewLine & $"Customer: {firstName} {lastName}, {address}" & Environment.NewLine
         details &= $"Order Subtotal: {(grandTotal - balanceTotal):N2}" & Environment.NewLine
         details &= $"Settled Balances: {balanceTotal:N2}" & Environment.NewLine
         details &= $"Grand Total: {grandTotal:N2}" & Environment.NewLine
         details &= $"Total Paid: {totalPaid:N2}" & Environment.NewLine
-        details &= $"Change: {(totalPaid - grandTotal):N2}"
+        details &= $"Change: {Math.Max(totalPaid - grandTotal, 0):N2}" & Environment.NewLine
+        details &= $"Status: {status}" & Environment.NewLine
+
+        If status = "Partial" Then
+            details &= $"Unpaid Balance (to ledger): {unpaidBalance:N2}" & Environment.NewLine
+        End If
 
         MessageBox.Show(details, "Save + Print (Simulation)", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
@@ -242,6 +264,7 @@ Public Class frmCashierPaymentInput
         dgvPaymentEntries.Rows.Clear()
         txtChange.Clear()
     End Sub
+
 
 
 
