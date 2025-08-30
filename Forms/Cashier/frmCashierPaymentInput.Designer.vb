@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class frmCashierPaymentInput
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,7 +20,7 @@ Partial Class frmCashierPaymentInput
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.cboPaymentMethod = New System.Windows.Forms.ComboBox()
         Me.dgvPaymentEntries = New System.Windows.Forms.DataGridView()
@@ -40,7 +40,7 @@ Partial Class frmCashierPaymentInput
         'cboPaymentMethod
         '
         Me.cboPaymentMethod.FormattingEnabled = True
-        Me.cboPaymentMethod.Location = New System.Drawing.Point(127, 122)
+        Me.cboPaymentMethod.Location = New System.Drawing.Point(127, 133)
         Me.cboPaymentMethod.Name = "cboPaymentMethod"
         Me.cboPaymentMethod.Size = New System.Drawing.Size(261, 24)
         Me.cboPaymentMethod.TabIndex = 0
@@ -52,26 +52,26 @@ Partial Class frmCashierPaymentInput
         Me.dgvPaymentEntries.Name = "dgvPaymentEntries"
         Me.dgvPaymentEntries.RowHeadersWidth = 51
         Me.dgvPaymentEntries.RowTemplate.Height = 24
-        Me.dgvPaymentEntries.Size = New System.Drawing.Size(376, 104)
+        Me.dgvPaymentEntries.Size = New System.Drawing.Size(376, 115)
         Me.dgvPaymentEntries.TabIndex = 1
         '
         'txtRefNum
         '
-        Me.txtRefNum.Location = New System.Drawing.Point(127, 152)
+        Me.txtRefNum.Location = New System.Drawing.Point(127, 163)
         Me.txtRefNum.Name = "txtRefNum"
         Me.txtRefNum.Size = New System.Drawing.Size(261, 22)
         Me.txtRefNum.TabIndex = 2
         '
         'txtAmount
         '
-        Me.txtAmount.Location = New System.Drawing.Point(127, 180)
+        Me.txtAmount.Location = New System.Drawing.Point(127, 191)
         Me.txtAmount.Name = "txtAmount"
         Me.txtAmount.Size = New System.Drawing.Size(261, 22)
         Me.txtAmount.TabIndex = 3
         '
         'btnAddPayment
         '
-        Me.btnAddPayment.Location = New System.Drawing.Point(228, 299)
+        Me.btnAddPayment.Location = New System.Drawing.Point(228, 247)
         Me.btnAddPayment.Name = "btnAddPayment"
         Me.btnAddPayment.Size = New System.Drawing.Size(160, 27)
         Me.btnAddPayment.TabIndex = 4
@@ -89,7 +89,7 @@ Partial Class frmCashierPaymentInput
         '
         'btnClearDgvPaymentEntries
         '
-        Me.btnClearDgvPaymentEntries.Location = New System.Drawing.Point(228, 332)
+        Me.btnClearDgvPaymentEntries.Location = New System.Drawing.Point(228, 280)
         Me.btnClearDgvPaymentEntries.Name = "btnClearDgvPaymentEntries"
         Me.btnClearDgvPaymentEntries.Size = New System.Drawing.Size(160, 27)
         Me.btnClearDgvPaymentEntries.TabIndex = 6
@@ -98,7 +98,7 @@ Partial Class frmCashierPaymentInput
         '
         'txtChange
         '
-        Me.txtChange.Location = New System.Drawing.Point(127, 208)
+        Me.txtChange.Location = New System.Drawing.Point(127, 219)
         Me.txtChange.Name = "txtChange"
         Me.txtChange.Size = New System.Drawing.Size(261, 22)
         Me.txtChange.TabIndex = 7
@@ -106,7 +106,7 @@ Partial Class frmCashierPaymentInput
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(13, 125)
+        Me.Label1.Location = New System.Drawing.Point(13, 134)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(108, 16)
         Me.Label1.TabIndex = 8
@@ -115,7 +115,7 @@ Partial Class frmCashierPaymentInput
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(39, 155)
+        Me.Label2.Location = New System.Drawing.Point(39, 164)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(82, 16)
         Me.Label2.TabIndex = 9
@@ -124,7 +124,7 @@ Partial Class frmCashierPaymentInput
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(69, 183)
+        Me.Label3.Location = New System.Drawing.Point(69, 192)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(52, 16)
         Me.Label3.TabIndex = 10
@@ -133,7 +133,7 @@ Partial Class frmCashierPaymentInput
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(69, 211)
+        Me.Label4.Location = New System.Drawing.Point(69, 220)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(54, 16)
         Me.Label4.TabIndex = 11

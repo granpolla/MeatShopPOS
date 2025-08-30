@@ -11,7 +11,7 @@ Public Class frmCashierDashboard
     End Sub
 
     ' ✅ Normalize name (remove extra spaces + proper case)
-    Private Function NormalizeName(input As String) As String
+    Public Function NormalizeName(input As String) As String
         Dim cleaned As String = Regex.Replace(input.Trim(), "\s+", " ")
         Return StrConv(cleaned, VbStrConv.ProperCase)
     End Function
