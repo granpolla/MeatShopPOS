@@ -5,5 +5,8 @@
     <Setting Name="DBConnection" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Server=localhost;Database=meatshop_db;Uid=pos_user;Pwd=securepass;</Value>
     </Setting>
+    <Setting Name="Setting" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -45,14 +45,29 @@ Public Class frmCashierDashboard
             .SelectionMode = DataGridViewSelectionMode.FullRowSelect
             .MultiSelect = False
             .ReadOnly = True
+            .RowHeadersVisible = False
 
-            ' Format numeric columns
+            ' Format numeric columns & make them thinner
             .Columns("Unit Price").DefaultCellStyle.Format = "N2"
+            .Columns("Unit Price").FillWeight = 70
+
             .Columns("Unit Weight").DefaultCellStyle.Format = "N2"
-            .Columns("Total Box").DefaultCellStyle.Format = "N2"
+            .Columns("Unit Weight").FillWeight = 70
+
+            .Columns("Total Box").DefaultCellStyle.Format = "N0"
+            .Columns("Total Box").FillWeight = 70
+
             .Columns("Total Weight").DefaultCellStyle.Format = "N2"
+            .Columns("Total Weight").FillWeight = 70
+
             .Columns("Total").DefaultCellStyle.Format = "N2"
+            .Columns("Total").FillWeight = 90
+
+            ' Make text columns wider
+            .Columns("Product Name").FillWeight = 200
+            .Columns("Brand").FillWeight = 120
         End With
+
 
         ' ✅ Update Grand Total
         UpdateGrandTotal()
@@ -257,6 +272,7 @@ Public Class frmCashierDashboard
             .SelectionMode = DataGridViewSelectionMode.FullRowSelect
             .MultiSelect = False
             .ReadOnly = True
+            .RowHeadersVisible = False
 
             If .Columns.Contains("CustomerID") Then
                 .Columns("CustomerID").Visible = False
@@ -271,18 +287,27 @@ Public Class frmCashierDashboard
             .SelectionMode = DataGridViewSelectionMode.FullRowSelect
             .MultiSelect = False
             .ReadOnly = True
+            .RowHeadersVisible = False
 
             ' Hide ProductID
             If .Columns.Contains("ProductID") Then
                 .Columns("ProductID").Visible = False
             End If
 
-            ' Format numeric columns
+            ' Format numeric columns and make them thinner
             If .Columns.Contains("Unit Price") Then
                 .Columns("Unit Price").DefaultCellStyle.Format = "N2"
+                .Columns("Unit Price").FillWeight = 70   ' thinner
             End If
+
             If .Columns.Contains("Unit Weight") Then
                 .Columns("Unit Weight").DefaultCellStyle.Format = "N2"
+                .Columns("Unit Weight").FillWeight = 70  ' thinner
+            End If
+
+            ' Example: make product name wider
+            If .Columns.Contains("Product Name") Then
+                .Columns("Product Name").FillWeight = 130
             End If
         End With
     End Sub

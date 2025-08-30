@@ -42,7 +42,7 @@ Partial Class frmCashierPaymentInput
         Me.cboPaymentMethod.FormattingEnabled = True
         Me.cboPaymentMethod.Location = New System.Drawing.Point(127, 133)
         Me.cboPaymentMethod.Name = "cboPaymentMethod"
-        Me.cboPaymentMethod.Size = New System.Drawing.Size(261, 24)
+        Me.cboPaymentMethod.Size = New System.Drawing.Size(141, 24)
         Me.cboPaymentMethod.TabIndex = 0
         '
         'dgvPaymentEntries
@@ -52,46 +52,46 @@ Partial Class frmCashierPaymentInput
         Me.dgvPaymentEntries.Name = "dgvPaymentEntries"
         Me.dgvPaymentEntries.RowHeadersWidth = 51
         Me.dgvPaymentEntries.RowTemplate.Height = 24
-        Me.dgvPaymentEntries.Size = New System.Drawing.Size(376, 115)
+        Me.dgvPaymentEntries.Size = New System.Drawing.Size(337, 115)
         Me.dgvPaymentEntries.TabIndex = 1
         '
         'txtRefNum
         '
         Me.txtRefNum.Location = New System.Drawing.Point(127, 163)
         Me.txtRefNum.Name = "txtRefNum"
-        Me.txtRefNum.Size = New System.Drawing.Size(261, 22)
+        Me.txtRefNum.Size = New System.Drawing.Size(141, 22)
         Me.txtRefNum.TabIndex = 2
         '
         'txtAmount
         '
         Me.txtAmount.Location = New System.Drawing.Point(127, 191)
         Me.txtAmount.Name = "txtAmount"
-        Me.txtAmount.Size = New System.Drawing.Size(261, 22)
+        Me.txtAmount.Size = New System.Drawing.Size(141, 22)
         Me.txtAmount.TabIndex = 3
         '
         'btnAddPayment
         '
-        Me.btnAddPayment.Location = New System.Drawing.Point(228, 247)
+        Me.btnAddPayment.Location = New System.Drawing.Point(274, 134)
         Me.btnAddPayment.Name = "btnAddPayment"
-        Me.btnAddPayment.Size = New System.Drawing.Size(160, 27)
+        Me.btnAddPayment.Size = New System.Drawing.Size(75, 23)
         Me.btnAddPayment.TabIndex = 4
-        Me.btnAddPayment.Text = "Add Payment"
+        Me.btnAddPayment.Text = "Add"
         Me.btnAddPayment.UseVisualStyleBackColor = True
         '
         'btnSaveAndPrint
         '
-        Me.btnSaveAndPrint.Location = New System.Drawing.Point(12, 365)
+        Me.btnSaveAndPrint.Location = New System.Drawing.Point(12, 265)
         Me.btnSaveAndPrint.Name = "btnSaveAndPrint"
-        Me.btnSaveAndPrint.Size = New System.Drawing.Size(376, 48)
+        Me.btnSaveAndPrint.Size = New System.Drawing.Size(337, 42)
         Me.btnSaveAndPrint.TabIndex = 5
         Me.btnSaveAndPrint.Text = "Save and Print"
         Me.btnSaveAndPrint.UseVisualStyleBackColor = True
         '
         'btnClearDgvPaymentEntries
         '
-        Me.btnClearDgvPaymentEntries.Location = New System.Drawing.Point(228, 280)
+        Me.btnClearDgvPaymentEntries.Location = New System.Drawing.Point(274, 163)
         Me.btnClearDgvPaymentEntries.Name = "btnClearDgvPaymentEntries"
-        Me.btnClearDgvPaymentEntries.Size = New System.Drawing.Size(160, 27)
+        Me.btnClearDgvPaymentEntries.Size = New System.Drawing.Size(75, 22)
         Me.btnClearDgvPaymentEntries.TabIndex = 6
         Me.btnClearDgvPaymentEntries.Text = "Clear"
         Me.btnClearDgvPaymentEntries.UseVisualStyleBackColor = True
@@ -100,7 +100,7 @@ Partial Class frmCashierPaymentInput
         '
         Me.txtChange.Location = New System.Drawing.Point(127, 219)
         Me.txtChange.Name = "txtChange"
-        Me.txtChange.Size = New System.Drawing.Size(261, 22)
+        Me.txtChange.Size = New System.Drawing.Size(141, 22)
         Me.txtChange.TabIndex = 7
         '
         'Label1
@@ -115,7 +115,7 @@ Partial Class frmCashierPaymentInput
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(39, 164)
+        Me.Label2.Location = New System.Drawing.Point(39, 166)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(82, 16)
         Me.Label2.TabIndex = 9
@@ -144,7 +144,7 @@ Partial Class frmCashierPaymentInput
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.SystemColors.ActiveCaption
-        Me.ClientSize = New System.Drawing.Size(400, 425)
+        Me.ClientSize = New System.Drawing.Size(361, 320)
         Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.Label2)

@@ -22,6 +22,8 @@ Public Class frmCashierPaymentInput
         dgvPaymentEntries.SelectionMode = DataGridViewSelectionMode.FullRowSelect
         dgvPaymentEntries.ReadOnly = True
         dgvPaymentEntries.MultiSelect = False
+        dgvPaymentEntries.RowHeadersVisible = False
+        dgvPaymentEntries.ScrollBars = ScrollBars.None
 
         txtChange.ReadOnly = True
         txtRefNum.Enabled = (cboPaymentMethod.SelectedItem.ToString() = "online")
@@ -46,7 +48,6 @@ Public Class frmCashierPaymentInput
         Return False
     End Function
 
-    ' ✅ Add Payment Entry
     ' ✅ Add Payment Entry
     Private Sub btnAddPayment_Click(sender As Object, e As EventArgs) Handles btnAddPayment.Click
         Dim method As String = cboPaymentMethod.SelectedItem.ToString().Trim().ToLower()
