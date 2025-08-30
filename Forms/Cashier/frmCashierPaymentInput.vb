@@ -113,25 +113,33 @@ Public Class frmCashierPaymentInput
     End Sub
 
     Private Sub btnSaveAndPrint_Click(sender As Object, e As EventArgs) Handles btnSaveAndPrint.Click
+        ' ✅ Get grand total + customer info from Dashboard
+        Dim parentForm As frmCashierDashboard = CType(Me.ParentForm, frmCashierDashboard)
+
+        If parentForm.dgvOrderItemPreview.DataSource Is Nothing OrElse
+       CType(parentForm.dgvOrderItemPreview.DataSource, DataTable).Rows.Count = 0 Then
+            MessageBox.Show("No order items added. Please add products before saving and printing.",
+                        "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End If
+
         If dgvPaymentEntries.Rows.Count = 0 Then
             MessageBox.Show("No payment entries to save.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
-        ' ✅ Get grand total + customer info from Dashboard
-        Dim parentForm As frmCashierDashboard = CType(Me.ParentForm, frmCashierDashboard)
-
+        ' ✅ Get grand total + customer info
         Dim grandTotal As Decimal = 0
         Decimal.TryParse(parentForm.txtGrandTotal.Text, grandTotal)
 
-        Dim firstName As String = parentForm.txtFirstName.Text.Trim()
-        Dim lastName As String = parentForm.txtLastName.Text.Trim()
+        Dim firstName As String = ParentForm.txtFirstName.Text.Trim()
+        Dim lastName As String = ParentForm.txtLastName.Text.Trim()
         Dim address As String = parentForm.txtCustomerAddress.Text.Trim()
 
         ' 🔹 Validate customer fields
         If String.IsNullOrWhiteSpace(firstName) OrElse String.IsNullOrWhiteSpace(lastName) OrElse String.IsNullOrWhiteSpace(address) Then
             MessageBox.Show("Customer information is incomplete. Please make sure First Name, Last Name, and Address are filled.",
-                        "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
