@@ -197,6 +197,18 @@ Public Class frmCashierPaymentInput
 
         If totalPaid < grandTotal Then
             unpaidBalance = grandTotal - totalPaid
+
+            ' 🚫 Extra rule: If cashier selected previous balances, they CANNOT pay partially
+            If parentForm.dgvCustomerBalancePreview.SelectedRows.Count > 0 Then
+                MessageBox.Show("Partial payment is not allowed when settling previous balances." &
+                        Environment.NewLine & Environment.NewLine &
+                        "👉 Either pay the FULL AMOUNT (Order + Previous Balance)" & Environment.NewLine &
+                        "👉 Or just pay for the NEW ORDER only and leave the previous balance for now.",
+                        "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                Return
+            End If
+
+            ' ✅ Otherwise, allow Partial confirmation for new orders only
             Dim confirmResult = MessageBox.Show(
         $"Payment is insufficient!" & Environment.NewLine &
         $"Grand Total: {grandTotal:N2}" & Environment.NewLine &
@@ -211,6 +223,7 @@ Public Class frmCashierPaymentInput
 
             status = "Partial"
         End If
+
 
         ' ✅ Passed all validations → simulate Save + Print
         Dim details As String = "=== ORDER ITEMS ===" & Environment.NewLine
