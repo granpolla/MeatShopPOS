@@ -8,6 +8,9 @@ Public Class frmCashierDashboard
         LoadProducts()
         LoadInputOrderItemForm()
         LoadPaymentInput()
+
+        InitializeOrderItemPreview()
+        InitializeCustomerBalancePreview()
     End Sub
 
     ' ✅ Normalize name (remove extra spaces + proper case)
@@ -20,53 +23,11 @@ Public Class frmCashierDashboard
     Public Sub AddOrderItem(productName As String, brand As String, unitWeight As Decimal, unitPrice As Decimal,
                     totalBox As Decimal, totalWeight As Decimal, total As Decimal)
 
-        ' Create DataTable if dgvOrderItemPreview is empty
-        If dgvOrderItemPreview.DataSource Is Nothing Then
-            Dim dt As New DataTable()
-            dt.Columns.Add("Product Name", GetType(String))
-            dt.Columns.Add("Brand", GetType(String))
-            dt.Columns.Add("Unit Weight", GetType(Decimal))
-            dt.Columns.Add("Unit Price", GetType(Decimal))
-            dt.Columns.Add("Total Box", GetType(Decimal))
-            dt.Columns.Add("Total Weight", GetType(Decimal))
-            dt.Columns.Add("Total", GetType(Decimal))
-            dgvOrderItemPreview.DataSource = dt
-        End If
-
         ' Cast DataSource back to DataTable
         Dim orderTable As DataTable = CType(dgvOrderItemPreview.DataSource, DataTable)
 
         ' Add the new row
         orderTable.Rows.Add(productName, brand, unitWeight, unitPrice, totalBox, totalWeight, total)
-
-        ' Optional formatting
-        With dgvOrderItemPreview
-            .AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-            .SelectionMode = DataGridViewSelectionMode.FullRowSelect
-            .MultiSelect = False
-            .ReadOnly = True
-            .RowHeadersVisible = False
-
-            ' Format numeric columns & make them thinner
-            .Columns("Unit Price").DefaultCellStyle.Format = "N2"
-            .Columns("Unit Price").FillWeight = 70
-
-            .Columns("Unit Weight").DefaultCellStyle.Format = "N2"
-            .Columns("Unit Weight").FillWeight = 70
-
-            .Columns("Total Box").DefaultCellStyle.Format = "N0"
-            .Columns("Total Box").FillWeight = 70
-
-            .Columns("Total Weight").DefaultCellStyle.Format = "N2"
-            .Columns("Total Weight").FillWeight = 70
-
-            .Columns("Total").DefaultCellStyle.Format = "N2"
-            .Columns("Total").FillWeight = 90
-
-            ' Make text columns wider
-            .Columns("Product Name").FillWeight = 200
-            .Columns("Brand").FillWeight = 120
-        End With
 
 
         ' ✅ Update Grand Total
@@ -102,6 +63,62 @@ Public Class frmCashierDashboard
     ' ✅ Whenever user changes balance selection → recalc totals
     Private Sub dgvCustomerBalancePreview_SelectionChanged(sender As Object, e As EventArgs) Handles dgvCustomerBalancePreview.SelectionChanged
         UpdateTotals()
+    End Sub
+
+    ' 🔹 Initialize dgvOrderItemPreview with headers only
+    Private Sub InitializeOrderItemPreview()
+        Dim dt As New DataTable()
+        dt.Columns.Add("Product Name", GetType(String))
+        dt.Columns.Add("Brand", GetType(String))
+        dt.Columns.Add("Unit Weight", GetType(Decimal))
+        dt.Columns.Add("Unit Price", GetType(Decimal))
+        dt.Columns.Add("Total Box", GetType(Decimal))
+        dt.Columns.Add("Total Weight", GetType(Decimal))
+        dt.Columns.Add("Total", GetType(Decimal))
+
+        dgvOrderItemPreview.DataSource = dt
+
+        ' Apply formatting once
+        With dgvOrderItemPreview
+            .AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+            .SelectionMode = DataGridViewSelectionMode.FullRowSelect
+            .MultiSelect = False
+            .ReadOnly = True
+            .RowHeadersVisible = False
+
+            .Columns("Unit Price").DefaultCellStyle.Format = "N2"
+            .Columns("Unit Weight").DefaultCellStyle.Format = "N2"
+            .Columns("Total Box").DefaultCellStyle.Format = "N0"
+            .Columns("Total Weight").DefaultCellStyle.Format = "N2"
+            .Columns("Total").DefaultCellStyle.Format = "N2"
+
+            .Columns("Unit Price").FillWeight = 70
+            .Columns("Unit Weight").FillWeight = 70
+            .Columns("Total Box").FillWeight = 70
+            .Columns("Total Weight").FillWeight = 70
+            .Columns("Total").FillWeight = 90
+            .Columns("Product Name").FillWeight = 200
+            .Columns("Brand").FillWeight = 120
+        End With
+    End Sub
+
+    ' 🔹 Initialize dgvCustomerBalancePreview with headers only
+    Private Sub InitializeCustomerBalancePreview()
+        Dim dt As New DataTable()
+        dt.Columns.Add("Date", GetType(Date))
+        dt.Columns.Add("Description", GetType(String))
+        dt.Columns.Add("Balance", GetType(Decimal))
+
+        dgvCustomerBalancePreview.DataSource = dt
+
+        With dgvCustomerBalancePreview
+            .AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+            .SelectionMode = DataGridViewSelectionMode.FullRowSelect
+            .MultiSelect = True
+            .ReadOnly = True
+            .RowHeadersVisible = False
+            .Columns("Balance").DefaultCellStyle.Format = "N2"
+        End With
     End Sub
 
 
@@ -158,20 +175,13 @@ Public Class frmCashierDashboard
                     Dim dt As New DataTable()
                     adapter.Fill(dt)
 
-                    dgvCustomerBalancePreview.DataSource = dt
-
-                    ' If no rows → show empty table
+                    ' ✅ If no rows → just clear table but keep headers
                     If dt.Rows.Count = 0 Then
-                        dgvCustomerBalancePreview.DataSource = Nothing
+                        Dim emptyTable As DataTable = CType(dgvCustomerBalancePreview.DataSource, DataTable)
+                        emptyTable.Rows.Clear()
+                    Else
+                        dgvCustomerBalancePreview.DataSource = dt
                     End If
-
-                    ' format
-                    With dgvCustomerBalancePreview
-                        .AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-                        .SelectionMode = DataGridViewSelectionMode.FullRowSelect
-                        .MultiSelect = True
-                        .ReadOnly = True
-                    End With
 
                     ' ✅ Prevent auto-selecting the first row
                     dgvCustomerBalancePreview.ClearSelection()
@@ -182,6 +192,7 @@ Public Class frmCashierDashboard
             MessageBox.Show("Error loading balance: " & ex.Message)
         End Try
     End Sub
+
 
     ' ✅ Load all products into dgvProductsPreview
     Private Sub LoadProducts()
