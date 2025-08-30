@@ -196,10 +196,23 @@ Public Class frmCashierPaymentInput
         End If
 
         ' ✅ Passed all validations → simulate Save + Print
-        Dim details As String = "Payments Entered:" & Environment.NewLine
+        Dim details As String = "=== ORDER ITEMS ===" & Environment.NewLine
+
+        ' 🔹 Include all items from dgvOrderItemPreview
+        Dim orderTable As DataTable = CType(parentForm.dgvOrderItemPreview.DataSource, DataTable)
+        For Each row As DataRow In orderTable.Rows
+            details &= $"{row("Product Name")} | {row("Brand")} | " &
+               $"Unit: {Convert.ToDecimal(row("Unit Weight")):N2}kg @ {Convert.ToDecimal(row("Unit Price")):N2} | " &
+               $"Box: {Convert.ToDecimal(row("Total Box")):N0} | " &
+               $"Weight: {Convert.ToDecimal(row("Total Weight")):N2}kg | " &
+               $"Total: {Convert.ToDecimal(row("Total")):N2}" & Environment.NewLine
+        Next
+
+        details &= Environment.NewLine & "=== PAYMENTS ENTERED ===" & Environment.NewLine
         For Each row As DataGridViewRow In dgvPaymentEntries.Rows
             details &= $"{row.Cells("Method").Value} | {row.Cells("RefNum").Value} | {row.Cells("Amount").Value}" & Environment.NewLine
         Next
+
         details &= Environment.NewLine & $"Customer: {firstName} {lastName}, {address}" & Environment.NewLine
         details &= $"Grand Total: {grandTotal:N2}" & Environment.NewLine
         details &= $"Total Paid: {totalPaid:N2}" & Environment.NewLine
