@@ -208,12 +208,30 @@ Public Class frmCashierPaymentInput
                $"Total: {Convert.ToDecimal(row("Total")):N2}" & Environment.NewLine
         Next
 
+        ' 🔹 Show Settled Balances (if any were selected)
+        Dim balanceTotal As Decimal = 0
+        details &= Environment.NewLine & "=== SETTLED BALANCES ===" & Environment.NewLine
+        If parentForm.dgvCustomerBalancePreview.SelectedRows.Count > 0 Then
+            For Each row As DataGridViewRow In parentForm.dgvCustomerBalancePreview.SelectedRows
+                details &= $"{CDate(row.Cells("Date").Value):yyyy-MM-dd} | " &
+                   $"{row.Cells("Description").Value} | " &
+                   $"{Convert.ToDecimal(row.Cells("Balance").Value):N2}" & Environment.NewLine
+
+                balanceTotal += Convert.ToDecimal(row.Cells("Balance").Value)
+            Next
+        Else
+            details &= "No balances settled (0.00)" & Environment.NewLine
+        End If
+
         details &= Environment.NewLine & "=== PAYMENTS ENTERED ===" & Environment.NewLine
         For Each row As DataGridViewRow In dgvPaymentEntries.Rows
             details &= $"{row.Cells("Method").Value} | {row.Cells("RefNum").Value} | {row.Cells("Amount").Value}" & Environment.NewLine
         Next
 
+        ' 🔹 Customer + Totals
         details &= Environment.NewLine & $"Customer: {firstName} {lastName}, {address}" & Environment.NewLine
+        details &= $"Order Subtotal: {(grandTotal - balanceTotal):N2}" & Environment.NewLine
+        details &= $"Settled Balances: {balanceTotal:N2}" & Environment.NewLine
         details &= $"Grand Total: {grandTotal:N2}" & Environment.NewLine
         details &= $"Total Paid: {totalPaid:N2}" & Environment.NewLine
         details &= $"Change: {(totalPaid - grandTotal):N2}"
