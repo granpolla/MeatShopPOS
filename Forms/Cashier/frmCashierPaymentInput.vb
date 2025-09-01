@@ -333,21 +333,23 @@ Public Class frmCashierPaymentInput
 
                     ' 🔹 Insert sales_transaction
                     Dim transId As Integer
+                    Dim invoicePdf As String = orderNumber & "-receipt"
                     Using cmd As New MySqlCommand("
-                INSERT INTO sales_transaction
-                    (order_number, user_id, customer_id, total_amount, payment_status_id, amount_paid)
-                VALUES
-                    (
-                        @ord, @uid, @cid, @total,
-                        (SELECT id FROM payment_status WHERE LOWER(payment_status_name) = @status_key LIMIT 1),
-                        @paid
-                    );", conn, tx)
+                        INSERT INTO sales_transaction
+                            (order_number, user_id, customer_id, total_amount, payment_status_id, amount_paid, invoice_pdf)
+                        VALUES
+                            (
+                                @ord, @uid, @cid, @total,
+                                (SELECT id FROM payment_status WHERE LOWER(payment_status_name) = @status_key LIMIT 1),
+                                @paid, @inv
+                            );", conn, tx)
                         cmd.Parameters.AddWithValue("@ord", orderNumber)
                         cmd.Parameters.AddWithValue("@uid", modSession.LoggedInUserID)
                         cmd.Parameters.AddWithValue("@cid", customerID)
                         cmd.Parameters.AddWithValue("@total", grandTotal)
                         cmd.Parameters.AddWithValue("@status_key", statusKey) ' will be "full" or "partial"
                         cmd.Parameters.AddWithValue("@paid", totalPaid)
+                        cmd.Parameters.AddWithValue("@inv", invoicePdf)
                         cmd.ExecuteNonQuery()
                     End Using
 
