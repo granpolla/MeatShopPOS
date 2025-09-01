@@ -469,7 +469,7 @@ Public Class frmCashierPaymentInput
                                 cmd.Parameters.AddWithValue("@tid", transId)
                                 cmd.Parameters.AddWithValue("@rid", oldTransId)
                                 cmd.Parameters.AddWithValue("@desc", descText)
-                                cmd.Parameters.AddWithValue("@amt", Convert.ToDecimal(row.Cells("Balance").Value))
+                                cmd.Parameters.AddWithValue("@amt", -Convert.ToDecimal(row.Cells("Balance").Value))
                                 cmd.ExecuteNonQuery()
                             End Using
                         Next

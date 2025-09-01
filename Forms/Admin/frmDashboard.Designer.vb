@@ -37,8 +37,9 @@ Partial Class frmDashboard
         Me.Chart1 = New System.Windows.Forms.DataVisualization.Charting.Chart()
         Me.txtTotalCustomer = New System.Windows.Forms.TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
-        Me.TextBox1 = New System.Windows.Forms.TextBox()
+        Me.txtTotalProducts = New System.Windows.Forms.TextBox()
         Me.Chart2 = New System.Windows.Forms.DataVisualization.Charting.Chart()
+        Me.Label4 = New System.Windows.Forms.Label()
         Me.Panel1.SuspendLayout()
         Me.Panel2.SuspendLayout()
         CType(Me.Chart1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -96,7 +97,8 @@ Partial Class frmDashboard
         '
         'Panel2
         '
-        Me.Panel2.Controls.Add(Me.TextBox1)
+        Me.Panel2.Controls.Add(Me.Label4)
+        Me.Panel2.Controls.Add(Me.txtTotalProducts)
         Me.Panel2.Controls.Add(Me.Label3)
         Me.Panel2.Controls.Add(Me.txtTotalCustomer)
         Me.Panel2.Location = New System.Drawing.Point(12, 12)
@@ -122,26 +124,28 @@ Partial Class frmDashboard
         '
         'txtTotalCustomer
         '
-        Me.txtTotalCustomer.Location = New System.Drawing.Point(39, 48)
+        Me.txtTotalCustomer.Font = New System.Drawing.Font("Segoe UI", 19.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtTotalCustomer.Location = New System.Drawing.Point(39, 47)
         Me.txtTotalCustomer.Name = "txtTotalCustomer"
-        Me.txtTotalCustomer.Size = New System.Drawing.Size(100, 22)
+        Me.txtTotalCustomer.Size = New System.Drawing.Size(100, 51)
         Me.txtTotalCustomer.TabIndex = 0
         '
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(36, 19)
+        Me.Label3.Location = New System.Drawing.Point(36, 28)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(98, 16)
         Me.Label3.TabIndex = 1
         Me.Label3.Text = "Total Customer"
         '
-        'TextBox1
+        'txtTotalProducts
         '
-        Me.TextBox1.Location = New System.Drawing.Point(209, 48)
-        Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.Size = New System.Drawing.Size(100, 22)
-        Me.TextBox1.TabIndex = 2
+        Me.txtTotalProducts.Font = New System.Drawing.Font("Segoe UI", 19.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtTotalProducts.Location = New System.Drawing.Point(209, 47)
+        Me.txtTotalProducts.Name = "txtTotalProducts"
+        Me.txtTotalProducts.Size = New System.Drawing.Size(100, 51)
+        Me.txtTotalProducts.TabIndex = 2
         '
         'Chart2
         '
@@ -158,6 +162,15 @@ Partial Class frmDashboard
         Me.Chart2.Size = New System.Drawing.Size(956, 298)
         Me.Chart2.TabIndex = 3
         Me.Chart2.Text = "Chart2"
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(206, 28)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(94, 16)
+        Me.Label4.TabIndex = 3
+        Me.Label4.Text = "Total Products"
         '
         'frmDashboard
         '
@@ -188,8 +201,9 @@ Partial Class frmDashboard
     Friend WithEvents Label1 As Label
     Friend WithEvents ComboBox1 As ComboBox
     Friend WithEvents txtSales As TextBox
-    Friend WithEvents TextBox1 As TextBox
+    Friend WithEvents txtTotalProducts As TextBox
     Friend WithEvents Label3 As Label
     Friend WithEvents txtTotalCustomer As TextBox
     Friend WithEvents Chart2 As DataVisualization.Charting.Chart
+    Friend WithEvents Label4 As Label
 End Class
