@@ -402,17 +402,20 @@ Public Class frmCashierPaymentInput
                     Next
 
                     ' 🔹 Ledger entry for NEW order
-                    Using cmd As New MySqlCommand("
-            INSERT INTO customer_ledger
-                (customer_id, transaction_id, description, amount)
-            VALUES
-                (@cid, @tid, @desc, @amt);", conn, tx)
-                        cmd.Parameters.AddWithValue("@cid", customerID)
-                        cmd.Parameters.AddWithValue("@tid", transId)
-                        cmd.Parameters.AddWithValue("@desc", "Order Transaction")
-                        cmd.Parameters.AddWithValue("@amt", If(status = "Partial", unpaidBalance, 0D))
-                        cmd.ExecuteNonQuery()
-                    End Using
+                    If status = "Partial" AndAlso unpaidBalance > 0 Then
+                        Using cmd As New MySqlCommand("
+                        INSERT INTO customer_ledger
+                            (customer_id, transaction_id, description, amount)
+                        VALUES
+                            (@cid, @tid, @desc, @amt);", conn, tx)
+                            cmd.Parameters.AddWithValue("@cid", customerID)
+                            cmd.Parameters.AddWithValue("@tid", transId)
+                            cmd.Parameters.AddWithValue("@desc", "Order Transaction")
+                            cmd.Parameters.AddWithValue("@amt", unpaidBalance)
+                            cmd.ExecuteNonQuery()
+                        End Using
+                    End If
+
 
                     ' 🔹 Ledger entries for SETTLED balances
                     If parentForm.dgvCustomerBalancePreview.SelectedRows.Count > 0 Then

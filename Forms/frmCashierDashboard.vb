@@ -159,14 +159,20 @@ Public Class frmCashierDashboard
     ' ✅ Load customer balance preview
     Private Sub LoadCustomerBalance(customerID As Integer)
         Dim query As String = "
-        SELECT cl.transaction_id AS 'TransactionID',
-               cl.entry_date AS 'Date',
-               cl.description AS 'Description',
-               cl.amount AS 'Balance'
-        FROM customer_ledger cl
-        WHERE cl.customer_id = @custID
-          AND cl.amount > 0
-        ORDER BY cl.entry_date DESC"
+            SELECT cl.transaction_id AS 'TransactionID',
+                   cl.entry_date AS 'Date',
+                   cl.description AS 'Description',
+                   cl.amount AS 'Balance'
+            FROM customer_ledger cl
+            WHERE cl.customer_id = @custID
+              AND cl.amount > 0
+              AND cl.related_transaction_id IS NULL  -- 🔹 exclude settlement rows
+              AND NOT EXISTS (                       -- 🔹 exclude if already settled
+                  SELECT 1
+                  FROM customer_ledger cl2
+                  WHERE cl2.related_transaction_id = cl.transaction_id
+              )
+            ORDER BY cl.entry_date DESC"
 
         Try
             Using conn As New MySqlConnection(My.Settings.DBConnection)
