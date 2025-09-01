@@ -1,5 +1,6 @@
 ﻿Imports MySql.Data.MySqlClient
 Imports System.Drawing
+Imports System.Windows.Forms.DataVisualization.Charting
 
 Public Class frmDashboard
 
@@ -12,10 +13,12 @@ Public Class frmDashboard
         ComboBox1.DropDownStyle = ComboBoxStyle.DropDownList
 
         LoadCashiers()
+        LoadMonthlySalesChart()
     End Sub
 
     Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged
         LoadCashiers()
+        LoadMonthlySalesChart()
     End Sub
 
     Private Sub LoadCashiers()
@@ -103,6 +106,73 @@ Public Class frmDashboard
 
         Catch ex As Exception
             MessageBox.Show("Error loading cashiers: " & ex.Message,
+                            "Error",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    Private Sub LoadMonthlySalesChart()
+        Try
+            Using conn As New MySqlConnection(My.Settings.DBConnection)
+                conn.Open()
+
+                ' ✅ Decide column for chart
+                Dim salesColumn As String
+                If ComboBox1.SelectedItem.ToString() = "Revenue" Then
+                    salesColumn = "st.total_amount"
+                Else
+                    salesColumn = "st.amount_paid"
+                End If
+
+                ' ✅ Current year monthly sales
+                Dim query As String = $"
+                    SELECT MONTH(st.order_datetime) AS sales_month,
+                           IFNULL(SUM({salesColumn}), 0) AS monthly_total
+                    FROM sales_transaction st
+                    WHERE YEAR(st.order_datetime) = YEAR(CURDATE())
+                    GROUP BY MONTH(st.order_datetime)
+                    ORDER BY sales_month;
+                "
+
+                Dim salesData As New Dictionary(Of Integer, Decimal)()
+
+                ' Initialize months with 0
+                For m As Integer = 1 To 12
+                    salesData(m) = 0
+                Next
+
+                Using cmd As New MySqlCommand(query, conn)
+                    Using reader As MySqlDataReader = cmd.ExecuteReader()
+                        While reader.Read()
+                            Dim monthNum As Integer = Convert.ToInt32(reader("sales_month"))
+                            Dim total As Decimal = Convert.ToDecimal(reader("monthly_total"))
+                            salesData(monthNum) = total
+                        End While
+                    End Using
+                End Using
+
+                ' ✅ Configure Chart
+                Chart1.Series.Clear()
+                Chart1.ChartAreas(0).AxisX.Interval = 1
+                Chart1.ChartAreas(0).AxisX.MajorGrid.LineWidth = 0
+                Chart1.ChartAreas(0).AxisY.MajorGrid.LineDashStyle = ChartDashStyle.Dash
+
+                Dim series As New Series("Monthly Sales")
+                series.ChartType = SeriesChartType.Column
+                series.Color = Color.SteelBlue
+                series.IsValueShownAsLabel = True
+
+                For m As Integer = 1 To 12
+                    Dim monthName As String = New DateTime(2025, m, 1).ToString("MMM")
+                    series.Points.AddXY(monthName, salesData(m))
+                Next
+
+                Chart1.Series.Add(series)
+
+            End Using
+        Catch ex As Exception
+            MessageBox.Show("Error loading monthly chart: " & ex.Message,
                             "Error",
                             MessageBoxButtons.OK,
                             MessageBoxIcon.Error)
