@@ -159,7 +159,8 @@ Public Class frmCashierDashboard
     ' ✅ Load customer balance preview
     Private Sub LoadCustomerBalance(customerID As Integer)
         Dim query As String = "
-        SELECT cl.entry_date AS 'Date',
+        SELECT cl.transaction_id AS 'TransactionID',
+               cl.entry_date AS 'Date',
                cl.description AS 'Description',
                cl.amount AS 'Balance'
         FROM customer_ledger cl
@@ -176,7 +177,6 @@ Public Class frmCashierDashboard
                     Dim dt As New DataTable()
                     adapter.Fill(dt)
 
-                    ' ✅ If no rows → just clear table but keep headers
                     If dt.Rows.Count = 0 Then
                         Dim emptyTable As DataTable = CType(dgvCustomerBalancePreview.DataSource, DataTable)
                         emptyTable.Rows.Clear()
@@ -184,7 +184,11 @@ Public Class frmCashierDashboard
                         dgvCustomerBalancePreview.DataSource = dt
                     End If
 
-                    ' ✅ Prevent auto-selecting the first row
+                    ' ✅ Hide TransactionID column
+                    If dgvCustomerBalancePreview.Columns.Contains("TransactionID") Then
+                        dgvCustomerBalancePreview.Columns("TransactionID").Visible = False
+                    End If
+
                     dgvCustomerBalancePreview.ClearSelection()
                     dgvCustomerBalancePreview.CurrentCell = Nothing
                 End Using
@@ -193,6 +197,7 @@ Public Class frmCashierDashboard
             MessageBox.Show("Error loading balance: " & ex.Message)
         End Try
     End Sub
+
 
 
     ' ✅ Load all products into dgvProductsPreview
