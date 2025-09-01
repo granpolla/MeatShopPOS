@@ -45,14 +45,14 @@ Partial Class frmCustomer
         Me.dgvCustomer.RowHeadersWidth = 51
         Me.dgvCustomer.RowTemplate.Height = 24
         Me.dgvCustomer.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvCustomer.Size = New System.Drawing.Size(1095, 409)
+        Me.dgvCustomer.Size = New System.Drawing.Size(1243, 409)
         Me.dgvCustomer.TabIndex = 4
         '
         'btnRefresh
         '
         Me.btnRefresh.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnRefresh.Font = New System.Drawing.Font("Segoe UI Semibold", 10.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnRefresh.Location = New System.Drawing.Point(940, 427)
+        Me.btnRefresh.Location = New System.Drawing.Point(1088, 427)
         Me.btnRefresh.Name = "btnRefresh"
         Me.btnRefresh.Size = New System.Drawing.Size(167, 57)
         Me.btnRefresh.TabIndex = 11
@@ -65,7 +65,7 @@ Partial Class frmCustomer
         Me.btnDeleteCustomer.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnDeleteCustomer.Font = New System.Drawing.Font("Segoe UI Semibold", 10.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnDeleteCustomer.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.btnDeleteCustomer.Location = New System.Drawing.Point(767, 427)
+        Me.btnDeleteCustomer.Location = New System.Drawing.Point(915, 427)
         Me.btnDeleteCustomer.Name = "btnDeleteCustomer"
         Me.btnDeleteCustomer.Size = New System.Drawing.Size(167, 57)
         Me.btnDeleteCustomer.TabIndex = 14
@@ -77,7 +77,7 @@ Partial Class frmCustomer
         Me.btnEditCustomer.BackColor = System.Drawing.Color.Lime
         Me.btnEditCustomer.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnEditCustomer.Font = New System.Drawing.Font("Segoe UI Semibold", 10.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnEditCustomer.Location = New System.Drawing.Point(594, 427)
+        Me.btnEditCustomer.Location = New System.Drawing.Point(742, 427)
         Me.btnEditCustomer.Name = "btnEditCustomer"
         Me.btnEditCustomer.Size = New System.Drawing.Size(167, 57)
         Me.btnEditCustomer.TabIndex = 13
@@ -90,7 +90,7 @@ Partial Class frmCustomer
         Me.btnAddCustomer.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnAddCustomer.Font = New System.Drawing.Font("Segoe UI Semibold", 10.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnAddCustomer.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.btnAddCustomer.Location = New System.Drawing.Point(421, 427)
+        Me.btnAddCustomer.Location = New System.Drawing.Point(569, 427)
         Me.btnAddCustomer.Name = "btnAddCustomer"
         Me.btnAddCustomer.Size = New System.Drawing.Size(167, 57)
         Me.btnAddCustomer.TabIndex = 12
@@ -101,7 +101,7 @@ Partial Class frmCustomer
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1119, 625)
+        Me.ClientSize = New System.Drawing.Size(1267, 770)
         Me.Controls.Add(Me.btnDeleteCustomer)
         Me.Controls.Add(Me.btnEditCustomer)
         Me.Controls.Add(Me.btnAddCustomer)

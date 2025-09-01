@@ -46,7 +46,7 @@ Partial Class frmAdminDashboard
         '
         Me.lblUserFullName.AutoSize = True
         Me.lblUserFullName.Font = New System.Drawing.Font("Segoe UI Semibold", 10.8!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblUserFullName.Location = New System.Drawing.Point(1061, 11)
+        Me.lblUserFullName.Location = New System.Drawing.Point(1239, 11)
         Me.lblUserFullName.Name = "lblUserFullName"
         Me.lblUserFullName.Size = New System.Drawing.Size(50, 25)
         Me.lblUserFullName.TabIndex = 0
@@ -97,13 +97,13 @@ Partial Class frmAdminDashboard
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel2.Location = New System.Drawing.Point(0, 0)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(1383, 61)
+        Me.Panel2.Size = New System.Drawing.Size(1531, 61)
         Me.Panel2.TabIndex = 5
         '
         'lblUserRole
         '
         Me.lblUserRole.AutoSize = True
-        Me.lblUserRole.Location = New System.Drawing.Point(1063, 36)
+        Me.lblUserRole.Location = New System.Drawing.Point(1241, 36)
         Me.lblUserRole.Name = "lblUserRole"
         Me.lblUserRole.Size = New System.Drawing.Size(30, 16)
         Me.lblUserRole.TabIndex = 11
@@ -112,7 +112,7 @@ Partial Class frmAdminDashboard
         'PictureBox2
         '
         Me.PictureBox2.Image = CType(resources.GetObject("PictureBox2.Image"), System.Drawing.Image)
-        Me.PictureBox2.Location = New System.Drawing.Point(1017, 14)
+        Me.PictureBox2.Location = New System.Drawing.Point(1195, 14)
         Me.PictureBox2.Name = "PictureBox2"
         Me.PictureBox2.Size = New System.Drawing.Size(38, 38)
         Me.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -125,7 +125,7 @@ Partial Class frmAdminDashboard
         Me.btnLogout.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnLogout.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnLogout.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.btnLogout.Location = New System.Drawing.Point(1281, 14)
+        Me.btnLogout.Location = New System.Drawing.Point(1429, 16)
         Me.btnLogout.Name = "btnLogout"
         Me.btnLogout.Size = New System.Drawing.Size(90, 33)
         Me.btnLogout.TabIndex = 0
@@ -162,7 +162,7 @@ Partial Class frmAdminDashboard
         Me.pnlSidebar.Dock = System.Windows.Forms.DockStyle.Left
         Me.pnlSidebar.Location = New System.Drawing.Point(0, 61)
         Me.pnlSidebar.Name = "pnlSidebar"
-        Me.pnlSidebar.Size = New System.Drawing.Size(264, 625)
+        Me.pnlSidebar.Size = New System.Drawing.Size(264, 770)
         Me.pnlSidebar.TabIndex = 6
         '
         'btnUser
@@ -181,14 +181,14 @@ Partial Class frmAdminDashboard
         Me.pnlContainer.Dock = System.Windows.Forms.DockStyle.Fill
         Me.pnlContainer.Location = New System.Drawing.Point(264, 61)
         Me.pnlContainer.Name = "pnlContainer"
-        Me.pnlContainer.Size = New System.Drawing.Size(1119, 625)
+        Me.pnlContainer.Size = New System.Drawing.Size(1267, 770)
         Me.pnlContainer.TabIndex = 7
         '
         'frmAdminDashboard
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1383, 686)
+        Me.ClientSize = New System.Drawing.Size(1531, 831)
         Me.Controls.Add(Me.pnlContainer)
         Me.Controls.Add(Me.pnlSidebar)
         Me.Controls.Add(Me.Panel2)

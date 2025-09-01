@@ -45,7 +45,7 @@ Partial Class frmUser
         Me.dgvUsers.RowHeadersWidth = 51
         Me.dgvUsers.RowTemplate.Height = 24
         Me.dgvUsers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvUsers.Size = New System.Drawing.Size(1095, 409)
+        Me.dgvUsers.Size = New System.Drawing.Size(1243, 409)
         Me.dgvUsers.TabIndex = 2
         '
         'btnAddUser
@@ -54,7 +54,7 @@ Partial Class frmUser
         Me.btnAddUser.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnAddUser.Font = New System.Drawing.Font("Segoe UI Semibold", 10.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnAddUser.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.btnAddUser.Location = New System.Drawing.Point(421, 427)
+        Me.btnAddUser.Location = New System.Drawing.Point(569, 427)
         Me.btnAddUser.Name = "btnAddUser"
         Me.btnAddUser.Size = New System.Drawing.Size(167, 57)
         Me.btnAddUser.TabIndex = 3
@@ -66,7 +66,7 @@ Partial Class frmUser
         Me.btnEditUser.BackColor = System.Drawing.Color.Lime
         Me.btnEditUser.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnEditUser.Font = New System.Drawing.Font("Segoe UI Semibold", 10.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnEditUser.Location = New System.Drawing.Point(594, 427)
+        Me.btnEditUser.Location = New System.Drawing.Point(742, 427)
         Me.btnEditUser.Name = "btnEditUser"
         Me.btnEditUser.Size = New System.Drawing.Size(167, 57)
         Me.btnEditUser.TabIndex = 4
@@ -79,7 +79,7 @@ Partial Class frmUser
         Me.btnDeleteUser.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnDeleteUser.Font = New System.Drawing.Font("Segoe UI Semibold", 10.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnDeleteUser.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.btnDeleteUser.Location = New System.Drawing.Point(767, 427)
+        Me.btnDeleteUser.Location = New System.Drawing.Point(915, 427)
         Me.btnDeleteUser.Name = "btnDeleteUser"
         Me.btnDeleteUser.Size = New System.Drawing.Size(167, 57)
         Me.btnDeleteUser.TabIndex = 5
@@ -90,7 +90,7 @@ Partial Class frmUser
         '
         Me.btnRefresh.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnRefresh.Font = New System.Drawing.Font("Segoe UI Semibold", 10.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnRefresh.Location = New System.Drawing.Point(940, 427)
+        Me.btnRefresh.Location = New System.Drawing.Point(1088, 427)
         Me.btnRefresh.Name = "btnRefresh"
         Me.btnRefresh.Size = New System.Drawing.Size(167, 57)
         Me.btnRefresh.TabIndex = 6
@@ -101,7 +101,7 @@ Partial Class frmUser
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1119, 625)
+        Me.ClientSize = New System.Drawing.Size(1267, 770)
         Me.Controls.Add(Me.btnRefresh)
         Me.Controls.Add(Me.btnDeleteUser)
         Me.Controls.Add(Me.btnEditUser)
