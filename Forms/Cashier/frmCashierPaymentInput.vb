@@ -378,39 +378,56 @@ Public Class frmCashierPaymentInput
                     ' 🔹 Insert payments
                     For Each row As DataGridViewRow In dgvPaymentEntries.Rows
                         If row.IsNewRow Then Continue For
+
                         Dim methodRaw As String = row.Cells("Method").Value.ToString()
                         Dim methodKey As String = methodRaw.ToLower().Replace(" "c, "_"c)
+                        Dim refNumValue As Object = DBNull.Value
+
+                        ' 🔹 Only require RefNum if NOT cash
+                        If Not methodKey.Contains("cash") Then
+                            If row.Cells("RefNum").Value IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(row.Cells("RefNum").Value.ToString()) Then
+                                refNumValue = row.Cells("RefNum").Value
+                            Else
+                                MessageBox.Show($"Payment method '{methodRaw}' requires a Reference Number.",
+                            "Validation Error",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error)
+                                tx.Rollback()
+                                Return
+                            End If
+                        End If
 
                         Using cmd As New MySqlCommand("
-                INSERT INTO payment_detail
-                    (transaction_id, payment_method_id, ref_num, amount)
-                VALUES
-                    (
-                        @tid,
-                        (SELECT id
-                           FROM payment_method
-                          WHERE REPLACE(LOWER(payment_method_name),' ','_') = @mkey
-                          LIMIT 1),
-                        @ref, @amt
-                    );", conn, tx)
+                        INSERT INTO payment_detail
+                            (transaction_id, payment_method_id, ref_num, amount)
+                        VALUES
+                            (
+                                @tid,
+                                (SELECT id
+                                   FROM payment_method
+                                  WHERE REPLACE(LOWER(payment_method_name),' ','_') = @mkey
+                                  LIMIT 1),
+                                @ref, @amt
+                            );", conn, tx)
                             cmd.Parameters.AddWithValue("@tid", transId)
                             cmd.Parameters.AddWithValue("@mkey", methodKey)
-                            cmd.Parameters.AddWithValue("@ref", If(row.Cells("RefNum").Value, DBNull.Value))
+                            cmd.Parameters.AddWithValue("@ref", refNumValue)  ' ✅ CASH → NULL, OTHERS → value
                             cmd.Parameters.AddWithValue("@amt", Convert.ToDecimal(row.Cells("Amount").Value))
                             cmd.ExecuteNonQuery()
                         End Using
                     Next
 
+
                     ' 🔹 Ledger entry for NEW order
                     If status = "Partial" AndAlso unpaidBalance > 0 Then
                         Using cmd As New MySqlCommand("
                         INSERT INTO customer_ledger
-                            (customer_id, transaction_id, description, amount)
+                            (customer_id, transaction_id, related_transaction_id, description, amount)
                         VALUES
-                            (@cid, @tid, @desc, @amt);", conn, tx)
+                            (@cid, @tid, NULL, @desc, @amt);", conn, tx)
                             cmd.Parameters.AddWithValue("@cid", customerID)
                             cmd.Parameters.AddWithValue("@tid", transId)
-                            cmd.Parameters.AddWithValue("@desc", "Order Transaction")
+                            cmd.Parameters.AddWithValue("@desc", $"Balance from purchase {orderNumber}")
                             cmd.Parameters.AddWithValue("@amt", unpaidBalance)
                             cmd.ExecuteNonQuery()
                         End Using
@@ -420,22 +437,34 @@ Public Class frmCashierPaymentInput
                     ' 🔹 Ledger entries for SETTLED balances
                     If parentForm.dgvCustomerBalancePreview.SelectedRows.Count > 0 Then
                         For Each row As DataGridViewRow In parentForm.dgvCustomerBalancePreview.SelectedRows
+                            Dim oldTransId As Integer = Convert.ToInt32(row.Cells("TransactionID").Value)
+                            Dim oldOrderNum As String = ""
+
+                            ' Get the old order number
+                            Using cmdFetch As New MySqlCommand("SELECT order_number FROM sales_transaction WHERE id=@rid LIMIT 1;", conn, tx)
+                                cmdFetch.Parameters.AddWithValue("@rid", oldTransId)
+                                oldOrderNum = Convert.ToString(cmdFetch.ExecuteScalar())
+                            End Using
+
+                            Dim descText As String = $"Paid old balance from {oldOrderNum} during {orderNumber}"
+
                             Using cmd As New MySqlCommand("
-                    INSERT INTO customer_ledger
-                        (customer_id, transaction_id, related_transaction_id, description, amount)
-                    VALUES
-                        (@cid, @tid, @rid, @desc, @amt);", conn, tx)
+                                INSERT INTO customer_ledger
+                                    (customer_id, transaction_id, related_transaction_id, description, amount)
+                                VALUES
+                                    (@cid, @tid, @rid, @desc, @amt);", conn, tx)
                                 cmd.Parameters.AddWithValue("@cid", customerID)
                                 cmd.Parameters.AddWithValue("@tid", transId)
-                                cmd.Parameters.AddWithValue("@rid", Convert.ToInt32(row.Cells("TransactionID").Value))
-                                cmd.Parameters.AddWithValue("@desc", "Payment for previous balance")
+                                cmd.Parameters.AddWithValue("@rid", oldTransId)
+                                cmd.Parameters.AddWithValue("@desc", descText)
                                 cmd.Parameters.AddWithValue("@amt", Convert.ToDecimal(row.Cells("Balance").Value))
                                 cmd.ExecuteNonQuery()
                             End Using
                         Next
+
                     End If
 
-                    ' ✅ Commit
+                    ' ✅ Commit 
                     tx.Commit()
                 End Using
             End Using
