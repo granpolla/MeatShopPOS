@@ -20,17 +20,15 @@ Public Class frmCashierDashboard
     End Function
 
     ' ✅ Add order item row to dgvOrderItemPreview
-    Public Sub AddOrderItem(productName As String, brand As String, unitWeight As Decimal, unitPrice As Decimal,
-                    totalBox As Decimal, totalWeight As Decimal, total As Decimal)
+    Public Sub AddOrderItem(productID As Integer, productName As String, brand As String,
+                        unitWeight As Decimal, unitPrice As Decimal,
+                        totalBox As Decimal, totalWeight As Decimal, total As Decimal)
 
-        ' Cast DataSource back to DataTable
         Dim orderTable As DataTable = CType(dgvOrderItemPreview.DataSource, DataTable)
 
-        ' Add the new row
-        orderTable.Rows.Add(productName, brand, unitWeight, unitPrice, totalBox, totalWeight, total)
+        ' Include ProductID in the row
+        orderTable.Rows.Add(productID, productName, brand, unitWeight, unitPrice, totalBox, totalWeight, total)
 
-
-        ' ✅ Update Grand Total
         UpdateGrandTotal()
     End Sub
 
@@ -68,6 +66,7 @@ Public Class frmCashierDashboard
     ' 🔹 Initialize dgvOrderItemPreview with headers only
     Private Sub InitializeOrderItemPreview()
         Dim dt As New DataTable()
+        dt.Columns.Add("ProductID", GetType(Integer)) ' Add hidden ProductID column for database reference
         dt.Columns.Add("Product Name", GetType(String))
         dt.Columns.Add("Brand", GetType(String))
         dt.Columns.Add("Unit Weight", GetType(Decimal))
@@ -85,6 +84,8 @@ Public Class frmCashierDashboard
             .MultiSelect = False
             .ReadOnly = True
             .RowHeadersVisible = False
+
+            .Columns("ProductID").Visible = False
 
             .Columns("Unit Price").DefaultCellStyle.Format = "N2"
             .Columns("Unit Weight").DefaultCellStyle.Format = "N2"
@@ -504,6 +505,7 @@ Public Class frmCashierDashboard
             Dim row As DataGridViewRow = dgvProductsPreview.Rows(e.RowIndex)
 
             ' Get product details
+            Dim productID As Integer = Convert.ToInt32(row.Cells("ProductID").Value)
             Dim productName As String = row.Cells("Product Name").Value.ToString()
             Dim productBrand As String = row.Cells("Brand").Value.ToString()
             Dim unitWeight As Decimal = Convert.ToDecimal(row.Cells("Unit Weight").Value)
@@ -513,12 +515,14 @@ Public Class frmCashierDashboard
             For Each ctrl As Control In pnlInputOrderItem.Controls
                 If TypeOf ctrl Is frmCashierInputOrderItem Then
                     Dim inputForm As frmCashierInputOrderItem = CType(ctrl, frmCashierInputOrderItem)
-                    inputForm.FillProductDetails(productName, productBrand, unitWeight, unitPrice)
+                    ' ✅ Now pass productID as well
+                    inputForm.FillProductDetails(productID, productName, productBrand, unitWeight, unitPrice)
                     Exit For
                 End If
             Next
         End If
     End Sub
+
 
 
 

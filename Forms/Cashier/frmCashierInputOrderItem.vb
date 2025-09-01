@@ -11,15 +11,17 @@
 
 
     ' ✅ Called by Dashboard when product row is clicked
-    Public Sub FillProductDetails(pName As String, pBrand As String, weight As Decimal, price As Decimal)
+    ' In frmCashierInputOrderItem
+    Public Sub FillProductDetails(pID As Integer, pName As String, pBrand As String, weight As Decimal, price As Decimal)
         txtProductName.Text = pName
         txtProductBrand.Text = pBrand
         txtUnitWeight.Text = weight.ToString()
         txtUnitPrice.Text = price.ToString("N2")
-        txtTotal.Text = price.ToString("N2") ' default for 1 weight
-
-        ' ✅ Lock ProductName after product is chosen
+        txtTotal.Text = price.ToString("N2")
         txtProductName.ReadOnly = True
+
+        ' Store productID in hidden field
+        txtProductName.Tag = pID
     End Sub
 
 
@@ -166,7 +168,9 @@
 
         ' ✅ Pass data back to Dashboard
         Dim parentForm As frmCashierDashboard = CType(Me.ParentForm, frmCashierDashboard)
-        parentForm.AddOrderItem(txtProductName.Text, txtProductBrand.Text, unitWeight, unitPrice, totalBox, totalWeight, total)
+        Dim productId As Integer = Convert.ToInt32(txtProductName.Tag)
+
+        parentForm.AddOrderItem(productId, txtProductName.Text, txtProductBrand.Text, unitWeight, unitPrice, totalBox, totalWeight, total)
 
         ' ✅ Clear input fields after adding
         txtProductName.Clear()

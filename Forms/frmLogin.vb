@@ -19,7 +19,7 @@ Public Class frmLogin
             Return
         End If
 
-        Dim query As String = "SELECT u.id, u.full_name, u.password_hash, r.role_name
+        Dim query As String = "SELECT u.id, u.full_name, u.username, u.password_hash, r.role_name
                                FROM USER u
                                INNER JOIN ROLE r ON u.role_id = r.id
                                WHERE u.username = @username"
@@ -39,6 +39,7 @@ Public Class frmLogin
                             ' ✅ Login success: store in session
                             LoggedInUserID = reader("id")
                             LoggedInFullName = reader("full_name").ToString()
+                            LoggedInUsername = reader("username").ToString()
                             LoggedInRole = reader("role_name").ToString()
 
                             MessageBox.Show("Welcome " & LoggedInFullName & "!", "Login Successful")

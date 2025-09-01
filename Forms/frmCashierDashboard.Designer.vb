@@ -36,12 +36,12 @@ Partial Class frmCashierDashboard
         Me.dgvCustomer = New System.Windows.Forms.DataGridView()
         Me.dgvOrderItemPreview = New System.Windows.Forms.DataGridView()
         Me.pnlTransactionHeader = New System.Windows.Forms.Panel()
+        Me.btnSearch = New System.Windows.Forms.Button()
         Me.txtLastName = New System.Windows.Forms.TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.btnRefresh = New System.Windows.Forms.Button()
         Me.txtFirstName = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.btnSearch = New System.Windows.Forms.Button()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.txtCustomerAddress = New System.Windows.Forms.TextBox()
         Me.pnlCashierPaymentInput = New System.Windows.Forms.Panel()
@@ -203,6 +203,15 @@ Partial Class frmCashierDashboard
         Me.pnlTransactionHeader.Size = New System.Drawing.Size(361, 153)
         Me.pnlTransactionHeader.TabIndex = 12
         '
+        'btnSearch
+        '
+        Me.btnSearch.Location = New System.Drawing.Point(19, 111)
+        Me.btnSearch.Name = "btnSearch"
+        Me.btnSearch.Size = New System.Drawing.Size(148, 23)
+        Me.btnSearch.TabIndex = 11
+        Me.btnSearch.Text = "Search Customer"
+        Me.btnSearch.UseVisualStyleBackColor = True
+        '
         'txtLastName
         '
         Me.txtLastName.Location = New System.Drawing.Point(97, 42)
@@ -243,15 +252,6 @@ Partial Class frmCashierDashboard
         Me.Label1.Size = New System.Drawing.Size(75, 16)
         Me.Label1.TabIndex = 8
         Me.Label1.Text = "First Name:"
-        '
-        'btnSearch
-        '
-        Me.btnSearch.Location = New System.Drawing.Point(19, 111)
-        Me.btnSearch.Name = "btnSearch"
-        Me.btnSearch.Size = New System.Drawing.Size(148, 23)
-        Me.btnSearch.TabIndex = 11
-        Me.btnSearch.Text = "Search Customer"
-        Me.btnSearch.UseVisualStyleBackColor = True
         '
         'Label2
         '
