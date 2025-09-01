@@ -9,13 +9,17 @@ Public Class frmCustomer
     ' ✅ Load customers into DataGridView
     Public Sub LoadCustomers()
         Dim query As String = "
-            SELECT id,
-                   customer_name AS 'Customer Name',
-                   address AS 'Address',
-                   created_at AS 'Created At',
-                   updated_at AS 'Updated At'
-            FROM customer
-            ORDER BY created_at DESC"
+        SELECT 
+            c.id,
+            c.customer_name AS 'Customer Name',
+            c.address AS 'Address',
+            COALESCE(SUM(cl.amount), 0) AS 'Balance',
+            c.created_at AS 'Created At',
+            c.updated_at AS 'Updated At'
+        FROM customer c
+        LEFT JOIN customer_ledger cl ON c.id = cl.customer_id
+        GROUP BY c.id, c.customer_name, c.address, c.created_at, c.updated_at
+        ORDER BY c.created_at DESC"
         Try
             Using conn As New MySqlConnection(My.Settings.DBConnection)
                 Using cmd As New MySqlCommand(query, conn)
@@ -32,12 +36,15 @@ Public Class frmCustomer
         End Try
     End Sub
 
+
     ' ✅ Format grid
     Private Sub FormatGrid()
         With dgvCustomer
             .Columns("id").Visible = False   ' hide primary key
             .Columns("Customer Name").Width = 200
             .Columns("Address").Width = 250
+            .Columns("Balance").Width = 100
+            .Columns("Balance").DefaultCellStyle.Format = "N2"
             .Columns("Created At").Width = 150
             .Columns("Updated At").Width = 150
 
@@ -50,6 +57,7 @@ Public Class frmCustomer
             .RowHeadersVisible = False
         End With
     End Sub
+
 
 
 
