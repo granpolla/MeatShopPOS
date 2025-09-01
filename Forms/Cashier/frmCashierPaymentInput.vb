@@ -334,21 +334,28 @@ Public Class frmCashierPaymentInput
                     ' 🔹 Insert sales_transaction
                     Dim transId As Integer
                     Dim invoicePdf As String = orderNumber & "-receipt"
+                    Dim cashReceived As Decimal = totalPaid
+                    Dim amountApplied As Decimal = Math.Min(totalPaid, grandTotal)
+                    Dim changeGiven As Decimal = Math.Max(totalPaid - grandTotal, 0)
+
                     Using cmd As New MySqlCommand("
-                        INSERT INTO sales_transaction
-                            (order_number, user_id, customer_id, total_amount, payment_status_id, amount_paid, invoice_pdf)
-                        VALUES
-                            (
-                                @ord, @uid, @cid, @total,
-                                (SELECT id FROM payment_status WHERE LOWER(payment_status_name) = @status_key LIMIT 1),
-                                @paid, @inv
-                            );", conn, tx)
+                    INSERT INTO sales_transaction
+                        (order_number, user_id, customer_id, total_amount, payment_status_id, cash_received, amount_paid, change_given, invoice_pdf)
+                    VALUES
+                        (
+                            @ord, @uid, @cid, @total,
+                            (SELECT id FROM payment_status WHERE LOWER(payment_status_name) = @status_key LIMIT 1),
+                            @cash, @applied, @chg, @inv
+                        );", conn, tx)
+
                         cmd.Parameters.AddWithValue("@ord", orderNumber)
                         cmd.Parameters.AddWithValue("@uid", modSession.LoggedInUserID)
                         cmd.Parameters.AddWithValue("@cid", customerID)
                         cmd.Parameters.AddWithValue("@total", grandTotal)
-                        cmd.Parameters.AddWithValue("@status_key", statusKey) ' will be "full" or "partial"
-                        cmd.Parameters.AddWithValue("@paid", totalPaid)
+                        cmd.Parameters.AddWithValue("@status_key", statusKey)
+                        cmd.Parameters.AddWithValue("@cash", cashReceived)
+                        cmd.Parameters.AddWithValue("@applied", amountApplied)
+                        cmd.Parameters.AddWithValue("@chg", changeGiven)
                         cmd.Parameters.AddWithValue("@inv", invoicePdf)
                         cmd.ExecuteNonQuery()
                     End Using
@@ -362,10 +369,10 @@ Public Class frmCashierPaymentInput
                     Dim orderTable As DataTable = CType(parentForm.dgvOrderItemPreview.DataSource, DataTable)
                     For Each r As DataRow In orderTable.Rows
                         Using cmd As New MySqlCommand("
-                INSERT INTO transaction_item
-                    (transaction_id, product_id, number_of_box, unit_weight_kg, unit_price_php, total_weight_kg, subtotal)
-                VALUES
-                    (@tid, @pid, @box, @uw, @up, @tw, @sub);", conn, tx)
+                        INSERT INTO transaction_item
+                            (transaction_id, product_id, number_of_box, unit_weight_kg, unit_price_php, total_weight_kg, subtotal)
+                        VALUES
+                            (@tid, @pid, @box, @uw, @up, @tw, @sub);", conn, tx)
                             cmd.Parameters.AddWithValue("@tid", transId)
                             cmd.Parameters.AddWithValue("@pid", Convert.ToInt32(r("ProductID")))
                             cmd.Parameters.AddWithValue("@box", Convert.ToDecimal(r("Total Box")))
