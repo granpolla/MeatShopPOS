@@ -27,29 +27,39 @@ Public Class frmDashboard
             Using conn As New MySqlConnection(My.Settings.DBConnection)
                 conn.Open()
 
-                ' ✅ Decide which column to SUM based on selection
-                Dim salesColumn As String
-                If ComboBox1.SelectedItem.ToString() = "Revenue" Then
-                    salesColumn = "st.total_amount"
-                Else
-                    salesColumn = "st.amount_paid"
-                End If
+                ' Determine column based on ComboBox
+                Dim isRevenue As Boolean = ComboBox1.SelectedItem.ToString() = "Revenue"
 
-                Dim query As String = $"
-                    SELECT u.id, u.full_name, 
-                           IFNULL(SUM({salesColumn}), 0) AS total_sales
+                Dim query As String
+
+                If isRevenue Then
+                    ' Revenue = total_amount
+                    query = "
+                    SELECT u.id, u.full_name,
+                           IFNULL(SUM(st.total_amount),0) AS total_sales
                     FROM user u
                     INNER JOIN role r ON u.role_id = r.id
                     LEFT JOIN sales_transaction st ON u.id = st.user_id
                     WHERE r.role_name = 'cashier'
                     GROUP BY u.id, u.full_name
-                    ORDER BY u.id ASC;
-                "
+                    ORDER BY u.id ASC;"
+                Else
+                    ' Payments Received = amount_paid + settled balances
+                    query = "
+                    SELECT u.id, u.full_name,
+                           IFNULL(SUM(st.amount_paid + COALESCE(cl.amount * -1,0)),0) AS total_sales
+                    FROM user u
+                    INNER JOIN role r ON u.role_id = r.id
+                    LEFT JOIN sales_transaction st ON u.id = st.user_id
+                    LEFT JOIN customer_ledger cl ON cl.related_transaction_id = st.id
+                    WHERE r.role_name = 'cashier'
+                    GROUP BY u.id, u.full_name
+                    ORDER BY u.id ASC;"
+                End If
 
                 Using cmd As New MySqlCommand(query, conn)
                     Using reader As MySqlDataReader = cmd.ExecuteReader()
-
-                        ' ✅ Clear previous controls
+                        ' Clear previous controls
                         For i As Integer = Panel1.Controls.Count - 1 To 0 Step -1
                             Dim ctrl = Panel1.Controls(i)
                             If TypeOf ctrl Is TextBox AndAlso ctrl.Name.StartsWith("txtCashier") Then
@@ -57,7 +67,7 @@ Public Class frmDashboard
                             End If
                         Next
 
-                        Dim yPos As Integer = 82   ' starting Y position inside Panel1
+                        Dim yPos As Integer = 82
                         Dim index As Integer = 1
                         Dim grandTotal As Decimal = 0
 
@@ -66,52 +76,48 @@ Public Class frmDashboard
                             Dim totalSales As Decimal = Convert.ToDecimal(reader("total_sales"))
                             grandTotal += totalSales
 
-                            ' ✅ Cashier Name TextBox
-                            Dim txtName As New TextBox()
-                            txtName.Name = "txtCashier" & index
-                            txtName.Text = fullName
-                            txtName.ReadOnly = True
-                            txtName.Width = 110
-                            txtName.BorderStyle = BorderStyle.None
-                            txtName.BackColor = Color.White
-                            txtName.Font = New Font("Segoe UI", 10)
-                            txtName.Location = New Point(3, yPos)
-                            txtName.ReadOnly = True
+                            ' Cashier Name
+                            Dim txtName As New TextBox() With {
+                            .Name = "txtCashier" & index,
+                            .Text = fullName,
+                            .ReadOnly = True,
+                            .Width = 110,
+                            .BorderStyle = BorderStyle.None,
+                            .BackColor = Color.White,
+                            .Font = New Font("Segoe UI", 10),
+                            .Location = New Point(3, yPos)
+                        }
 
-                            ' ✅ Sales Total TextBox
-                            Dim txtSalesBox As New TextBox()
-                            txtSalesBox.Name = "txtCashierSales" & index
-                            txtSalesBox.Text = totalSales.ToString("N2") ' format 12,000.00
-                            txtSalesBox.ReadOnly = True
-                            txtSalesBox.Width = 70
-                            txtSalesBox.TextAlign = HorizontalAlignment.Right
-                            txtSalesBox.Font = New Font("Segoe UI", 10, FontStyle.Bold)
+                            ' Sales Total
+                            Dim txtSalesBox As New TextBox() With {
+                            .Name = "txtCashierSales" & index,
+                            .Text = totalSales.ToString("N2"),
+                            .ReadOnly = True,
+                            .Width = 70,
+                            .TextAlign = HorizontalAlignment.Right,
+                            .Font = New Font("Segoe UI", 10, FontStyle.Bold),
+                            .BorderStyle = BorderStyle.None,
+                            .BackColor = Color.White,
+                            .Location = New Point(130, yPos)
+                        }
 
-                            txtSalesBox.BorderStyle = BorderStyle.None
-                            txtSalesBox.BackColor = Color.White
-                            txtSalesBox.Location = New Point(130, yPos)
-                            txtSales.ReadOnly = True
-
-                            ' Add them to Panel1
                             Panel1.Controls.Add(txtName)
                             Panel1.Controls.Add(txtSalesBox)
 
-                            yPos += 30  ' spacing between rows
+                            yPos += 30
                             index += 1
                         End While
 
-                        ' ✅ Show grand total in txtSales
                         txtSales.Text = grandTotal.ToString("N2")
-
                     End Using
                 End Using
             End Using
 
         Catch ex As Exception
             MessageBox.Show("Error loading cashiers: " & ex.Message,
-                            "Error",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Error)
+                        "Error",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -120,27 +126,31 @@ Public Class frmDashboard
             Using conn As New MySqlConnection(My.Settings.DBConnection)
                 conn.Open()
 
-                ' ✅ Decide column for chart
-                Dim salesColumn As String
-                If ComboBox1.SelectedItem.ToString() = "Revenue" Then
-                    salesColumn = "st.total_amount"
+                Dim isRevenue As Boolean = ComboBox1.SelectedItem.ToString() = "Revenue"
+                Dim query As String
+
+                If isRevenue Then
+                    ' Revenue = sum of total_amount
+                    query = "
+                    SELECT MONTH(st.order_datetime) AS sales_month,
+                           IFNULL(SUM(st.total_amount),0) AS monthly_total
+                    FROM sales_transaction st
+                    WHERE YEAR(st.order_datetime) = YEAR(CURDATE())
+                    GROUP BY MONTH(st.order_datetime)
+                    ORDER BY sales_month;"
                 Else
-                    salesColumn = "st.amount_paid"
+                    ' Payments Received = sum of amount_paid + settled balances
+                    query = "
+                    SELECT MONTH(st.order_datetime) AS sales_month,
+                           IFNULL(SUM(st.amount_paid + COALESCE(cl.amount * -1,0)),0) AS monthly_total
+                    FROM sales_transaction st
+                    LEFT JOIN customer_ledger cl ON cl.related_transaction_id = st.id
+                    WHERE YEAR(st.order_datetime) = YEAR(CURDATE())
+                    GROUP BY MONTH(st.order_datetime)
+                    ORDER BY sales_month;"
                 End If
 
-                ' ✅ Current year monthly sales
-                Dim query As String = $"
-                SELECT MONTH(st.order_datetime) AS sales_month,
-                       IFNULL(SUM({salesColumn}), 0) AS monthly_total
-                FROM sales_transaction st
-                WHERE YEAR(st.order_datetime) = YEAR(CURDATE())
-                GROUP BY MONTH(st.order_datetime)
-                ORDER BY sales_month;
-            "
-
-                Dim salesData As New Dictionary(Of Integer, Decimal)()
-
-                ' Initialize months with 0
+                Dim salesData As New Dictionary(Of Integer, Decimal)
                 For m As Integer = 1 To 12
                     salesData(m) = 0
                 Next
@@ -155,20 +165,20 @@ Public Class frmDashboard
                     End Using
                 End Using
 
-                ' ✅ Configure Chart
+                ' Configure Chart
                 Chart1.Series.Clear()
                 Chart1.ChartAreas(0).AxisX.Interval = 1
                 Chart1.ChartAreas(0).AxisX.MajorGrid.LineWidth = 0
                 Chart1.ChartAreas(0).AxisY.MajorGrid.LineDashStyle = ChartDashStyle.Dash
-                Chart1.ChartAreas(0).AxisX.LabelStyle.Angle = -45 ' rotate X-axis labels
+                Chart1.ChartAreas(0).AxisX.LabelStyle.Angle = -45
 
-                Dim series As New Series("Monthly Sales")
-                series.ChartType = SeriesChartType.Column
-                series.Color = Color.SteelBlue
-                series.IsValueShownAsLabel = True
+                Dim series As New Series("Monthly Sales") With {
+                .ChartType = SeriesChartType.Column,
+                .Color = Color.SteelBlue,
+                .IsValueShownAsLabel = True
+            }
 
                 Dim currentYear As Integer = DateTime.Now.Year
-
                 For m As Integer = 1 To 12
                     Dim monthName As String = New DateTime(currentYear, m, 1).ToString("MMM")
                     series.Points.AddXY(monthName, salesData(m))
@@ -176,15 +186,15 @@ Public Class frmDashboard
 
                 Chart1.Series.Add(series)
 
-                ' ✅ Dynamic chart title
                 Chart1.Titles.Clear()
-                Dim title As New Title()
-                title.Text = $"Monthly Sales for {currentYear}"
-                title.Font = New Font("Segoe UI", 12, FontStyle.Bold)
-                title.ForeColor = Color.DarkBlue
+                Dim title As New Title() With {
+                .Text = $"Monthly Sales for {currentYear}",
+                .Font = New Font("Segoe UI", 12, FontStyle.Bold),
+                .ForeColor = Color.DarkBlue
+            }
                 Chart1.Titles.Add(title)
-
             End Using
+
         Catch ex As Exception
             MessageBox.Show("Error loading monthly chart: " & ex.Message,
                         "Error",
@@ -192,6 +202,7 @@ Public Class frmDashboard
                         MessageBoxIcon.Error)
         End Try
     End Sub
+
 
     Private Sub LoadTopProductsChart()
         Try
