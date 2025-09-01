@@ -4,6 +4,10 @@ Imports System.Text.RegularExpressions
 Public Class frmCashierDashboard
 
     Private Sub frmCashierDashboard_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        lblUserFullName.Text = LoggedInFullName
+        lblUserRole.Text = LoggedInRole
+
+
         LoadCustomers()
         LoadProducts()
         LoadInputOrderItemForm()
@@ -497,6 +501,27 @@ Public Class frmCashierDashboard
 
         ' Recalculate grand total (only order items remain)
         UpdateGrandTotal()
+    End Sub
+
+    Private Sub btnLogout_Click(sender As Object, e As EventArgs) Handles btnLogout.Click
+        Dim result As DialogResult = MessageBox.Show("Are you sure you want to logout?",
+                                                "Logout Confirmation",
+                                                MessageBoxButtons.YesNo,
+                                                MessageBoxIcon.Question)
+
+        If result = DialogResult.Yes Then
+            ' 🔹 Clear session variables
+            LoggedInUserID = 0
+            LoggedInFullName = ""
+            LoggedInRole = ""
+
+            ' 🔹 Show login form again
+            Dim loginForm As New frmLogin()
+            loginForm.Show()
+
+            ' 🔹 Close current dashboard
+            Me.Close()
+        End If
     End Sub
 
 

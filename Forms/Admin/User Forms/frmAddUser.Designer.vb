@@ -149,6 +149,7 @@ Partial Class frmAddUser
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(495, 641)
+        Me.ControlBox = False
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.lblRole)
         Me.Controls.Add(Me.lblConfirmPassword)
@@ -160,7 +161,7 @@ Partial Class frmAddUser
         Me.Controls.Add(Me.txtPassword)
         Me.Controls.Add(Me.txtConfirmPassword)
         Me.Controls.Add(Me.txtFullName)
-        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
+        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Name = "frmAddUser"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "frmAddUser"

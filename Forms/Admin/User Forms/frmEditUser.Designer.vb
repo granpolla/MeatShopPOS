@@ -149,6 +149,7 @@ Partial Class frmEditUser
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(495, 641)
+        Me.ControlBox = False
         Me.Controls.Add(Me.lblRole)
         Me.Controls.Add(Me.lblConfirmPassword)
         Me.Controls.Add(Me.lblPassword)
@@ -160,7 +161,7 @@ Partial Class frmEditUser
         Me.Controls.Add(Me.txtConfirmPassword)
         Me.Controls.Add(Me.txtFullName)
         Me.Controls.Add(Me.Label1)
-        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
+        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Name = "frmEditUser"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "frmEditUser"

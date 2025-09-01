@@ -145,6 +145,7 @@ Partial Class frmEditProduct
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(495, 641)
+        Me.ControlBox = False
         Me.Controls.Add(Me.btnCancel)
         Me.Controls.Add(Me.btnSave)
         Me.Controls.Add(Me.Label5)
@@ -156,7 +157,7 @@ Partial Class frmEditProduct
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.txtProductName)
         Me.Controls.Add(Me.Label1)
-        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
+        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Name = "frmEditProduct"
         Me.Text = "frmEditProduct"
         Me.ResumeLayout(False)

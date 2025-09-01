@@ -192,7 +192,7 @@ Partial Class frmAdminDashboard
         Me.Controls.Add(Me.pnlContainer)
         Me.Controls.Add(Me.pnlSidebar)
         Me.Controls.Add(Me.Panel2)
-        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
+        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.Name = "frmAdminDashboard"

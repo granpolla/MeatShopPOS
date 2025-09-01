@@ -105,6 +105,7 @@ Partial Class frmAddCustomer
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(495, 641)
+        Me.ControlBox = False
         Me.Controls.Add(Me.btnCancel)
         Me.Controls.Add(Me.btnSave)
         Me.Controls.Add(Me.txtAddress)
@@ -112,7 +113,7 @@ Partial Class frmAddCustomer
         Me.Controls.Add(Me.txtCustomerName)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.Label5)
-        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
+        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Name = "frmAddCustomer"
         Me.Text = "frmAddCustomer"
         Me.ResumeLayout(False)
