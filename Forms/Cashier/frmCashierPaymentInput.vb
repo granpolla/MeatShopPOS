@@ -10,6 +10,9 @@ Public Class frmCashierPaymentInput
         cboPaymentMethod.Items.Add("online")
         cboPaymentMethod.SelectedIndex = 0
 
+        ' 💥 Change DropDownStyle to prevent typing
+        cboPaymentMethod.DropDownStyle = ComboBoxStyle.DropDownList
+
         ' Setup DataGridView columns
         If dgvPaymentEntries.Columns.Count = 0 Then
             dgvPaymentEntries.Columns.Add("Method", "Payment Mode")
@@ -31,14 +34,14 @@ Public Class frmCashierPaymentInput
 
     ' 🔹 Build Transaction Summary String
     Private Function BuildTransactionSummary(parentForm As frmCashierDashboard,
-                                         grandTotal As Decimal,
-                                         totalPaid As Decimal,
-                                         status As String,
-                                         unpaidBalance As Decimal,
-                                         customerID As Integer,
-                                         firstName As String,
-                                         lastName As String,
-                                         address As String) As String
+                                             grandTotal As Decimal,
+                                             totalPaid As Decimal,
+                                             status As String,
+                                             unpaidBalance As Decimal,
+                                             customerID As Integer,
+                                             firstName As String,
+                                             lastName As String,
+                                             address As String) As String
 
         Dim details As String = "=== ORDER ITEMS ===" & Environment.NewLine
 
@@ -46,10 +49,10 @@ Public Class frmCashierPaymentInput
         Dim orderTable As DataTable = CType(parentForm.dgvOrderItemPreview.DataSource, DataTable)
         For Each row As DataRow In orderTable.Rows
             details &= $"{row("Product Name")} | {row("Brand")} | " &
-                   $"Unit: {Convert.ToDecimal(row("Unit Weight")):N2}kg @ {Convert.ToDecimal(row("Unit Price")):N2} | " &
-                   $"Box: {Convert.ToDecimal(row("Total Box")):N0} | " &
-                   $"Weight: {Convert.ToDecimal(row("Total Weight")):N2}kg | " &
-                   $"Total: {Convert.ToDecimal(row("Total")):N2}" & Environment.NewLine
+                       $"Unit: {Convert.ToDecimal(row("Unit Weight")):N2}kg @ {Convert.ToDecimal(row("Unit Price")):N2} | " &
+                       $"Box: {Convert.ToDecimal(row("Total Box")):N0} | " &
+                       $"Weight: {Convert.ToDecimal(row("Total Weight")):N2}kg | " &
+                       $"Total: {Convert.ToDecimal(row("Total")):N2}" & Environment.NewLine
         Next
 
         ' 👉 Settled Balances
@@ -58,8 +61,8 @@ Public Class frmCashierPaymentInput
         If parentForm.dgvCustomerBalancePreview.SelectedRows.Count > 0 Then
             For Each row As DataGridViewRow In parentForm.dgvCustomerBalancePreview.SelectedRows
                 details &= $"{CDate(row.Cells("Date").Value):yyyy-MM-dd} | " &
-                       $"{row.Cells("Description").Value} | " &
-                       $"{Convert.ToDecimal(row.Cells("Balance").Value):N2}" & Environment.NewLine
+                           $"{row.Cells("Description").Value} | " &
+                           $"{Convert.ToDecimal(row.Cells("Balance").Value):N2}" & Environment.NewLine
                 balanceTotal += Convert.ToDecimal(row.Cells("Balance").Value)
             Next
         Else
@@ -185,9 +188,9 @@ Public Class frmCashierPaymentInput
         ' 🔹 SECTION 1: VALIDATE ORDER & PAYMENTS
         ' ================================
         If parentForm.dgvOrderItemPreview.DataSource Is Nothing OrElse
-       CType(parentForm.dgvOrderItemPreview.DataSource, DataTable).Rows.Count = 0 Then
+           CType(parentForm.dgvOrderItemPreview.DataSource, DataTable).Rows.Count = 0 Then
             MessageBox.Show("No order items added. Please add products before saving and printing.",
-                        "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                            "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
@@ -208,7 +211,7 @@ Public Class frmCashierPaymentInput
 
         If String.IsNullOrWhiteSpace(firstName) OrElse String.IsNullOrWhiteSpace(lastName) OrElse String.IsNullOrWhiteSpace(address) Then
             MessageBox.Show("Customer information is incomplete. Please make sure First Name, Last Name, and Address are filled.",
-                        "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                            "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
@@ -221,11 +224,11 @@ Public Class frmCashierPaymentInput
             Using conn As New MySqlConnection(My.Settings.DBConnection)
                 conn.Open()
                 Dim query As String = "
-                    SELECT id 
-                    FROM customer 
-                    WHERE LOWER(TRIM(REPLACE(customer_name,' ',''))) = LOWER(REPLACE(@name,' ','')) 
-                      AND LOWER(TRIM(address)) = LOWER(@address)
-                    LIMIT 1"
+                        SELECT id 
+                        FROM customer 
+                        WHERE LOWER(TRIM(REPLACE(customer_name,' ',''))) = LOWER(REPLACE(@name,' ','')) 
+                          AND LOWER(TRIM(address)) = LOWER(@address)
+                        LIMIT 1"
                 Using cmd As New MySqlCommand(query, conn)
                     cmd.Parameters.AddWithValue("@name", (firstName & " " & lastName).Replace(" ", ""))
                     cmd.Parameters.AddWithValue("@address", address.Trim().ToLower())
@@ -243,7 +246,7 @@ Public Class frmCashierPaymentInput
 
         If Not exists Then
             MessageBox.Show("This customer is not yet saved in the database. Please save the customer before proceeding.",
-                        "Validation", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            "Validation", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Return
         End If
 
@@ -261,7 +264,7 @@ Public Class frmCashierPaymentInput
         ' 👉 Require minimum payment
         If totalPaid < 100 Then
             MessageBox.Show("Minimum payment required is 100. Please enter a valid payment before saving.",
-                        "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                            "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
@@ -275,21 +278,21 @@ Public Class frmCashierPaymentInput
             ' 🚫 Rule: Cannot partially pay if previous balances are selected
             If parentForm.dgvCustomerBalancePreview.SelectedRows.Count > 0 Then
                 MessageBox.Show("Partial payment is not allowed when settling previous balances." &
-                            Environment.NewLine & Environment.NewLine &
-                            "👉 Either pay the FULL AMOUNT (Order + Previous Balance)" & Environment.NewLine &
-                            "👉 Or just pay for the NEW ORDER only and leave the previous balance for now.",
-                            "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                                Environment.NewLine & Environment.NewLine &
+                                "👉 Either pay the FULL AMOUNT (Order + Previous Balance)" & Environment.NewLine &
+                                "👉 Or just pay for the NEW ORDER only and leave the previous balance for now.",
+                                "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
 
             ' ✅ Otherwise allow partial, with confirmation
             Dim confirmResult = MessageBox.Show(
-            $"Payment is insufficient!" & Environment.NewLine &
-            $"Grand Total: {grandTotal:N2}" & Environment.NewLine &
-            $"Paid: {totalPaid:N2}" & Environment.NewLine &
-            $"Unpaid Balance: {unpaidBalance:N2}" & Environment.NewLine &
-            Environment.NewLine & "Do you want to proceed and mark this as PARTIAL?",
-            "Partial Payment Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+                $"Payment is insufficient!" & Environment.NewLine &
+                $"Grand Total: {grandTotal:N2}" & Environment.NewLine &
+                $"Paid: {totalPaid:N2}" & Environment.NewLine &
+                $"Unpaid Balance: {unpaidBalance:N2}" & Environment.NewLine &
+                Environment.NewLine & "Do you want to proceed and mark this as PARTIAL?",
+                "Partial Payment Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
 
             If confirmResult = DialogResult.No Then
                 Return
@@ -339,14 +342,14 @@ Public Class frmCashierPaymentInput
                     Dim changeGiven As Decimal = Math.Max(totalPaid - grandTotal, 0)
 
                     Using cmd As New MySqlCommand("
-                        INSERT INTO sales_transaction
-                            (order_number, user_id, customer_id, total_amount, payment_status_id, cash_received, amount_paid, change_given, invoice_pdf)
-                        VALUES
-                            (
-                                @ord, @uid, @cid, @total,
-                                (SELECT id FROM payment_status WHERE LOWER(payment_status_name) = @status_key LIMIT 1),
-                                @cash, @applied, @chg, @inv
-                            );", conn, tx)
+                            INSERT INTO sales_transaction
+                                (order_number, user_id, customer_id, total_amount, payment_status_id, cash_received, amount_paid, change_given, invoice_pdf)
+                            VALUES
+                                (
+                                    @ord, @uid, @cid, @total,
+                                    (SELECT id FROM payment_status WHERE LOWER(payment_status_name) = @status_key LIMIT 1),
+                                    @cash, @applied, @chg, @inv
+                                );", conn, tx)
 
                         cmd.Parameters.AddWithValue("@ord", orderNumber)
                         cmd.Parameters.AddWithValue("@uid", modSession.LoggedInUserID)
@@ -369,10 +372,10 @@ Public Class frmCashierPaymentInput
                     Dim orderTable As DataTable = CType(parentForm.dgvOrderItemPreview.DataSource, DataTable)
                     For Each r As DataRow In orderTable.Rows
                         Using cmd As New MySqlCommand("
-                        INSERT INTO transaction_item
-                            (transaction_id, product_id, number_of_box, unit_weight_kg, unit_price_php, total_weight_kg, subtotal)
-                        VALUES
-                            (@tid, @pid, @box, @uw, @up, @tw, @sub);", conn, tx)
+                            INSERT INTO transaction_item
+                                (transaction_id, product_id, number_of_box, unit_weight_kg, unit_price_php, total_weight_kg, subtotal)
+                            VALUES
+                                (@tid, @pid, @box, @uw, @up, @tw, @sub);", conn, tx)
                             cmd.Parameters.AddWithValue("@tid", transId)
                             cmd.Parameters.AddWithValue("@pid", Convert.ToInt32(r("ProductID")))
                             cmd.Parameters.AddWithValue("@box", Convert.ToDecimal(r("Total Box")))
@@ -398,26 +401,26 @@ Public Class frmCashierPaymentInput
                                 refNumValue = row.Cells("RefNum").Value
                             Else
                                 MessageBox.Show($"Payment method '{methodRaw}' requires a Reference Number.",
-                            "Validation Error",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Error)
+                                "Validation Error",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error)
                                 tx.Rollback()
                                 Return
                             End If
                         End If
 
                         Using cmd As New MySqlCommand("
-                            INSERT INTO payment_detail
-                                (transaction_id, payment_method_id, ref_num, amount)
-                            VALUES
-                                (
-                                    @tid,
-                                    (SELECT id
-                                       FROM payment_method
-                                      WHERE REPLACE(LOWER(payment_method_name),' ','_') = @mkey
-                                      LIMIT 1),
-                                    @ref, @amt
-                                );", conn, tx)
+                                INSERT INTO payment_detail
+                                    (transaction_id, payment_method_id, ref_num, amount)
+                                VALUES
+                                    (
+                                        @tid,
+                                        (SELECT id
+                                           FROM payment_method
+                                          WHERE REPLACE(LOWER(payment_method_name),' ','_') = @mkey
+                                          LIMIT 1),
+                                        @ref, @amt
+                                    );", conn, tx)
                             cmd.Parameters.AddWithValue("@tid", transId)
                             cmd.Parameters.AddWithValue("@mkey", methodKey)
                             cmd.Parameters.AddWithValue("@ref", refNumValue)  ' ✅ CASH → NULL, OTHERS → value
@@ -430,10 +433,10 @@ Public Class frmCashierPaymentInput
                     ' 🔹 Ledger entry for NEW order
                     If status = "Partial" AndAlso unpaidBalance > 0 Then
                         Using cmd As New MySqlCommand("
-                            INSERT INTO customer_ledger
-                                (customer_id, transaction_id, related_transaction_id, description, amount)
-                            VALUES
-                                (@cid, @tid, NULL, @desc, @amt);", conn, tx)
+                                INSERT INTO customer_ledger
+                                    (customer_id, transaction_id, related_transaction_id, description, amount)
+                                VALUES
+                                    (@cid, @tid, NULL, @desc, @amt);", conn, tx)
                             cmd.Parameters.AddWithValue("@cid", customerID)
                             cmd.Parameters.AddWithValue("@tid", transId)
                             cmd.Parameters.AddWithValue("@desc", $"Balance from purchase {orderNumber}")
@@ -458,10 +461,10 @@ Public Class frmCashierPaymentInput
                             Dim descText As String = $"Paid old balance from {oldOrderNum} during {orderNumber}"
 
                             Using cmd As New MySqlCommand("
-                                INSERT INTO customer_ledger
-                                    (customer_id, transaction_id, related_transaction_id, description, amount)
-                                VALUES
-                                    (@cid, @tid, @rid, @desc, @amt);", conn, tx)
+                                    INSERT INTO customer_ledger
+                                        (customer_id, transaction_id, related_transaction_id, description, amount)
+                                    VALUES
+                                        (@cid, @tid, @rid, @desc, @amt);", conn, tx)
                                 cmd.Parameters.AddWithValue("@cid", customerID)
                                 cmd.Parameters.AddWithValue("@tid", transId)
                                 cmd.Parameters.AddWithValue("@rid", oldTransId)

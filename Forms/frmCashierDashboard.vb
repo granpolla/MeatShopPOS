@@ -13,6 +13,15 @@ Public Class frmCashierDashboard
         InitializeCustomerBalancePreview()
     End Sub
 
+    Private Sub frmCashierDashboard_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+        ' Ensure no active rows are selected on form load
+        dgvCustomer.ClearSelection()
+        dgvCustomer.CurrentCell = Nothing
+
+        dgvProductsPreview.ClearSelection()
+        dgvProductsPreview.CurrentCell = Nothing
+    End Sub
+
     ' ✅ Normalize name (remove extra spaces + proper case)
     Public Function NormalizeName(input As String) As String
         Dim cleaned As String = Regex.Replace(input.Trim(), "\s+", " ")
@@ -119,6 +128,10 @@ Public Class frmCashierDashboard
             .ReadOnly = True
             .RowHeadersVisible = False
             .Columns("Balance").DefaultCellStyle.Format = "N2"
+
+            .Columns("Date").FillWeight = 35
+            .Columns("Balance").FillWeight = 20
+
         End With
     End Sub
 
@@ -146,9 +159,6 @@ Public Class frmCashierDashboard
                     dgvCustomer.DataSource = dt
                     FormatCustomerGrid()
 
-                    ' ✅ Prevent auto-selecting the first row
-                    dgvCustomer.ClearSelection()
-                    dgvCustomer.CurrentCell = Nothing
                 End Using
             End Using
         Catch ex As Exception
@@ -225,9 +235,6 @@ Public Class frmCashierDashboard
                     dgvProductsPreview.DataSource = dt
                     FormatProductsGrid()
 
-                    ' ✅ Prevent auto-selecting the first row
-                    dgvProductsPreview.ClearSelection()
-                    dgvProductsPreview.CurrentCell = Nothing
                 End Using
             End Using
         Catch ex As Exception
@@ -425,13 +432,30 @@ Public Class frmCashierDashboard
 
 
     Private Sub btnRefresh_Click(sender As Object, e As EventArgs) Handles btnRefresh.Click
+        ' Load customers from the database.
         LoadCustomers()
+        LoadProducts()
+
+        ' Clear customer info text boxes.
         txtFirstName.Clear()
         txtLastName.Clear()
         txtCustomerAddress.Clear()
-        dgvCustomerBalancePreview.DataSource = Nothing
 
-        ' ✅ Reset readonly to editable
+        ' 💥 Correctly clear data-bound DataGridViews
+        ' Clear the rows from the underlying DataTable.
+        If dgvCustomerBalancePreview.DataSource IsNot Nothing Then
+            CType(dgvCustomerBalancePreview.DataSource, DataTable).Rows.Clear()
+        End If
+        If dgvOrderItemPreview.DataSource IsNot Nothing Then
+            CType(dgvOrderItemPreview.DataSource, DataTable).Rows.Clear()
+        End If
+
+
+
+        ' Refresh grand total to reflect the empty order/balance tables.
+        UpdateGrandTotal()
+
+        ' Reset readonly status to allow new customer input.
         txtFirstName.ReadOnly = False
         txtLastName.ReadOnly = False
         txtCustomerAddress.ReadOnly = False
