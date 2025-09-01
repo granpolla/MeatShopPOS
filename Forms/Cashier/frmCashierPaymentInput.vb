@@ -221,11 +221,11 @@ Public Class frmCashierPaymentInput
             Using conn As New MySqlConnection(My.Settings.DBConnection)
                 conn.Open()
                 Dim query As String = "
-                SELECT id 
-                FROM customer 
-                WHERE LOWER(TRIM(REPLACE(customer_name,' ',''))) = LOWER(REPLACE(@name,' ','')) 
-                  AND LOWER(TRIM(address)) = LOWER(@address)
-                LIMIT 1"
+                    SELECT id 
+                    FROM customer 
+                    WHERE LOWER(TRIM(REPLACE(customer_name,' ',''))) = LOWER(REPLACE(@name,' ','')) 
+                      AND LOWER(TRIM(address)) = LOWER(@address)
+                    LIMIT 1"
                 Using cmd As New MySqlCommand(query, conn)
                     cmd.Parameters.AddWithValue("@name", (firstName & " " & lastName).Replace(" ", ""))
                     cmd.Parameters.AddWithValue("@address", address.Trim().ToLower())
@@ -339,14 +339,14 @@ Public Class frmCashierPaymentInput
                     Dim changeGiven As Decimal = Math.Max(totalPaid - grandTotal, 0)
 
                     Using cmd As New MySqlCommand("
-                    INSERT INTO sales_transaction
-                        (order_number, user_id, customer_id, total_amount, payment_status_id, cash_received, amount_paid, change_given, invoice_pdf)
-                    VALUES
-                        (
-                            @ord, @uid, @cid, @total,
-                            (SELECT id FROM payment_status WHERE LOWER(payment_status_name) = @status_key LIMIT 1),
-                            @cash, @applied, @chg, @inv
-                        );", conn, tx)
+                        INSERT INTO sales_transaction
+                            (order_number, user_id, customer_id, total_amount, payment_status_id, cash_received, amount_paid, change_given, invoice_pdf)
+                        VALUES
+                            (
+                                @ord, @uid, @cid, @total,
+                                (SELECT id FROM payment_status WHERE LOWER(payment_status_name) = @status_key LIMIT 1),
+                                @cash, @applied, @chg, @inv
+                            );", conn, tx)
 
                         cmd.Parameters.AddWithValue("@ord", orderNumber)
                         cmd.Parameters.AddWithValue("@uid", modSession.LoggedInUserID)
@@ -407,17 +407,17 @@ Public Class frmCashierPaymentInput
                         End If
 
                         Using cmd As New MySqlCommand("
-                        INSERT INTO payment_detail
-                            (transaction_id, payment_method_id, ref_num, amount)
-                        VALUES
-                            (
-                                @tid,
-                                (SELECT id
-                                   FROM payment_method
-                                  WHERE REPLACE(LOWER(payment_method_name),' ','_') = @mkey
-                                  LIMIT 1),
-                                @ref, @amt
-                            );", conn, tx)
+                            INSERT INTO payment_detail
+                                (transaction_id, payment_method_id, ref_num, amount)
+                            VALUES
+                                (
+                                    @tid,
+                                    (SELECT id
+                                       FROM payment_method
+                                      WHERE REPLACE(LOWER(payment_method_name),' ','_') = @mkey
+                                      LIMIT 1),
+                                    @ref, @amt
+                                );", conn, tx)
                             cmd.Parameters.AddWithValue("@tid", transId)
                             cmd.Parameters.AddWithValue("@mkey", methodKey)
                             cmd.Parameters.AddWithValue("@ref", refNumValue)  ' ✅ CASH → NULL, OTHERS → value
@@ -430,10 +430,10 @@ Public Class frmCashierPaymentInput
                     ' 🔹 Ledger entry for NEW order
                     If status = "Partial" AndAlso unpaidBalance > 0 Then
                         Using cmd As New MySqlCommand("
-                        INSERT INTO customer_ledger
-                            (customer_id, transaction_id, related_transaction_id, description, amount)
-                        VALUES
-                            (@cid, @tid, NULL, @desc, @amt);", conn, tx)
+                            INSERT INTO customer_ledger
+                                (customer_id, transaction_id, related_transaction_id, description, amount)
+                            VALUES
+                                (@cid, @tid, NULL, @desc, @amt);", conn, tx)
                             cmd.Parameters.AddWithValue("@cid", customerID)
                             cmd.Parameters.AddWithValue("@tid", transId)
                             cmd.Parameters.AddWithValue("@desc", $"Balance from purchase {orderNumber}")
@@ -487,6 +487,18 @@ Public Class frmCashierPaymentInput
             ' Cleanup
             dgvPaymentEntries.Rows.Clear()
             txtChange.Clear()
+
+            ' 🧹 Cleanup parent form (frmCashierDashboard)
+            parentForm.txtGrandTotal.Clear()
+            parentForm.txtFirstName.Clear()
+            parentForm.txtLastName.Clear()
+            parentForm.txtCustomerAddress.Clear()
+            CType(parentForm.dgvOrderItemPreview.DataSource, DataTable).Rows.Clear()
+            CType(parentForm.dgvCustomerBalancePreview.DataSource, DataTable).Rows.Clear()
+
+            ' 🔄 Refresh/Reload Data on Parent Form
+            parentForm.LoadProducts()
+            parentForm.LoadCustomers()
 
         Catch ex As Exception
             MessageBox.Show("Error saving transaction: " & ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error)

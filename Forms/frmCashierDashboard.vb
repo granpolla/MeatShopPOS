@@ -130,7 +130,7 @@ Public Class frmCashierDashboard
 
 
     ' ✅ Load all customers
-    Private Sub LoadCustomers()
+    Public Sub LoadCustomers()
         Dim query As String = "
         SELECT id AS 'CustomerID',
                customer_name AS 'Full Name',
@@ -207,7 +207,7 @@ Public Class frmCashierDashboard
 
 
     ' ✅ Load all products into dgvProductsPreview
-    Private Sub LoadProducts()
+    Public Sub LoadProducts()
         Dim query As String = "
         SELECT id AS 'ProductID',
                product_name AS 'Product Name',
