@@ -15,7 +15,7 @@ Public Class frmCashierPaymentInput
 
         ' Setup DataGridView columns
         If dgvPaymentEntries.Columns.Count = 0 Then
-            dgvPaymentEntries.Columns.Add("Method", "Payment Mode")
+            dgvPaymentEntries.Columns.Add("Method", "Payment")
             dgvPaymentEntries.Columns.Add("RefNum", "Ref No.")
             dgvPaymentEntries.Columns.Add("Amount", "Amount")
             dgvPaymentEntries.Columns("Amount").DefaultCellStyle.Format = "N2"
@@ -27,6 +27,8 @@ Public Class frmCashierPaymentInput
         dgvPaymentEntries.MultiSelect = False
         dgvPaymentEntries.RowHeadersVisible = False
         dgvPaymentEntries.ScrollBars = ScrollBars.None
+        dgvPaymentEntries.Columns("Method").FillWeight = 55
+        dgvPaymentEntries.Columns("Amount").FillWeight = 70
 
         txtChange.ReadOnly = True
         txtRefNum.Enabled = (cboPaymentMethod.SelectedItem.ToString() = "online")

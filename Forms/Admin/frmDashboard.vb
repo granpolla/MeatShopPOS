@@ -15,6 +15,7 @@ Public Class frmDashboard
         LoadCashiers()
         LoadMonthlySalesChart()
         LoadTopProductsChart()
+        LoadTotals()
     End Sub
 
     Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged
@@ -280,6 +281,30 @@ Public Class frmDashboard
         End Try
     End Sub
 
+    Private Sub LoadTotals()
+        Try
+            Using conn As New MySqlConnection(My.Settings.DBConnection)
+                conn.Open()
+
+                ' Total Customers
+                Using cmd As New MySqlCommand("SELECT COUNT(*) FROM customer;", conn)
+                    Dim totalCustomers As Integer = Convert.ToInt32(cmd.ExecuteScalar())
+                    txtTotalCustomer.Text = totalCustomers.ToString("N0")  ' formats with commas
+                End Using
+
+                ' Total Products
+                Using cmd As New MySqlCommand("SELECT COUNT(*) FROM product;", conn)
+                    Dim totalProducts As Integer = Convert.ToInt32(cmd.ExecuteScalar())
+                    txtTotalProduct.Text = totalProducts.ToString("N0")  ' formats with commas
+                End Using
+            End Using
+        Catch ex As Exception
+            MessageBox.Show("Error loading totals: " & ex.Message,
+                            "Error",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error)
+        End Try
+    End Sub
 
 
 

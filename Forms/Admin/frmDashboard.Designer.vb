@@ -22,12 +22,12 @@ Partial Class frmDashboard
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim ChartArea1 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
-        Dim Legend1 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
-        Dim Series1 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
-        Dim ChartArea2 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
-        Dim Legend2 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
-        Dim Series2 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
+        Dim ChartArea7 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
+        Dim Legend7 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
+        Dim Series7 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
+        Dim ChartArea8 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
+        Dim Legend8 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
+        Dim Series8 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.txtSales = New System.Windows.Forms.TextBox()
         Me.ComboBox1 = New System.Windows.Forms.ComboBox()
@@ -35,15 +35,17 @@ Partial Class frmDashboard
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.Label4 = New System.Windows.Forms.Label()
-        Me.txtTotalProducts = New System.Windows.Forms.TextBox()
+        Me.txtTotalProduct = New System.Windows.Forms.TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.txtTotalCustomer = New System.Windows.Forms.TextBox()
         Me.Chart1 = New System.Windows.Forms.DataVisualization.Charting.Chart()
         Me.Chart2 = New System.Windows.Forms.DataVisualization.Charting.Chart()
+        Me.Panel3 = New System.Windows.Forms.Panel()
         Me.Panel1.SuspendLayout()
         Me.Panel2.SuspendLayout()
         CType(Me.Chart1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.Chart2, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.Panel3.SuspendLayout()
         Me.SuspendLayout()
         '
         'Panel1
@@ -59,10 +61,13 @@ Partial Class frmDashboard
         '
         'txtSales
         '
-        Me.txtSales.Font = New System.Drawing.Font("Segoe UI", 19.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtSales.Location = New System.Drawing.Point(16, 582)
+        Me.txtSales.BackColor = System.Drawing.Color.White
+        Me.txtSales.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.txtSales.Font = New System.Drawing.Font("Segoe UI", 25.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtSales.Location = New System.Drawing.Point(16, 575)
         Me.txtSales.Name = "txtSales"
-        Me.txtSales.Size = New System.Drawing.Size(251, 51)
+        Me.txtSales.ReadOnly = True
+        Me.txtSales.Size = New System.Drawing.Size(251, 58)
         Me.txtSales.TabIndex = 5
         Me.txtSales.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
@@ -97,86 +102,106 @@ Partial Class frmDashboard
         '
         'Panel2
         '
-        Me.Panel2.Controls.Add(Me.Label4)
-        Me.Panel2.Controls.Add(Me.txtTotalProducts)
-        Me.Panel2.Controls.Add(Me.Label3)
+        Me.Panel2.BackColor = System.Drawing.Color.White
         Me.Panel2.Controls.Add(Me.txtTotalCustomer)
-        Me.Panel2.Location = New System.Drawing.Point(12, 12)
+        Me.Panel2.Location = New System.Drawing.Point(12, 59)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(956, 138)
+        Me.Panel2.Size = New System.Drawing.Size(192, 91)
         Me.Panel2.TabIndex = 1
         '
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(206, 28)
+        Me.Label4.Font = New System.Drawing.Font("Segoe UI Semibold", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label4.Location = New System.Drawing.Point(280, 28)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(94, 16)
+        Me.Label4.Size = New System.Drawing.Size(141, 28)
         Me.Label4.TabIndex = 3
         Me.Label4.Text = "Total Products"
         '
-        'txtTotalProducts
+        'txtTotalProduct
         '
-        Me.txtTotalProducts.Font = New System.Drawing.Font("Segoe UI", 19.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtTotalProducts.Location = New System.Drawing.Point(209, 47)
-        Me.txtTotalProducts.Name = "txtTotalProducts"
-        Me.txtTotalProducts.Size = New System.Drawing.Size(100, 51)
-        Me.txtTotalProducts.TabIndex = 2
+        Me.txtTotalProduct.BackColor = System.Drawing.Color.White
+        Me.txtTotalProduct.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.txtTotalProduct.Font = New System.Drawing.Font("Segoe UI", 28.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtTotalProduct.Location = New System.Drawing.Point(24, 14)
+        Me.txtTotalProduct.Name = "txtTotalProduct"
+        Me.txtTotalProduct.ReadOnly = True
+        Me.txtTotalProduct.Size = New System.Drawing.Size(142, 63)
+        Me.txtTotalProduct.TabIndex = 2
+        Me.txtTotalProduct.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(36, 28)
+        Me.Label3.Font = New System.Drawing.Font("Segoe UI Semibold", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label3.Location = New System.Drawing.Point(37, 28)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(98, 16)
+        Me.Label3.Size = New System.Drawing.Size(149, 28)
         Me.Label3.TabIndex = 1
         Me.Label3.Text = "Total Customer"
         '
         'txtTotalCustomer
         '
-        Me.txtTotalCustomer.Font = New System.Drawing.Font("Segoe UI", 19.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtTotalCustomer.Location = New System.Drawing.Point(39, 47)
+        Me.txtTotalCustomer.BackColor = System.Drawing.Color.White
+        Me.txtTotalCustomer.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.txtTotalCustomer.Font = New System.Drawing.Font("Segoe UI", 28.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtTotalCustomer.Location = New System.Drawing.Point(25, 14)
         Me.txtTotalCustomer.Name = "txtTotalCustomer"
-        Me.txtTotalCustomer.Size = New System.Drawing.Size(100, 51)
+        Me.txtTotalCustomer.ReadOnly = True
+        Me.txtTotalCustomer.Size = New System.Drawing.Size(142, 63)
         Me.txtTotalCustomer.TabIndex = 0
+        Me.txtTotalCustomer.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'Chart1
         '
-        ChartArea1.Name = "ChartArea1"
-        Me.Chart1.ChartAreas.Add(ChartArea1)
-        Legend1.Name = "Legend1"
-        Me.Chart1.Legends.Add(Legend1)
+        ChartArea7.Name = "ChartArea1"
+        Me.Chart1.ChartAreas.Add(ChartArea7)
+        Legend7.Name = "Legend1"
+        Me.Chart1.Legends.Add(Legend7)
         Me.Chart1.Location = New System.Drawing.Point(12, 460)
         Me.Chart1.Name = "Chart1"
-        Series1.ChartArea = "ChartArea1"
-        Series1.Legend = "Legend1"
-        Series1.Name = "Series1"
-        Me.Chart1.Series.Add(Series1)
+        Series7.ChartArea = "ChartArea1"
+        Series7.Legend = "Legend1"
+        Series7.Name = "Series1"
+        Me.Chart1.Series.Add(Series7)
         Me.Chart1.Size = New System.Drawing.Size(956, 298)
         Me.Chart1.TabIndex = 2
         Me.Chart1.Text = "Chart1"
         '
         'Chart2
         '
-        ChartArea2.Name = "ChartArea1"
-        Me.Chart2.ChartAreas.Add(ChartArea2)
-        Legend2.Name = "Legend1"
-        Me.Chart2.Legends.Add(Legend2)
+        ChartArea8.Name = "ChartArea1"
+        Me.Chart2.ChartAreas.Add(ChartArea8)
+        Legend8.Name = "Legend1"
+        Me.Chart2.Legends.Add(Legend8)
         Me.Chart2.Location = New System.Drawing.Point(12, 156)
         Me.Chart2.Name = "Chart2"
-        Series2.ChartArea = "ChartArea1"
-        Series2.Legend = "Legend1"
-        Series2.Name = "Series1"
-        Me.Chart2.Series.Add(Series2)
+        Series8.ChartArea = "ChartArea1"
+        Series8.Legend = "Legend1"
+        Series8.Name = "Series1"
+        Me.Chart2.Series.Add(Series8)
         Me.Chart2.Size = New System.Drawing.Size(956, 298)
         Me.Chart2.TabIndex = 3
         Me.Chart2.Text = "Chart2"
+        '
+        'Panel3
+        '
+        Me.Panel3.BackColor = System.Drawing.Color.White
+        Me.Panel3.Controls.Add(Me.txtTotalProduct)
+        Me.Panel3.Location = New System.Drawing.Point(253, 59)
+        Me.Panel3.Name = "Panel3"
+        Me.Panel3.Size = New System.Drawing.Size(192, 91)
+        Me.Panel3.TabIndex = 2
         '
         'frmDashboard
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1267, 770)
+        Me.Controls.Add(Me.Panel3)
+        Me.Controls.Add(Me.Label3)
+        Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.Chart2)
         Me.Controls.Add(Me.Chart1)
         Me.Controls.Add(Me.Panel2)
@@ -190,7 +215,10 @@ Partial Class frmDashboard
         Me.Panel2.PerformLayout()
         CType(Me.Chart1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.Chart2, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Panel3.ResumeLayout(False)
+        Me.Panel3.PerformLayout()
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
 
@@ -201,9 +229,10 @@ Partial Class frmDashboard
     Friend WithEvents Label1 As Label
     Friend WithEvents ComboBox1 As ComboBox
     Friend WithEvents txtSales As TextBox
-    Friend WithEvents txtTotalProducts As TextBox
+    Friend WithEvents txtTotalProduct As TextBox
     Friend WithEvents Label3 As Label
     Friend WithEvents txtTotalCustomer As TextBox
     Friend WithEvents Chart2 As DataVisualization.Charting.Chart
     Friend WithEvents Label4 As Label
+    Friend WithEvents Panel3 As Panel
 End Class
