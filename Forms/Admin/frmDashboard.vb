@@ -18,9 +18,20 @@ Public Class frmDashboard
         LoadTotals()
     End Sub
 
+    Private Sub RefreshAll()
+        LoadCashiers()
+        LoadMonthlySalesChart()
+        LoadTopProductsChart()
+        LoadTotals()
+    End Sub
+
     Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged
         LoadCashiers()
         LoadMonthlySalesChart()
+    End Sub
+
+    Private Sub btnRefresh_Click(sender As Object, e As EventArgs) Handles btnRefresh.Click
+        RefreshAll()
     End Sub
 
     Private Sub LoadCashiers()
@@ -297,6 +308,21 @@ Public Class frmDashboard
                     Dim totalProducts As Integer = Convert.ToInt32(cmd.ExecuteScalar())
                     txtTotalProduct.Text = totalProducts.ToString("N0")  ' formats with commas
                 End Using
+
+                ' Total Unpaid 
+                Using cmd As New MySqlCommand("SELECT IFNULL(SUM(amount),0) FROM customer_ledger;", conn)
+                    Dim totalBalance As Decimal = Convert.ToDecimal(cmd.ExecuteScalar())
+                    txtOverallTotalBalance.Text = totalBalance.ToString("N2")  ' with commas + 2 decimals
+
+                    ' ✅ Set ForeColor based on balance
+                    If totalBalance > 0 Then
+                        txtOverallTotalBalance.ForeColor = Color.Red   ' means receivable
+                    Else
+                        txtOverallTotalBalance.ForeColor = Color.Green ' means settled / no receivable
+                    End If
+                End Using
+
+
             End Using
         Catch ex As Exception
             MessageBox.Show("Error loading totals: " & ex.Message,
