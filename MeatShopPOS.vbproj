@@ -187,6 +187,12 @@
     <Compile Include="Forms\Admin\frmProduct.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\Admin\frmTransaction.Designer.vb">
+      <DependentUpon>frmTransaction.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Admin\frmTransaction.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Admin\frmUser.Designer.vb">
       <DependentUpon>frmUser.vb</DependentUpon>
     </Compile>
@@ -297,6 +303,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Admin\frmProduct.resx">
       <DependentUpon>frmProduct.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Admin\frmTransaction.resx">
+      <DependentUpon>frmTransaction.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Admin\frmUser.resx">
       <DependentUpon>frmUser.vb</DependentUpon>

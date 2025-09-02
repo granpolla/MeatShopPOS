@@ -57,6 +57,11 @@
         LoadFormInPanel(New frmUser())
     End Sub
 
+    Private Sub btnTransaction_Click(sender As Object, e As EventArgs) Handles btnTransaction.Click
+        HighlightButton(btnTransaction)
+        LoadFormInPanel(New frmTransaction())
+    End Sub
+
     Private Sub btnLogout_Click(sender As Object, e As EventArgs) Handles btnLogout.Click
         Dim result As DialogResult = MessageBox.Show("Are you sure you want to logout?",
                                                 "Logout Confirmation",

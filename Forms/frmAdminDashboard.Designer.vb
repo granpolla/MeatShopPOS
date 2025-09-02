@@ -34,6 +34,7 @@ Partial Class frmAdminDashboard
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.lblHeader = New System.Windows.Forms.Label()
         Me.pnlSidebar = New System.Windows.Forms.Panel()
+        Me.btnTransaction = New System.Windows.Forms.Button()
         Me.btnUser = New System.Windows.Forms.Button()
         Me.pnlContainer = New System.Windows.Forms.Panel()
         Me.Panel2.SuspendLayout()
@@ -56,33 +57,36 @@ Partial Class frmAdminDashboard
         '
         Me.btnDashboard.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnDashboard.Font = New System.Drawing.Font("Segoe UI Semibold", 10.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnDashboard.Location = New System.Drawing.Point(3, 6)
+        Me.btnDashboard.Location = New System.Drawing.Point(12, 6)
         Me.btnDashboard.Name = "btnDashboard"
-        Me.btnDashboard.Size = New System.Drawing.Size(258, 54)
+        Me.btnDashboard.Size = New System.Drawing.Size(168, 45)
         Me.btnDashboard.TabIndex = 2
         Me.btnDashboard.Text = "Dashboard"
+        Me.btnDashboard.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.btnDashboard.UseVisualStyleBackColor = True
         '
         'btnCustomer
         '
         Me.btnCustomer.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnCustomer.Font = New System.Drawing.Font("Segoe UI Semibold", 10.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnCustomer.Location = New System.Drawing.Point(3, 126)
+        Me.btnCustomer.Location = New System.Drawing.Point(12, 108)
         Me.btnCustomer.Name = "btnCustomer"
-        Me.btnCustomer.Size = New System.Drawing.Size(258, 54)
+        Me.btnCustomer.Size = New System.Drawing.Size(168, 45)
         Me.btnCustomer.TabIndex = 3
         Me.btnCustomer.Text = "Customer"
+        Me.btnCustomer.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.btnCustomer.UseVisualStyleBackColor = True
         '
         'btnProduct
         '
         Me.btnProduct.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnProduct.Font = New System.Drawing.Font("Segoe UI Semibold", 10.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnProduct.Location = New System.Drawing.Point(3, 66)
+        Me.btnProduct.Location = New System.Drawing.Point(12, 57)
         Me.btnProduct.Name = "btnProduct"
-        Me.btnProduct.Size = New System.Drawing.Size(258, 54)
+        Me.btnProduct.Size = New System.Drawing.Size(168, 45)
         Me.btnProduct.TabIndex = 4
         Me.btnProduct.Text = "Product"
+        Me.btnProduct.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.btnProduct.UseVisualStyleBackColor = True
         '
         'Panel2
@@ -155,6 +159,7 @@ Partial Class frmAdminDashboard
         'pnlSidebar
         '
         Me.pnlSidebar.BackColor = System.Drawing.Color.WhiteSmoke
+        Me.pnlSidebar.Controls.Add(Me.btnTransaction)
         Me.pnlSidebar.Controls.Add(Me.btnUser)
         Me.pnlSidebar.Controls.Add(Me.btnCustomer)
         Me.pnlSidebar.Controls.Add(Me.btnDashboard)
@@ -162,26 +167,39 @@ Partial Class frmAdminDashboard
         Me.pnlSidebar.Dock = System.Windows.Forms.DockStyle.Left
         Me.pnlSidebar.Location = New System.Drawing.Point(0, 61)
         Me.pnlSidebar.Name = "pnlSidebar"
-        Me.pnlSidebar.Size = New System.Drawing.Size(264, 770)
+        Me.pnlSidebar.Size = New System.Drawing.Size(188, 770)
         Me.pnlSidebar.TabIndex = 6
+        '
+        'btnTransaction
+        '
+        Me.btnTransaction.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnTransaction.Font = New System.Drawing.Font("Segoe UI Semibold", 10.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnTransaction.Location = New System.Drawing.Point(12, 159)
+        Me.btnTransaction.Name = "btnTransaction"
+        Me.btnTransaction.Size = New System.Drawing.Size(168, 45)
+        Me.btnTransaction.TabIndex = 9
+        Me.btnTransaction.Text = "Transaction"
+        Me.btnTransaction.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.btnTransaction.UseVisualStyleBackColor = True
         '
         'btnUser
         '
         Me.btnUser.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnUser.Font = New System.Drawing.Font("Segoe UI Semibold", 10.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnUser.Location = New System.Drawing.Point(3, 186)
+        Me.btnUser.Location = New System.Drawing.Point(12, 210)
         Me.btnUser.Name = "btnUser"
-        Me.btnUser.Size = New System.Drawing.Size(258, 54)
+        Me.btnUser.Size = New System.Drawing.Size(168, 45)
         Me.btnUser.TabIndex = 8
         Me.btnUser.Text = "User"
+        Me.btnUser.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.btnUser.UseVisualStyleBackColor = True
         '
         'pnlContainer
         '
         Me.pnlContainer.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.pnlContainer.Location = New System.Drawing.Point(264, 61)
+        Me.pnlContainer.Location = New System.Drawing.Point(188, 61)
         Me.pnlContainer.Name = "pnlContainer"
-        Me.pnlContainer.Size = New System.Drawing.Size(1267, 770)
+        Me.pnlContainer.Size = New System.Drawing.Size(1343, 770)
         Me.pnlContainer.TabIndex = 7
         '
         'frmAdminDashboard
@@ -220,4 +238,5 @@ Partial Class frmAdminDashboard
     Friend WithEvents PictureBox2 As PictureBox
     Friend WithEvents btnLogout As Button
     Friend WithEvents lblUserRole As Label
+    Friend WithEvents btnTransaction As Button
 End Class
