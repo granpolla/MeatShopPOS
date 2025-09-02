@@ -303,8 +303,27 @@ Public Class frmCashierPaymentInput
             status = "Partial"
         End If
 
+
         ' ================================
-        ' 🔹 SECTION 5: SAVE TO DATABASE
+        ' 🔹 SECTION 5: SHOW SUMMARY BEFORE SAVE
+        ' ================================
+        Dim details As String = BuildTransactionSummary(parentForm, grandTotal, totalPaid, status, unpaidBalance, customerID, firstName, lastName, address)
+
+        ' Ask user to confirm
+        Dim confirm = MessageBox.Show(details & Environment.NewLine & Environment.NewLine &
+                              "Do you want to SAVE and PRINT this transaction?",
+                              "Save + Print Confirmation",
+                              MessageBoxButtons.OKCancel,
+                              MessageBoxIcon.Question)
+
+        If confirm <> DialogResult.OK Then
+            ' ❌ Anything other than OK (Cancel / X) → exit
+            Return
+        End If
+
+
+        ' ================================
+        ' 🔹 SECTION 6: SAVE TO DATABASE
         ' ================================
         Try
             Using conn As New MySqlConnection(My.Settings.DBConnection)
@@ -483,11 +502,6 @@ Public Class frmCashierPaymentInput
                 End Using
             End Using
 
-            ' ================================
-            ' 🔹 SECTION 6: SHOW SUMMARY (USING HELPER)
-            ' ================================
-            Dim details As String = BuildTransactionSummary(parentForm, grandTotal, totalPaid, status, unpaidBalance, customerID, firstName, lastName, address)
-            ShowTransactionSummary(details)
 
             ' Cleanup
             dgvPaymentEntries.Rows.Clear()
