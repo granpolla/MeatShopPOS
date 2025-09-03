@@ -215,7 +215,8 @@ Partial Class frmAdminDashboard
         Me.MinimizeBox = False
         Me.Name = "frmAdminDashboard"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "Admin"
+        Me.Text = " "
+        Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()

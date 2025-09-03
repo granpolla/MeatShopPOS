@@ -352,6 +352,7 @@ Partial Class frmCashierDashboard
         Me.Name = "frmCashierDashboard"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Cashier"
+        Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
