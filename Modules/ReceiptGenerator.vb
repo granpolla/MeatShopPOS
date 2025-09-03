@@ -133,6 +133,23 @@ Module ReceiptGenerator
         table.AddCell(New PdfPCell(New Phrase("₱" & grandTotal, normalFont)) With {.HorizontalAlignment = Element.ALIGN_RIGHT})
 
         doc.Add(table)
+
+        ' === Signature Table (5 columns) ===
+        Dim signatureTable As New PdfPTable(5)
+        signatureTable.WidthPercentage = 100
+        signatureTable.SpacingBefore = 100 ' push it down a bit from product table
+        signatureTable.SetWidths(New Single() {1.2F, 2.0F, 0.8F, 1.2F, 2.0F})
+
+        ' Row: Checked By / Received By
+        signatureTable.AddCell(New PdfPCell(New Phrase("Checked By:", normalFont)) With {.Border = Rectangle.NO_BORDER, .HorizontalAlignment = Element.ALIGN_LEFT})
+        signatureTable.AddCell(New PdfPCell(New Phrase(" ", normalFont)) With {.Border = Rectangle.BOTTOM_BORDER, .BorderWidthBottom = 0.5F})
+        signatureTable.AddCell(New PdfPCell(New Phrase(" ", normalFont)) With {.Border = Rectangle.NO_BORDER})
+        signatureTable.AddCell(New PdfPCell(New Phrase("Received By:", normalFont)) With {.Border = Rectangle.NO_BORDER, .HorizontalAlignment = Element.ALIGN_LEFT})
+        signatureTable.AddCell(New PdfPCell(New Phrase(" ", normalFont)) With {.Border = Rectangle.BOTTOM_BORDER, .BorderWidthBottom = 0.5F})
+
+        ' Add signature table to document
+        doc.Add(signatureTable)
+
         doc.Close()
     End Sub
 
