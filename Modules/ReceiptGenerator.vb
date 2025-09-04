@@ -70,7 +70,7 @@ Module ReceiptGenerator
         ' === Product Table ===
         Dim table As New PdfPTable(5)
         table.WidthPercentage = 100
-        table.SetWidths(New Single() {1.5F, 1.2F, 3.5F, 2.0F, 2.0F})
+        table.SetWidths(New Single() {0.9F, 0.7F, 3.5F, 1.0F, 1.0F})
 
         ' Header Row
         Dim headers = {"Total KG", "No. Box", "Product Name", "Unit Price", "Total"}
@@ -85,11 +85,11 @@ Module ReceiptGenerator
         ' Data Rows
         Dim rowCount As Integer = 0
         For Each row As DataRow In orderItemTable.Rows
-            table.AddCell(New PdfPCell(New Phrase(row("Total KG").ToString(), normalFont)))
-            table.AddCell(New PdfPCell(New Phrase(row("No. Box").ToString(), normalFont)))
+            table.AddCell(New PdfPCell(New Phrase(row("Total KG").ToString(), normalFont)) With {.HorizontalAlignment = Element.ALIGN_CENTER})
+            table.AddCell(New PdfPCell(New Phrase(row("No. Box").ToString(), normalFont)) With {.HorizontalAlignment = Element.ALIGN_CENTER})
             table.AddCell(New PdfPCell(New Phrase(row("Product Name").ToString(), normalFont)))
-            table.AddCell(New PdfPCell(New Phrase("₱" & Convert.ToDecimal(row("Unit Price")).ToString("N2"), normalFont)))
-            table.AddCell(New PdfPCell(New Phrase("₱" & Convert.ToDecimal(row("Total")).ToString("N2"), normalFont)))
+            table.AddCell(New PdfPCell(New Phrase("₱" & Convert.ToDecimal(row("Unit Price")).ToString("N2"), normalFont)) With {.HorizontalAlignment = Element.ALIGN_RIGHT})
+            table.AddCell(New PdfPCell(New Phrase("₱" & Convert.ToDecimal(row("Total")).ToString("N2"), normalFont)) With {.HorizontalAlignment = Element.ALIGN_RIGHT})
             rowCount += 1
         Next
 
@@ -115,21 +115,21 @@ Module ReceiptGenerator
         If balances IsNot Nothing AndAlso balances.Count > 0 Then
             For Each bal In balances
                 If currentBalanceRow >= maxBalanceRows Then Exit For
-                table.AddCell(New PdfPCell(New Phrase("Balance", normalFont)))
+                table.AddCell(New PdfPCell(New Phrase("Balance", normalFont)) With {.HorizontalAlignment = Element.ALIGN_CENTER})
                 table.AddCell(New PdfPCell(New Phrase(bal.Item1, normalFont)) With {.Colspan = 3})
                 table.AddCell(New PdfPCell(New Phrase("₱" & bal.Item2.ToString("N2"), normalFont)) With {.HorizontalAlignment = Element.ALIGN_RIGHT})
                 currentBalanceRow += 1
             Next
         End If
         While currentBalanceRow < maxBalanceRows
-            table.AddCell(New PdfPCell(New Phrase("Balance", normalFont)))
+            table.AddCell(New PdfPCell(New Phrase("Balance", normalFont)) With {.HorizontalAlignment = Element.ALIGN_CENTER})
             table.AddCell(New PdfPCell(New Phrase("", normalFont)) With {.Colspan = 3})
             table.AddCell(New PdfPCell(New Phrase(" ", normalFont)))
             currentBalanceRow += 1
         End While
 
         ' Grand Total
-        table.AddCell(New PdfPCell(New Phrase("Grand Total", normalFont)) With {.Colspan = 4, .HorizontalAlignment = Element.ALIGN_CENTER})
+        table.AddCell(New PdfPCell(New Phrase("Total", normalFont)) With {.Colspan = 4, .HorizontalAlignment = Element.ALIGN_CENTER})
         table.AddCell(New PdfPCell(New Phrase("₱" & grandTotal, normalFont)) With {.HorizontalAlignment = Element.ALIGN_RIGHT})
 
         doc.Add(table)
