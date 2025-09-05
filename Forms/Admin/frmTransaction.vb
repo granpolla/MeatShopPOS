@@ -35,13 +35,19 @@ Public Class frmTransaction
                         st.cash_received AS 'Cash Received',
                         st.amount_paid AS 'Amount Paid',
                         st.change_given AS 'Change',
-                        -- ✅ Payment Summary (methods + amounts)
-                        (SELECT GROUP_CONCAT(CONCAT(pm.payment_method_name, ': ', FORMAT(pd.amount, 2)) SEPARATOR ', ')
+                        -- ✅ Cash Payment
+                        (SELECT IFNULL(SUM(pd.amount), 0)
                          FROM payment_detail pd
                          INNER JOIN payment_method pm ON pd.payment_method_id = pm.id
                          WHERE pd.transaction_id = st.id
-                        ) AS 'Payment Summary',
-                        -- ✅ Ref Num (only from non-cash payments)
+                           AND pm.payment_method_name = 'Cash') AS 'Cash Payment',
+                        -- ✅ Online Payment
+                        (SELECT IFNULL(SUM(pd.amount), 0)
+                         FROM payment_detail pd
+                         INNER JOIN payment_method pm ON pd.payment_method_id = pm.id
+                         WHERE pd.transaction_id = st.id
+                           AND pm.payment_method_name <> 'Cash') AS 'Online Payment',
+                        -- ✅ Ref No (only if online exists)
                         (SELECT GROUP_CONCAT(pd.ref_num SEPARATOR ', ')
                          FROM payment_detail pd
                          INNER JOIN payment_method pm ON pd.payment_method_id = pm.id
@@ -58,7 +64,7 @@ Public Class frmTransaction
                     INNER JOIN customer c ON st.customer_id = c.id
                     INNER JOIN payment_status ps ON st.payment_status_id = ps.id
                     ORDER BY st.order_datetime DESC;
-                       "
+                    "
 
                 Dim adapter As New MySqlDataAdapter(query, conn)
                 Dim dt As New DataTable()
@@ -70,7 +76,9 @@ Public Class frmTransaction
                 dgvTransaction.Columns("Total Amount").FillWeight = 65
                 dgvTransaction.Columns("Cash Received").FillWeight = 65
                 dgvTransaction.Columns("Amount Paid").FillWeight = 65
-                dgvTransaction.Columns("Ref No").FillWeight = 65
+                dgvTransaction.Columns("Cash Payment").FillWeight = 65
+                dgvTransaction.Columns("Online Payment").FillWeight = 65
+                dgvTransaction.Columns("Ref No").FillWeight = 80
                 dgvTransaction.Columns("User").FillWeight = 80
                 dgvTransaction.Columns("Customer").FillWeight = 80
 
@@ -87,6 +95,13 @@ Public Class frmTransaction
                 If dgvTransaction.Columns.Contains("Change") Then
                     dgvTransaction.Columns("Change").DefaultCellStyle.Format = "N2"
                 End If
+                If dgvTransaction.Columns.Contains("Cash Payment") Then
+                    dgvTransaction.Columns("Cash Payment").DefaultCellStyle.Format = "N2"
+                End If
+                If dgvTransaction.Columns.Contains("Online Payment") Then
+                    dgvTransaction.Columns("Online Payment").DefaultCellStyle.Format = "N2"
+                End If
+
             End Using
 
         Catch ex As Exception
