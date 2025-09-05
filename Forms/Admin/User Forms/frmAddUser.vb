@@ -57,22 +57,27 @@ Public Class frmAddUser
         ' Extract first name for username generation
         Dim firstName As String = properFullName.Split(" "c)(0).ToLower()
 
-        ' 3. Generate username based on role
+        ' 3. Generate base username based on role
         Dim selectedRole As String = cmbRole.Text.ToLower()
-        Dim generatedUsername As String = ""
+        Dim baseUsername As String = ""
 
         If selectedRole = "admin" Then
-            generatedUsername = "adm" & firstName
+            baseUsername = "adm" & firstName
         ElseIf selectedRole = "cashier" Then
-            generatedUsername = "csh" & firstName
+            baseUsername = "csh" & firstName
         End If
 
+        Dim generatedUsername As String = baseUsername
+
         ' 4. Check if full name already exists
-        Dim checkQuery As String = "SELECT COUNT(*) FROM USER WHERE full_name = @FullName"
+        Dim checkQuery As String = "SELECT COUNT(*) FROM USER WHERE LOWER(TRIM(full_name)) = LOWER(TRIM(@FullName))"
+        Dim checkUsernamesQuery As String = "SELECT username FROM USER WHERE username LIKE @BaseUsernamePattern"
+
         Try
             Using conn As New MySqlConnection(My.Settings.DBConnection)
                 conn.Open()
 
+                ' ✅ Block same full name
                 Using checkCmd As New MySqlCommand(checkQuery, conn)
                     checkCmd.Parameters.AddWithValue("@FullName", properFullName)
                     Dim exists As Integer = Convert.ToInt32(checkCmd.ExecuteScalar())
@@ -82,28 +87,49 @@ Public Class frmAddUser
                     End If
                 End Using
 
-                ' 5. Confirmation message
+
+                ' ✅ Check existing usernames with same base
+                Using checkUsernamesCmd As New MySqlCommand(checkUsernamesQuery, conn)
+                    checkUsernamesCmd.Parameters.AddWithValue("@BaseUsernamePattern", baseUsername & "%")
+                    Dim existingUsernames As New List(Of String)
+                    Using reader As MySqlDataReader = checkUsernamesCmd.ExecuteReader()
+                        While reader.Read()
+                            existingUsernames.Add(reader.GetString("username"))
+                        End While
+                    End Using
+
+                    ' If base username already taken, append number
+                    If existingUsernames.Contains(baseUsername) Then
+                        Dim suffix As Integer = 1
+                        Do
+                            generatedUsername = baseUsername & suffix.ToString("D2") ' D2 = 2 digits with leading zero
+                            suffix += 1
+                        Loop While existingUsernames.Contains(generatedUsername)
+                    End If
+                End Using
+
+                ' ✅ Confirmation message
                 Dim confirmationMsg As String =
-                    $"Full Name: {properFullName}" & vbCrLf &
-                    $"Username: {generatedUsername}" & vbCrLf &
-                    $"Password: {txtPassword.Text.Trim()}" & vbCrLf &
-                    $"Role: {cmbRole.Text}"
+                $"Full Name: {properFullName}" & vbCrLf &
+                $"Username: {generatedUsername}" & vbCrLf &
+                $"Password: {txtPassword.Text.Trim()}" & vbCrLf &
+                $"Role: {cmbRole.Text}"
 
                 Dim confirmResult = MessageBox.Show(confirmationMsg & vbCrLf & vbCrLf & "Do you want to save this user?",
-                                                    "Confirm User",
-                                                    MessageBoxButtons.YesNo,
-                                                    MessageBoxIcon.Question)
+                                                "Confirm User",
+                                                MessageBoxButtons.YesNo,
+                                                MessageBoxIcon.Question)
 
                 If confirmResult = DialogResult.No Then
                     Return
                 End If
 
-                ' 6. Save user
+                ' ✅ Save user
                 Dim hashedPassword As String = BCrypt.Net.BCrypt.HashPassword(txtPassword.Text.Trim())
 
                 Dim insertQuery As String =
-                    "INSERT INTO USER (full_name, username, password_hash, role_id, created_at, updated_at)
-                     VALUES (@FullName, @Username, @Password, @RoleID, NOW(), NOW())"
+                "INSERT INTO USER (full_name, username, password_hash, role_id, created_at, updated_at)
+                 VALUES (@FullName, @Username, @Password, @RoleID, NOW(), NOW())"
 
                 Using cmd As New MySqlCommand(insertQuery, conn)
                     cmd.Parameters.AddWithValue("@FullName", properFullName)

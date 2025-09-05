@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class frmEditProduct
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,7 +20,7 @@ Partial Class frmEditProduct
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.btnCancel = New System.Windows.Forms.Button()
         Me.btnSave = New System.Windows.Forms.Button()
@@ -38,11 +38,12 @@ Partial Class frmEditProduct
         'btnCancel
         '
         Me.btnCancel.BackColor = System.Drawing.Color.Red
+        Me.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnCancel.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnCancel.ForeColor = System.Drawing.Color.White
-        Me.btnCancel.Location = New System.Drawing.Point(12, 581)
+        Me.btnCancel.Location = New System.Drawing.Point(27, 509)
         Me.btnCancel.Name = "btnCancel"
-        Me.btnCancel.Size = New System.Drawing.Size(471, 41)
+        Me.btnCancel.Size = New System.Drawing.Size(440, 41)
         Me.btnCancel.TabIndex = 27
         Me.btnCancel.Text = "Cancel"
         Me.btnCancel.UseVisualStyleBackColor = False
@@ -50,10 +51,11 @@ Partial Class frmEditProduct
         'btnSave
         '
         Me.btnSave.BackColor = System.Drawing.Color.Lime
+        Me.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnSave.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnSave.Location = New System.Drawing.Point(12, 534)
+        Me.btnSave.Location = New System.Drawing.Point(27, 462)
         Me.btnSave.Name = "btnSave"
-        Me.btnSave.Size = New System.Drawing.Size(471, 41)
+        Me.btnSave.Size = New System.Drawing.Size(440, 41)
         Me.btnSave.TabIndex = 26
         Me.btnSave.Text = "Save"
         Me.btnSave.UseVisualStyleBackColor = False
@@ -62,34 +64,37 @@ Partial Class frmEditProduct
         '
         Me.Label5.AutoSize = True
         Me.Label5.Font = New System.Drawing.Font("Segoe UI Black", 13.8!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label5.Location = New System.Drawing.Point(154, 18)
+        Me.Label5.Location = New System.Drawing.Point(169, 19)
         Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(194, 31)
+        Me.Label5.Size = New System.Drawing.Size(155, 31)
         Me.Label5.TabIndex = 25
-        Me.Label5.Text = "Edit Product 🥩"
+        Me.Label5.Text = "Edit Product"
         '
         'txtPrice
         '
-        Me.txtPrice.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtPrice.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.txtPrice.Font = New System.Drawing.Font("Segoe UI", 13.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtPrice.Location = New System.Drawing.Point(28, 379)
         Me.txtPrice.Name = "txtPrice"
-        Me.txtPrice.Size = New System.Drawing.Size(442, 34)
+        Me.txtPrice.Size = New System.Drawing.Size(440, 31)
         Me.txtPrice.TabIndex = 24
         '
         'txtWeight
         '
-        Me.txtWeight.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtWeight.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.txtWeight.Font = New System.Drawing.Font("Segoe UI", 13.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtWeight.Location = New System.Drawing.Point(28, 299)
         Me.txtWeight.Name = "txtWeight"
-        Me.txtWeight.Size = New System.Drawing.Size(442, 34)
+        Me.txtWeight.Size = New System.Drawing.Size(440, 31)
         Me.txtWeight.TabIndex = 23
         '
         'txtBrand
         '
-        Me.txtBrand.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtBrand.Location = New System.Drawing.Point(28, 219)
+        Me.txtBrand.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.txtBrand.Font = New System.Drawing.Font("Segoe UI", 13.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtBrand.Location = New System.Drawing.Point(27, 219)
         Me.txtBrand.Name = "txtBrand"
-        Me.txtBrand.Size = New System.Drawing.Size(442, 34)
+        Me.txtBrand.Size = New System.Drawing.Size(441, 31)
         Me.txtBrand.TabIndex = 22
         '
         'Label4
@@ -116,7 +121,7 @@ Partial Class frmEditProduct
         '
         Me.Label2.AutoSize = True
         Me.Label2.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.Location = New System.Drawing.Point(24, 196)
+        Me.Label2.Location = New System.Drawing.Point(23, 196)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(55, 20)
         Me.Label2.TabIndex = 19
@@ -124,27 +129,29 @@ Partial Class frmEditProduct
         '
         'txtProductName
         '
-        Me.txtProductName.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtProductName.Location = New System.Drawing.Point(28, 139)
+        Me.txtProductName.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.txtProductName.Font = New System.Drawing.Font("Segoe UI", 13.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtProductName.Location = New System.Drawing.Point(27, 139)
         Me.txtProductName.Name = "txtProductName"
-        Me.txtProductName.Size = New System.Drawing.Size(442, 34)
+        Me.txtProductName.Size = New System.Drawing.Size(441, 31)
         Me.txtProductName.TabIndex = 18
         '
         'Label1
         '
         Me.Label1.AutoSize = True
         Me.Label1.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(24, 116)
+        Me.Label1.Location = New System.Drawing.Point(23, 116)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(114, 20)
         Me.Label1.TabIndex = 17
-        Me.Label1.Text = "Product Name;"
+        Me.Label1.Text = "Product Name:"
         '
         'frmEditProduct
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(495, 641)
+        Me.BackColor = System.Drawing.SystemColors.ActiveBorder
+        Me.ClientSize = New System.Drawing.Size(495, 575)
         Me.ControlBox = False
         Me.Controls.Add(Me.btnCancel)
         Me.Controls.Add(Me.btnSave)
@@ -157,9 +164,9 @@ Partial Class frmEditProduct
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.txtProductName)
         Me.Controls.Add(Me.Label1)
-        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Name = "frmEditProduct"
-        Me.Text = "frmEditProduct"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
+        Me.Text = "Edit Product"
         Me.ResumeLayout(False)
         Me.PerformLayout()
 

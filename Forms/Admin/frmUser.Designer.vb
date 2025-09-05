@@ -35,6 +35,8 @@ Partial Class frmUser
         Me.dgvUsers.AllowUserToAddRows = False
         Me.dgvUsers.AllowUserToDeleteRows = False
         Me.dgvUsers.AllowUserToResizeRows = False
+        Me.dgvUsers.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.dgvUsers.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.dgvUsers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvUsers.Location = New System.Drawing.Point(12, 12)
@@ -45,16 +47,17 @@ Partial Class frmUser
         Me.dgvUsers.RowHeadersWidth = 51
         Me.dgvUsers.RowTemplate.Height = 24
         Me.dgvUsers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvUsers.Size = New System.Drawing.Size(1319, 409)
+        Me.dgvUsers.Size = New System.Drawing.Size(1319, 596)
         Me.dgvUsers.TabIndex = 2
         '
         'btnAddUser
         '
+        Me.btnAddUser.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnAddUser.BackColor = System.Drawing.Color.Blue
         Me.btnAddUser.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnAddUser.Font = New System.Drawing.Font("Segoe UI Semibold", 10.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnAddUser.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.btnAddUser.Location = New System.Drawing.Point(645, 427)
+        Me.btnAddUser.Location = New System.Drawing.Point(645, 614)
         Me.btnAddUser.Name = "btnAddUser"
         Me.btnAddUser.Size = New System.Drawing.Size(167, 57)
         Me.btnAddUser.TabIndex = 3
@@ -63,10 +66,11 @@ Partial Class frmUser
         '
         'btnEditUser
         '
+        Me.btnEditUser.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnEditUser.BackColor = System.Drawing.Color.Lime
         Me.btnEditUser.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnEditUser.Font = New System.Drawing.Font("Segoe UI Semibold", 10.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnEditUser.Location = New System.Drawing.Point(818, 427)
+        Me.btnEditUser.Location = New System.Drawing.Point(818, 614)
         Me.btnEditUser.Name = "btnEditUser"
         Me.btnEditUser.Size = New System.Drawing.Size(167, 57)
         Me.btnEditUser.TabIndex = 4
@@ -75,11 +79,12 @@ Partial Class frmUser
         '
         'btnDeleteUser
         '
+        Me.btnDeleteUser.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnDeleteUser.BackColor = System.Drawing.Color.Red
         Me.btnDeleteUser.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnDeleteUser.Font = New System.Drawing.Font("Segoe UI Semibold", 10.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnDeleteUser.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.btnDeleteUser.Location = New System.Drawing.Point(991, 427)
+        Me.btnDeleteUser.Location = New System.Drawing.Point(991, 614)
         Me.btnDeleteUser.Name = "btnDeleteUser"
         Me.btnDeleteUser.Size = New System.Drawing.Size(167, 57)
         Me.btnDeleteUser.TabIndex = 5
@@ -88,19 +93,22 @@ Partial Class frmUser
         '
         'btnRefresh
         '
+        Me.btnRefresh.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnRefresh.BackColor = System.Drawing.Color.WhiteSmoke
         Me.btnRefresh.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnRefresh.Font = New System.Drawing.Font("Segoe UI Semibold", 10.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnRefresh.Location = New System.Drawing.Point(1164, 427)
+        Me.btnRefresh.Location = New System.Drawing.Point(1164, 614)
         Me.btnRefresh.Name = "btnRefresh"
         Me.btnRefresh.Size = New System.Drawing.Size(167, 57)
         Me.btnRefresh.TabIndex = 6
         Me.btnRefresh.Text = "Refresh"
-        Me.btnRefresh.UseVisualStyleBackColor = True
+        Me.btnRefresh.UseVisualStyleBackColor = False
         '
         'frmUser
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.BackColor = System.Drawing.SystemColors.GrayText
         Me.ClientSize = New System.Drawing.Size(1343, 770)
         Me.Controls.Add(Me.btnRefresh)
         Me.Controls.Add(Me.btnDeleteUser)

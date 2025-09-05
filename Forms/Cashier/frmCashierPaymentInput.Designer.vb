@@ -80,12 +80,17 @@ Partial Class frmCashierPaymentInput
         '
         'btnSaveAndPrint
         '
+        Me.btnSaveAndPrint.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnSaveAndPrint.BackColor = System.Drawing.Color.Lime
+        Me.btnSaveAndPrint.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnSaveAndPrint.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnSaveAndPrint.ForeColor = System.Drawing.SystemColors.WindowText
         Me.btnSaveAndPrint.Location = New System.Drawing.Point(12, 265)
         Me.btnSaveAndPrint.Name = "btnSaveAndPrint"
         Me.btnSaveAndPrint.Size = New System.Drawing.Size(337, 42)
         Me.btnSaveAndPrint.TabIndex = 5
         Me.btnSaveAndPrint.Text = "Save and Print"
-        Me.btnSaveAndPrint.UseVisualStyleBackColor = True
+        Me.btnSaveAndPrint.UseVisualStyleBackColor = False
         '
         'btnClearDgvPaymentEntries
         '
@@ -143,7 +148,7 @@ Partial Class frmCashierPaymentInput
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.BackColor = System.Drawing.SystemColors.ActiveCaption
+        Me.BackColor = System.Drawing.SystemColors.GradientActiveCaption
         Me.ClientSize = New System.Drawing.Size(361, 320)
         Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.Label3)

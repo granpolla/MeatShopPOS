@@ -97,7 +97,7 @@ Public Class frmDashboard
                             .BorderStyle = BorderStyle.None,
                             .BackColor = Color.White,
                             .Font = New Font("Segoe UI", 10),
-                            .Location = New Point(3, yPos)
+                            .Location = New Point(30, yPos)
                         }
 
                             ' Sales Total
@@ -110,7 +110,7 @@ Public Class frmDashboard
                             .Font = New Font("Segoe UI", 10, FontStyle.Bold),
                             .BorderStyle = BorderStyle.None,
                             .BackColor = Color.White,
-                            .Location = New Point(130, yPos)
+                            .Location = New Point(150, yPos)
                         }
 
                             Panel1.Controls.Add(txtName)

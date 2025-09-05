@@ -91,9 +91,9 @@ Partial Class frmEditUser
         Me.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnCancel.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnCancel.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.btnCancel.Location = New System.Drawing.Point(12, 588)
+        Me.btnCancel.Location = New System.Drawing.Point(32, 571)
         Me.btnCancel.Name = "btnCancel"
-        Me.btnCancel.Size = New System.Drawing.Size(471, 41)
+        Me.btnCancel.Size = New System.Drawing.Size(435, 41)
         Me.btnCancel.TabIndex = 18
         Me.btnCancel.Text = "Cancel"
         Me.btnCancel.UseVisualStyleBackColor = False
@@ -104,15 +104,16 @@ Partial Class frmEditUser
         Me.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnSave.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnSave.ForeColor = System.Drawing.Color.Black
-        Me.btnSave.Location = New System.Drawing.Point(12, 541)
+        Me.btnSave.Location = New System.Drawing.Point(32, 524)
         Me.btnSave.Name = "btnSave"
-        Me.btnSave.Size = New System.Drawing.Size(471, 41)
+        Me.btnSave.Size = New System.Drawing.Size(435, 41)
         Me.btnSave.TabIndex = 17
         Me.btnSave.Text = "Save"
         Me.btnSave.UseVisualStyleBackColor = False
         '
         'cmbRole
         '
+        Me.cmbRole.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.cmbRole.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cmbRole.FormattingEnabled = True
         Me.cmbRole.Location = New System.Drawing.Point(32, 423)
@@ -122,32 +123,33 @@ Partial Class frmEditUser
         '
         'txtPassword
         '
-        Me.txtPassword.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtPassword.Location = New System.Drawing.Point(28, 233)
+        Me.txtPassword.Font = New System.Drawing.Font("Segoe UI", 13.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtPassword.Location = New System.Drawing.Point(32, 233)
         Me.txtPassword.Name = "txtPassword"
-        Me.txtPassword.Size = New System.Drawing.Size(439, 34)
+        Me.txtPassword.Size = New System.Drawing.Size(435, 38)
         Me.txtPassword.TabIndex = 15
         '
         'txtConfirmPassword
         '
-        Me.txtConfirmPassword.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtConfirmPassword.Location = New System.Drawing.Point(28, 328)
+        Me.txtConfirmPassword.Font = New System.Drawing.Font("Segoe UI", 13.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtConfirmPassword.Location = New System.Drawing.Point(32, 328)
         Me.txtConfirmPassword.Name = "txtConfirmPassword"
-        Me.txtConfirmPassword.Size = New System.Drawing.Size(439, 34)
+        Me.txtConfirmPassword.Size = New System.Drawing.Size(435, 38)
         Me.txtConfirmPassword.TabIndex = 14
         '
         'txtFullName
         '
-        Me.txtFullName.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtFullName.Location = New System.Drawing.Point(28, 138)
+        Me.txtFullName.Font = New System.Drawing.Font("Segoe UI", 13.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtFullName.Location = New System.Drawing.Point(32, 138)
         Me.txtFullName.Name = "txtFullName"
-        Me.txtFullName.Size = New System.Drawing.Size(439, 34)
+        Me.txtFullName.Size = New System.Drawing.Size(435, 38)
         Me.txtFullName.TabIndex = 13
         '
         'frmEditUser
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.BackColor = System.Drawing.SystemColors.ActiveBorder
         Me.ClientSize = New System.Drawing.Size(495, 641)
         Me.ControlBox = False
         Me.Controls.Add(Me.lblRole)
@@ -161,10 +163,9 @@ Partial Class frmEditUser
         Me.Controls.Add(Me.txtConfirmPassword)
         Me.Controls.Add(Me.txtFullName)
         Me.Controls.Add(Me.Label1)
-        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Name = "frmEditUser"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "frmEditUser"
+        Me.Text = "Edit User"
         Me.ResumeLayout(False)
         Me.PerformLayout()
 

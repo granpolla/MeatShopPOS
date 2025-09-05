@@ -78,6 +78,7 @@ Partial Class frmCashierDashboard
         '
         'lblUserRole
         '
+        Me.lblUserRole.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblUserRole.AutoSize = True
         Me.lblUserRole.Font = New System.Drawing.Font("Segoe UI", 7.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblUserRole.Location = New System.Drawing.Point(1222, 23)
@@ -88,6 +89,7 @@ Partial Class frmCashierDashboard
         '
         'PictureBox2
         '
+        Me.PictureBox2.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.PictureBox2.Image = CType(resources.GetObject("PictureBox2.Image"), System.Drawing.Image)
         Me.PictureBox2.Location = New System.Drawing.Point(1183, 7)
         Me.PictureBox2.Name = "PictureBox2"
@@ -98,6 +100,7 @@ Partial Class frmCashierDashboard
         '
         'btnLogout
         '
+        Me.btnLogout.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnLogout.BackColor = System.Drawing.Color.Red
         Me.btnLogout.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnLogout.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -121,6 +124,7 @@ Partial Class frmCashierDashboard
         '
         'lblUserFullName
         '
+        Me.lblUserFullName.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblUserFullName.AutoSize = True
         Me.lblUserFullName.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblUserFullName.Location = New System.Drawing.Point(1221, 7)
@@ -149,12 +153,14 @@ Partial Class frmCashierDashboard
         '
         'dgvCustomerBalancePreview
         '
+        Me.dgvCustomerBalancePreview.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.dgvCustomerBalancePreview.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvCustomerBalancePreview.Location = New System.Drawing.Point(866, 354)
+        Me.dgvCustomerBalancePreview.Location = New System.Drawing.Point(992, 354)
         Me.dgvCustomerBalancePreview.Name = "dgvCustomerBalancePreview"
         Me.dgvCustomerBalancePreview.RowHeadersWidth = 51
         Me.dgvCustomerBalancePreview.RowTemplate.Height = 24
-        Me.dgvCustomerBalancePreview.Size = New System.Drawing.Size(653, 139)
+        Me.dgvCustomerBalancePreview.Size = New System.Drawing.Size(527, 139)
         Me.dgvCustomerBalancePreview.TabIndex = 14
         '
         'dgvProductsPreview
@@ -164,7 +170,7 @@ Partial Class frmCashierDashboard
         Me.dgvProductsPreview.Name = "dgvProductsPreview"
         Me.dgvProductsPreview.RowHeadersWidth = 51
         Me.dgvProductsPreview.RowTemplate.Height = 24
-        Me.dgvProductsPreview.Size = New System.Drawing.Size(481, 281)
+        Me.dgvProductsPreview.Size = New System.Drawing.Size(607, 281)
         Me.dgvProductsPreview.TabIndex = 0
         '
         'dgvCustomer
@@ -174,22 +180,24 @@ Partial Class frmCashierDashboard
         Me.dgvCustomer.Name = "dgvCustomer"
         Me.dgvCustomer.RowHeadersWidth = 51
         Me.dgvCustomer.RowTemplate.Height = 24
-        Me.dgvCustomer.Size = New System.Drawing.Size(481, 153)
+        Me.dgvCustomer.Size = New System.Drawing.Size(607, 153)
         Me.dgvCustomer.TabIndex = 13
         '
         'dgvOrderItemPreview
         '
+        Me.dgvOrderItemPreview.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.dgvOrderItemPreview.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvOrderItemPreview.Location = New System.Drawing.Point(866, 53)
+        Me.dgvOrderItemPreview.Location = New System.Drawing.Point(992, 53)
         Me.dgvOrderItemPreview.Name = "dgvOrderItemPreview"
         Me.dgvOrderItemPreview.RowHeadersWidth = 51
         Me.dgvOrderItemPreview.RowTemplate.Height = 24
-        Me.dgvOrderItemPreview.Size = New System.Drawing.Size(653, 257)
+        Me.dgvOrderItemPreview.Size = New System.Drawing.Size(527, 257)
         Me.dgvOrderItemPreview.TabIndex = 16
         '
         'pnlTransactionHeader
         '
-        Me.pnlTransactionHeader.BackColor = System.Drawing.SystemColors.ActiveCaption
+        Me.pnlTransactionHeader.BackColor = System.Drawing.SystemColors.GradientActiveCaption
         Me.pnlTransactionHeader.Controls.Add(Me.btnSearch)
         Me.pnlTransactionHeader.Controls.Add(Me.txtLastName)
         Me.pnlTransactionHeader.Controls.Add(Me.Label3)
@@ -207,7 +215,7 @@ Partial Class frmCashierDashboard
         '
         Me.btnSearch.Location = New System.Drawing.Point(19, 111)
         Me.btnSearch.Name = "btnSearch"
-        Me.btnSearch.Size = New System.Drawing.Size(148, 23)
+        Me.btnSearch.Size = New System.Drawing.Size(148, 30)
         Me.btnSearch.TabIndex = 11
         Me.btnSearch.Text = "Search Customer"
         Me.btnSearch.UseVisualStyleBackColor = True
@@ -232,7 +240,7 @@ Partial Class frmCashierDashboard
         '
         Me.btnRefresh.Location = New System.Drawing.Point(190, 111)
         Me.btnRefresh.Name = "btnRefresh"
-        Me.btnRefresh.Size = New System.Drawing.Size(148, 23)
+        Me.btnRefresh.Size = New System.Drawing.Size(148, 30)
         Me.btnRefresh.TabIndex = 13
         Me.btnRefresh.Text = "Refresh Customer"
         Me.btnRefresh.UseVisualStyleBackColor = True
@@ -278,23 +286,35 @@ Partial Class frmCashierDashboard
         '
         'txtCustomerBalanceTotal
         '
-        Me.txtCustomerBalanceTotal.Location = New System.Drawing.Point(1246, 499)
+        Me.txtCustomerBalanceTotal.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtCustomerBalanceTotal.BackColor = System.Drawing.Color.White
+        Me.txtCustomerBalanceTotal.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.txtCustomerBalanceTotal.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtCustomerBalanceTotal.Location = New System.Drawing.Point(1246, 502)
         Me.txtCustomerBalanceTotal.Name = "txtCustomerBalanceTotal"
-        Me.txtCustomerBalanceTotal.Size = New System.Drawing.Size(187, 22)
+        Me.txtCustomerBalanceTotal.ReadOnly = True
+        Me.txtCustomerBalanceTotal.Size = New System.Drawing.Size(187, 40)
         Me.txtCustomerBalanceTotal.TabIndex = 18
+        Me.txtCustomerBalanceTotal.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'txtGrandTotal
         '
-        Me.txtGrandTotal.Font = New System.Drawing.Font("Segoe UI", 19.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtGrandTotal.Location = New System.Drawing.Point(1332, 626)
+        Me.txtGrandTotal.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtGrandTotal.BackColor = System.Drawing.Color.White
+        Me.txtGrandTotal.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.txtGrandTotal.Font = New System.Drawing.Font("Segoe UI", 28.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtGrandTotal.Location = New System.Drawing.Point(1225, 618)
         Me.txtGrandTotal.Name = "txtGrandTotal"
-        Me.txtGrandTotal.Size = New System.Drawing.Size(187, 51)
+        Me.txtGrandTotal.ReadOnly = True
+        Me.txtGrandTotal.Size = New System.Drawing.Size(294, 63)
         Me.txtGrandTotal.TabIndex = 19
+        Me.txtGrandTotal.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'Label4
         '
+        Me.Label4.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(1180, 502)
+        Me.Label4.Location = New System.Drawing.Point(1180, 513)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(60, 16)
         Me.Label4.TabIndex = 20
@@ -302,31 +322,42 @@ Partial Class frmCashierDashboard
         '
         'Label5
         '
+        Me.Label5.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label5.AutoSize = True
-        Me.Label5.Font = New System.Drawing.Font("Segoe UI", 13.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label5.Location = New System.Drawing.Point(1157, 640)
+        Me.Label5.Font = New System.Drawing.Font("Segoe UI", 16.2!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label5.Location = New System.Drawing.Point(1008, 638)
         Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(156, 31)
+        Me.Label5.Size = New System.Drawing.Size(188, 38)
         Me.Label5.TabIndex = 21
         Me.Label5.Text = "Total Amount:"
         '
         'btnRemoveItem
         '
+        Me.btnRemoveItem.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnRemoveItem.BackColor = System.Drawing.Color.Red
+        Me.btnRemoveItem.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnRemoveItem.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnRemoveItem.ForeColor = System.Drawing.Color.White
         Me.btnRemoveItem.Location = New System.Drawing.Point(1387, 316)
         Me.btnRemoveItem.Name = "btnRemoveItem"
         Me.btnRemoveItem.Size = New System.Drawing.Size(132, 32)
         Me.btnRemoveItem.TabIndex = 22
         Me.btnRemoveItem.Text = "Remove Item"
-        Me.btnRemoveItem.UseVisualStyleBackColor = True
+        Me.btnRemoveItem.UseVisualStyleBackColor = False
         '
         'btnClearBalanceTxt
         '
-        Me.btnClearBalanceTxt.Location = New System.Drawing.Point(1444, 499)
+        Me.btnClearBalanceTxt.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnClearBalanceTxt.BackColor = System.Drawing.Color.Red
+        Me.btnClearBalanceTxt.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnClearBalanceTxt.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnClearBalanceTxt.ForeColor = System.Drawing.Color.White
+        Me.btnClearBalanceTxt.Location = New System.Drawing.Point(1444, 502)
         Me.btnClearBalanceTxt.Name = "btnClearBalanceTxt"
-        Me.btnClearBalanceTxt.Size = New System.Drawing.Size(75, 23)
+        Me.btnClearBalanceTxt.Size = New System.Drawing.Size(75, 40)
         Me.btnClearBalanceTxt.TabIndex = 23
         Me.btnClearBalanceTxt.Text = "Clear"
-        Me.btnClearBalanceTxt.UseVisualStyleBackColor = True
+        Me.btnClearBalanceTxt.UseVisualStyleBackColor = False
         '
         'frmCashierDashboard
         '
@@ -348,7 +379,7 @@ Partial Class frmCashierDashboard
         Me.Controls.Add(Me.dgvCustomerBalancePreview)
         Me.Controls.Add(Me.Panel2)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
-        Me.MaximizeBox = False
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "frmCashierDashboard"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Cashier"

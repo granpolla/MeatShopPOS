@@ -142,7 +142,9 @@ Partial Class frmCashierInputOrderItem
         'btnAddItem
         '
         Me.btnAddItem.BackColor = System.Drawing.Color.Lime
-        Me.btnAddItem.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.btnAddItem.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnAddItem.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnAddItem.ForeColor = System.Drawing.SystemColors.WindowText
         Me.btnAddItem.Location = New System.Drawing.Point(12, 228)
         Me.btnAddItem.Name = "btnAddItem"
         Me.btnAddItem.Size = New System.Drawing.Size(338, 39)
@@ -186,7 +188,7 @@ Partial Class frmCashierInputOrderItem
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.BackColor = System.Drawing.SystemColors.ActiveCaption
+        Me.BackColor = System.Drawing.SystemColors.GradientActiveCaption
         Me.ClientSize = New System.Drawing.Size(361, 281)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.txtProductBrand)

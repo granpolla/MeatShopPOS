@@ -32,6 +32,8 @@ Partial Class frmTransaction
         Me.dgvTransaction.AllowUserToAddRows = False
         Me.dgvTransaction.AllowUserToDeleteRows = False
         Me.dgvTransaction.AllowUserToResizeRows = False
+        Me.dgvTransaction.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.dgvTransaction.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.dgvTransaction.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvTransaction.Location = New System.Drawing.Point(12, 12)
@@ -42,22 +44,27 @@ Partial Class frmTransaction
         Me.dgvTransaction.RowHeadersWidth = 51
         Me.dgvTransaction.RowTemplate.Height = 24
         Me.dgvTransaction.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvTransaction.Size = New System.Drawing.Size(1319, 548)
+        Me.dgvTransaction.Size = New System.Drawing.Size(1319, 596)
         Me.dgvTransaction.TabIndex = 4
         '
         'btnRefreshTransaction
         '
-        Me.btnRefreshTransaction.Location = New System.Drawing.Point(1127, 566)
+        Me.btnRefreshTransaction.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnRefreshTransaction.BackColor = System.Drawing.Color.White
+        Me.btnRefreshTransaction.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnRefreshTransaction.Font = New System.Drawing.Font("Segoe UI", 7.8!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnRefreshTransaction.Location = New System.Drawing.Point(1127, 614)
         Me.btnRefreshTransaction.Name = "btnRefreshTransaction"
         Me.btnRefreshTransaction.Size = New System.Drawing.Size(204, 72)
         Me.btnRefreshTransaction.TabIndex = 5
         Me.btnRefreshTransaction.Text = "Refresh"
-        Me.btnRefreshTransaction.UseVisualStyleBackColor = True
+        Me.btnRefreshTransaction.UseVisualStyleBackColor = False
         '
         'frmTransaction
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.BackColor = System.Drawing.SystemColors.GrayText
         Me.ClientSize = New System.Drawing.Size(1343, 770)
         Me.Controls.Add(Me.btnRefreshTransaction)
         Me.Controls.Add(Me.dgvTransaction)
