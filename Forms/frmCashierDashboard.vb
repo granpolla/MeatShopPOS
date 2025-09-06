@@ -73,6 +73,16 @@ Public Class frmCashierDashboard
 
     ' ✅ Whenever user changes balance selection → recalc totals
     Private Sub dgvCustomerBalancePreview_SelectionChanged(sender As Object, e As EventArgs) Handles dgvCustomerBalancePreview.SelectionChanged
+        ' ✅ Limit selection to 4 balances
+        If dgvCustomerBalancePreview.SelectedRows.Count > 4 Then
+            MessageBox.Show("You can only settle up to 4 balances per transaction.", "Limit Reached", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+
+            ' Deselect the latest selected row
+            Dim lastSelected As DataGridViewRow = dgvCustomerBalancePreview.SelectedRows(dgvCustomerBalancePreview.SelectedRows.Count - 1)
+            lastSelected.Selected = False
+        End If
+
+        ' ✅ Recalculate totals after enforcing limit
         UpdateTotals()
     End Sub
 
