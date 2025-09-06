@@ -74,7 +74,7 @@ Module ReceiptGenerator
         table.SetWidths(New Single() {0.9F, 0.7F, 3.5F, 1.0F, 1.0F})
 
         ' Header Row
-        Dim headers = {"Total Weight (KG)", "Total Box", "Product Name", "Unit Price", "Subtotal"}
+        Dim headers = {"Total KG", "Total Box", "Product Name", "Unit Price", "Subtotal"}
         For Each h In headers
             Dim headerCell As New PdfPCell(New Phrase(h, normalFont)) With {
         .HorizontalAlignment = Element.ALIGN_CENTER,
