@@ -464,9 +464,9 @@ Public Class frmCashierPaymentInput
                 End Using
 
                 ' 🔓 Auto-open the PDF for cashier printing
-                If File.Exists(filePath) Then
-                    Process.Start(New ProcessStartInfo(filePath) With {.UseShellExecute = True})
-                End If
+                'If File.Exists(filePath) Then
+                '    Process.Start(New ProcessStartInfo(filePath) With {.UseShellExecute = True})
+                'End If
 
             Catch ex As Exception
                 MessageBox.Show("Transaction saved, but failed to generate receipt PDF: " & ex.Message,
