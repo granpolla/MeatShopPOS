@@ -52,13 +52,13 @@ Public Class frmCashierPaymentInput
 
         ' 👉 Order Items
         Dim orderTable As DataTable = CType(parentForm.dgvOrderItemPreview.DataSource, DataTable)
-        For Each row As DataRow In orderTable.Rows
-            details &= $"{row("Product Name")} | {row("Brand")} | " &
-                       $"Unit: {Convert.ToDecimal(row("Unit Weight")):N2}kg @ {Convert.ToDecimal(row("Unit Price")):N2} | " &
-                       $"Box: {Convert.ToDecimal(row("Total Box")):N0} | " &
-                       $"Weight: {Convert.ToDecimal(row("Total Weight")):N2}kg | " &
-                       $"Total: {Convert.ToDecimal(row("Total")):N2}" & Environment.NewLine
-        Next
+        If orderTable.Columns.Contains("Product Name") AndAlso orderTable.Columns.Contains("Brand") Then
+            For Each r As DataRow In orderTable.Rows
+                Dim prod As String = If(r("Product Name"), "").ToString()
+                Dim brand As String = If(r("Brand"), "").ToString()
+                r("Product Name") = prod & " - " & brand
+            Next
+        End If
 
         ' 👉 Settled Balances
         Dim balanceTotal As Decimal = 0
