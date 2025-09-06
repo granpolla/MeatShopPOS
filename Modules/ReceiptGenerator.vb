@@ -15,6 +15,7 @@ Module ReceiptGenerator
                                   Optional balances As List(Of Tuple(Of String, Decimal)) = Nothing)
 
         Dim doc As New Document(PageSize.A5, 30, 30, 10, 10)
+        If File.Exists(filePath) Then File.Delete(filePath)
         PdfWriter.GetInstance(doc, New FileStream(filePath, FileMode.Create))
         doc.Open()
 
@@ -73,20 +74,20 @@ Module ReceiptGenerator
         table.SetWidths(New Single() {0.9F, 0.7F, 3.5F, 1.0F, 1.0F})
 
         ' Header Row
-        Dim headers = {"Total KG", "No. Box", "Product Name", "Unit Price", "Total"}
+        Dim headers = {"Total Weight (KG)", "Total Box", "Product Name", "Unit Price", "Subtotal"}
         For Each h In headers
             Dim headerCell As New PdfPCell(New Phrase(h, normalFont)) With {
-                .HorizontalAlignment = Element.ALIGN_CENTER,
-                .BackgroundColor = BaseColor.LIGHT_GRAY
-            }
+        .HorizontalAlignment = Element.ALIGN_CENTER,
+        .BackgroundColor = BaseColor.LIGHT_GRAY
+    }
             table.AddCell(headerCell)
         Next
 
         ' Data Rows
         Dim rowCount As Integer = 0
         For Each row As DataRow In orderItemTable.Rows
-            table.AddCell(New PdfPCell(New Phrase(row("Total KG").ToString(), normalFont)) With {.HorizontalAlignment = Element.ALIGN_CENTER})
-            table.AddCell(New PdfPCell(New Phrase(row("No. Box").ToString(), normalFont)) With {.HorizontalAlignment = Element.ALIGN_CENTER})
+            table.AddCell(New PdfPCell(New Phrase(row("Total Weight").ToString(), normalFont)) With {.HorizontalAlignment = Element.ALIGN_CENTER})
+            table.AddCell(New PdfPCell(New Phrase(row("Total Box").ToString(), normalFont)) With {.HorizontalAlignment = Element.ALIGN_CENTER})
             table.AddCell(New PdfPCell(New Phrase(row("Product Name").ToString(), normalFont)))
             table.AddCell(New PdfPCell(New Phrase("₱" & Convert.ToDecimal(row("Unit Price")).ToString("N2"), normalFont)) With {.HorizontalAlignment = Element.ALIGN_RIGHT})
             table.AddCell(New PdfPCell(New Phrase("₱" & Convert.ToDecimal(row("Total")).ToString("N2"), normalFont)) With {.HorizontalAlignment = Element.ALIGN_RIGHT})

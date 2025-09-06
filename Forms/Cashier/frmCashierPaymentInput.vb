@@ -1,5 +1,8 @@
 ﻿Imports System.Text.RegularExpressions
 Imports MySql.Data.MySqlClient
+Imports System.IO
+Imports System.Diagnostics
+
 
 Public Class frmCashierPaymentInput
 
@@ -326,12 +329,13 @@ Public Class frmCashierPaymentInput
         ' 🔹 SECTION 6: SAVE TO DATABASE
         ' ================================
         Try
+            Dim orderNumber As String = ""
+
             Using conn As New MySqlConnection(My.Settings.DBConnection)
                 conn.Open()
                 Using tx As MySqlTransaction = conn.BeginTransaction()
 
                     ' 🔹 Generate unique order number
-                    Dim orderNumber As String = ""
                     Dim rand As New Random()
                     Dim existsOrd As Boolean = True
                     While existsOrd
@@ -500,8 +504,89 @@ Public Class frmCashierPaymentInput
                     ' ✅ Commit 
                     tx.Commit()
                 End Using
+
+
+
             End Using
 
+            Try
+                ' 📂 Ensure receipts folder exists
+                Dim receiptsFolder As String = "C:\POS_Receipts"
+                If Not Directory.Exists(receiptsFolder) Then
+                    Directory.CreateDirectory(receiptsFolder)
+                End If
+
+                ' 📝 Build file path using order number
+                Dim filePath As String = Path.Combine(receiptsFolder, orderNumber & ".pdf")
+
+                ' 🏷️ Customer info
+                Dim customerFullName As String = firstName & " " & lastName
+                Dim customerAddress As String = address
+
+                ' 📋 Order items table (already built earlier)
+                Dim orderTable As DataTable = CType(parentForm.dgvOrderItemPreview.DataSource, DataTable)
+
+                ' 📊 Optional balances list
+                Dim balancesList As New List(Of Tuple(Of String, Decimal))
+                Using conn As New MySqlConnection(My.Settings.DBConnection)
+                    conn.Open()
+                    For Each row As DataGridViewRow In parentForm.dgvCustomerBalancePreview.Rows
+                        If row.IsNewRow Then Continue For
+
+                        Dim oldTransId As Integer = Convert.ToInt32(row.Cells("TransactionID").Value)
+                        Dim bal As Decimal = Convert.ToDecimal(row.Cells("Balance").Value)
+
+                        ' Fetch order number from DB
+                        Dim oldOrderNum As String = ""
+                        Using cmdFetch As New MySqlCommand("SELECT order_number FROM sales_transaction WHERE id=@rid LIMIT 1;", conn)
+                            cmdFetch.Parameters.AddWithValue("@rid", oldTransId)
+                            oldOrderNum = Convert.ToString(cmdFetch.ExecuteScalar())
+                        End Using
+
+                        balancesList.Add(New Tuple(Of String, Decimal)(oldOrderNum, bal))
+                    Next
+                End Using
+
+                ' === Compute Totals ===
+                Dim totalPurchase As Decimal = orderTable.AsEnumerable().Sum(Function(r) Convert.ToDecimal(r("Total")))
+                Dim totalBalance As Decimal = balancesList.Sum(Function(b) b.Item2)
+                Dim computedGrandTotal As Decimal = totalPurchase + totalBalance
+
+                ' 🖨️ Call receipt generator
+                GenerateReceiptPDF(filePath,
+                   orderNumber,
+                   DateTime.Now.ToString("M/d/yyyy HH:mm"),
+                   customerFullName,
+                   customerAddress,
+                   totalPurchase.ToString("N2"),
+                   computedGrandTotal.ToString("N2"),
+                   orderTable,
+                   balancesList)
+
+                ' 🗂️ Optionally update DB with the actual PDF file name
+                Using conn As New MySqlConnection(My.Settings.DBConnection)
+                    conn.Open()
+                    Using cmd As New MySqlCommand("UPDATE sales_transaction SET invoice_pdf = @pdf WHERE order_number=@ord;", conn)
+                        cmd.Parameters.AddWithValue("@pdf", orderNumber & ".pdf")
+                        cmd.Parameters.AddWithValue("@ord", orderNumber)
+                        cmd.ExecuteNonQuery()
+                    End Using
+                End Using
+
+                ' 🔓 Auto-open the PDF for cashier printing
+                If File.Exists(filePath) Then
+                    Process.Start(New ProcessStartInfo(filePath) With {.UseShellExecute = True})
+                End If
+
+            Catch ex As Exception
+                MessageBox.Show("Transaction saved, but failed to generate receipt PDF: " & ex.Message,
+                            "PDF Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            End Try
+
+
+            ' ================================
+            ' 🔹 SECTION 8: CLEANUP
+            ' ================================
 
             ' Cleanup
             dgvPaymentEntries.Rows.Clear()
