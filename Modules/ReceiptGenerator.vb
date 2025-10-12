@@ -14,7 +14,7 @@ Module ReceiptGenerator
                                   orderItemTable As DataTable,
                                   Optional balances As List(Of Tuple(Of String, Decimal)) = Nothing)
 
-        Dim doc As New Document(PageSize.A5, 30, 30, 10, 10)
+        Dim doc As New Document(PageSize.A5, 20, 20, 5, 5)
         If File.Exists(filePath) Then File.Delete(filePath)
         PdfWriter.GetInstance(doc, New FileStream(filePath, FileMode.Create))
         doc.Open()
@@ -27,7 +27,7 @@ Module ReceiptGenerator
         ' === Header ===
         Dim header As New Paragraph("LASH FROZEN MEAT TRADING, INC.", boldFont)
         header.Alignment = Element.ALIGN_CENTER
-        header.SpacingAfter = 15
+        header.SpacingAfter = 40
         doc.Add(header)
 
         ' === Order Info (3 columns, 2 rows) ===
@@ -71,7 +71,7 @@ Module ReceiptGenerator
         ' === Product Table ===
         Dim table As New PdfPTable(5)
         table.WidthPercentage = 100
-        table.SetWidths(New Single() {0.9F, 0.7F, 3.5F, 1.0F, 1.0F})
+        table.SetWidths(New Single() {1.2F, 1.0F, 4.0F, 1.5F, 1.5F})
 
         ' Header Row
         Dim headers = {"Total KG", "Total Box", "Product Name", "Unit Price", "Subtotal"}
@@ -138,7 +138,7 @@ Module ReceiptGenerator
         ' === Signature Table (5 columns) ===
         Dim signatureTable As New PdfPTable(5)
         signatureTable.WidthPercentage = 100
-        signatureTable.SpacingBefore = 100 ' push it down a bit from product table
+        signatureTable.SpacingBefore = 80 ' push it down a bit from product table
         signatureTable.SetWidths(New Single() {1.2F, 2.0F, 0.8F, 1.2F, 2.0F})
 
         ' Row: Checked By / Received By

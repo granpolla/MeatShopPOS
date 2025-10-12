@@ -6,6 +6,58 @@ Imports System.Diagnostics
 
 Public Class frmCashierPaymentInput
 
+    Private Function IsPrinterInstalled(printerName As String) As Boolean
+        For Each installedPrinter As String In Printing.PrinterSettings.InstalledPrinters
+            If installedPrinter.Trim().ToLower() = printerName.Trim().ToLower() Then
+                Return True
+            End If
+        Next
+        Return False
+    End Function
+
+    ' 🔹 Print PDF using SumatraPDF
+    ' 🔹 Print PDF using Foxit Reader
+    Private Function PrintPDFWithFoxit(filePath As String, printerName As String) As Boolean
+        Try
+            If Not File.Exists(filePath) Then
+                MessageBox.Show("PDF file does not exist: " & filePath, "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Return False
+            End If
+
+            ' 🔹 Foxit Reader paths (update if installed in a different location)
+            Dim foxitPaths As String() = {
+            "C:\Program Files\Foxit Software\Foxit PDF Reader\FoxitPDFReader.exe",
+            "C:\Program Files (x86)\Foxit Software\Foxit PDF Reader\FoxitPDFReader.exe"
+        }
+
+            Dim foxitPath As String = foxitPaths.FirstOrDefault(Function(p) File.Exists(p))
+            If String.IsNullOrEmpty(foxitPath) Then
+                MessageBox.Show("Foxit PDF Reader not found. Please install Foxit.", "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Return False
+            End If
+
+            ' 🔹 Silent print command
+            ' /t : print PDF to specific printer and close Foxit automatically
+            Dim psi As New ProcessStartInfo(foxitPath) With {
+            .Arguments = $"/t ""{filePath}"" ""{printerName}""",
+            .UseShellExecute = False,
+            .CreateNoWindow = True
+        }
+
+            Using proc As Process = Process.Start(psi)
+                proc.WaitForExit(10000) ' wait max 10 seconds
+            End Using
+
+            Return True
+        Catch ex As Exception
+            MessageBox.Show("Failed to print: " & ex.Message, "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return False
+        End Try
+    End Function
+
+
+
+
     Private Sub frmCashierPaymentInput_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ' Populate payment method combo
         cboPaymentMethod.Items.Clear()
@@ -186,8 +238,36 @@ Public Class frmCashierPaymentInput
         txtChange.Clear()
     End Sub
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     Private Sub btnSaveAndPrint_Click(sender As Object, e As EventArgs) Handles btnSaveAndPrint.Click
+
+        Dim printerName As String = "EPSON LX-310"
+
+        ' ✅ Check printer first
+        If Not IsPrinterInstalled(printerName) Then
+            MessageBox.Show($"Printer '{printerName}' not found. Transaction will not be saved.",
+                        "Printer Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return
+        End If
+
         Dim parentForm As frmCashierDashboard = CType(Me.ParentForm, frmCashierDashboard)
+
         If parentForm.dgvCustomerBalancePreview.SelectedRows.Count > 4 Then
             MessageBox.Show("You can only settle up to 4 balances per transaction. Please deselect some balances.",
                     "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -452,6 +532,14 @@ Public Class frmCashierPaymentInput
                    computedGrandTotal.ToString("N2"),
                    orderTable,
                    balancesList)
+
+                ' 🔹 3. After PDF is generated, print it
+                Dim pdfFilePath As String = Path.Combine("C:\POS_Receipts", orderNumber & ".pdf")
+                If Not PrintPDFWithFoxit(pdfFilePath, printerName) Then
+                    MessageBox.Show("Printing failed. Transaction will not be saved.",
+                        "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    Return
+                End If
 
                 ' 🗂️ Optionally update DB with the actual PDF file name
                 Using conn As New MySqlConnection(My.Settings.DBConnection)
