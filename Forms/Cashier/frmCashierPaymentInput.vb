@@ -3,60 +3,7 @@ Imports MySql.Data.MySqlClient
 Imports System.IO
 Imports System.Diagnostics
 
-
 Public Class frmCashierPaymentInput
-
-    Private Function IsPrinterInstalled(printerName As String) As Boolean
-        For Each installedPrinter As String In Printing.PrinterSettings.InstalledPrinters
-            If installedPrinter.Trim().ToLower() = printerName.Trim().ToLower() Then
-                Return True
-            End If
-        Next
-        Return False
-    End Function
-
-    ' 🔹 Print PDF using SumatraPDF
-    ' 🔹 Print PDF using Foxit Reader
-    Private Function PrintPDFWithFoxit(filePath As String, printerName As String) As Boolean
-        Try
-            If Not File.Exists(filePath) Then
-                MessageBox.Show("PDF file does not exist: " & filePath, "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                Return False
-            End If
-
-            ' 🔹 Foxit Reader paths (update if installed in a different location)
-            Dim foxitPaths As String() = {
-            "C:\Program Files\Foxit Software\Foxit PDF Reader\FoxitPDFReader.exe",
-            "C:\Program Files (x86)\Foxit Software\Foxit PDF Reader\FoxitPDFReader.exe"
-        }
-
-            Dim foxitPath As String = foxitPaths.FirstOrDefault(Function(p) File.Exists(p))
-            If String.IsNullOrEmpty(foxitPath) Then
-                MessageBox.Show("Foxit PDF Reader not found. Please install Foxit.", "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                Return False
-            End If
-
-            ' 🔹 Silent print command
-            ' /t : print PDF to specific printer and close Foxit automatically
-            Dim psi As New ProcessStartInfo(foxitPath) With {
-            .Arguments = $"/t ""{filePath}"" ""{printerName}""",
-            .UseShellExecute = False,
-            .CreateNoWindow = True
-        }
-
-            Using proc As Process = Process.Start(psi)
-                proc.WaitForExit(10000) ' wait max 10 seconds
-            End Using
-
-            Return True
-        Catch ex As Exception
-            MessageBox.Show("Failed to print: " & ex.Message, "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            Return False
-        End Try
-    End Function
-
-
-
 
     Private Sub frmCashierPaymentInput_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ' Populate payment method combo
@@ -153,7 +100,6 @@ Public Class frmCashierPaymentInput
         MessageBox.Show(details, "Save + Print", MessageBoxButtons.OK, MessageBoxIcon.Information)
     End Sub
 
-
     ' Enable RefNum only when Online is selected
     Private Sub cboPaymentMethod_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboPaymentMethod.SelectedIndexChanged
         If cboPaymentMethod.SelectedItem.ToString() = "online" Then
@@ -219,7 +165,6 @@ Public Class frmCashierPaymentInput
             Return
         End If
 
-
         ' ✅ Passed → Add row
         dgvPaymentEntries.Rows.Add(method, refNum, Convert.ToDecimal(amountText).ToString("N2"))
 
@@ -238,34 +183,7 @@ Public Class frmCashierPaymentInput
         txtChange.Clear()
     End Sub
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     Private Sub btnSaveAndPrint_Click(sender As Object, e As EventArgs) Handles btnSaveAndPrint.Click
-
-        Dim printerName As String = "EPSON LX-310"
-
-        ' ✅ Check printer first
-        If Not IsPrinterInstalled(printerName) Then
-            MessageBox.Show($"Printer '{printerName}' not found. Transaction will not be saved.",
-                        "Printer Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            Return
-        End If
-
         Dim parentForm As frmCashierDashboard = CType(Me.ParentForm, frmCashierDashboard)
 
         If parentForm.dgvCustomerBalancePreview.SelectedRows.Count > 4 Then
@@ -423,7 +341,6 @@ Public Class frmCashierPaymentInput
                         End Using
                     Next
 
-
                     ' 🔹 Ledger entry for NEW order
                     If status = "Partial" AndAlso unpaidBalance > 0 Then
                         Using cmd As New MySqlCommand("
@@ -438,7 +355,6 @@ Public Class frmCashierPaymentInput
                             cmd.ExecuteNonQuery()
                         End Using
                     End If
-
 
                     ' 🔹 Ledger entries for SETTLED balances
                     If parentForm.dgvCustomerBalancePreview.SelectedRows.Count > 0 Then
@@ -467,23 +383,17 @@ Public Class frmCashierPaymentInput
                                 cmd.ExecuteNonQuery()
                             End Using
                         Next
-
                     End If
 
                     ' ✅ Commit 
                     tx.Commit()
                 End Using
-
-
-
             End Using
 
             Try
-                ' 📂 Ensure receipts folder exists
-                Dim receiptsFolder As String = "C:\POS_Receipts"
-                If Not Directory.Exists(receiptsFolder) Then
-                    Directory.CreateDirectory(receiptsFolder)
-                End If
+                ' Ensure receipts folder exists (moved to PrinterModule)
+                PrinterModule.EnsureReceiptsFolderExists()
+                Dim receiptsFolder As String = PrinterModule.ReceiptsFolder
 
                 ' 📝 Build file path using order number
                 Dim filePath As String = Path.Combine(receiptsFolder, orderNumber & ".pdf")
@@ -516,7 +426,6 @@ Public Class frmCashierPaymentInput
                     Next
                 End Using
 
-
                 ' === Compute Totals ===
                 Dim totalPurchase As Decimal = orderTable.AsEnumerable().Sum(Function(r) Convert.ToDecimal(r("Total")))
                 Dim totalBalance As Decimal = balancesList.Sum(Function(b) b.Item2)
@@ -533,15 +442,7 @@ Public Class frmCashierPaymentInput
                    orderTable,
                    balancesList)
 
-                ' 🔹 3. After PDF is generated, print it
-                Dim pdfFilePath As String = Path.Combine("C:\POS_Receipts", orderNumber & ".pdf")
-                If Not PrintPDFWithFoxit(pdfFilePath, printerName) Then
-                    MessageBox.Show("Printing failed. Transaction will not be saved.",
-                        "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                    Return
-                End If
-
-                ' 🗂️ Optionally update DB with the actual PDF file name
+                ' 🗂️ Update DB with the PDF file name
                 Using conn As New MySqlConnection(My.Settings.DBConnection)
                     conn.Open()
                     Using cmd As New MySqlCommand("UPDATE sales_transaction SET invoice_pdf = @pdf WHERE order_number=@ord;", conn)
@@ -551,10 +452,8 @@ Public Class frmCashierPaymentInput
                     End Using
                 End Using
 
-                ' 🔓 Auto-open the PDF for cashier printing
-                'If File.Exists(filePath) Then
-                '    Process.Start(New ProcessStartInfo(filePath) With {.UseShellExecute = True})
-                'End If
+                MessageBox.Show($"Transaction saved successfully. PDF receipt saved to: {filePath}",
+                            "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
             Catch ex As Exception
                 MessageBox.Show("Transaction saved, but failed to generate receipt PDF: " & ex.Message,
@@ -568,16 +467,6 @@ Public Class frmCashierPaymentInput
         ' 6️# After DB + PDF success → cleanup
         CleanupForms(parentForm)
     End Sub
-
-
-
-
-
-
-
-
-
-
 
     ' 🔹 Simple change calculator (GrandTotal - payments)
     Private Sub UpdateChange()
@@ -598,7 +487,6 @@ Public Class frmCashierPaymentInput
             txtChange.Text = "0.00"
         End If
     End Sub
-
 
     'HELPERS
     ' 🔹 VALIDATE ORDER & PAYMENTS
@@ -729,10 +617,8 @@ Public Class frmCashierPaymentInput
             CType(parentForm.dgvCustomerBalancePreview.DataSource, DataTable).Rows.Clear()
         End If
 
-
         parentForm.LoadProducts()
         parentForm.LoadCustomers()
     End Sub
-
 
 End Class

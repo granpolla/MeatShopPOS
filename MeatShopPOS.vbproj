@@ -282,6 +282,7 @@
     <Compile Include="Modules\modDatabase.vb" />
     <Compile Include="Modules\modHelpers.vb" />
     <Compile Include="Modules\modSession.vb" />
+    <Compile Include="Modules\PrinterModule.vb" />
     <Compile Include="Modules\ReceiptGenerator.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
