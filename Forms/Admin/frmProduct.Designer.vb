@@ -22,31 +22,110 @@ Partial Class frmProduct
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.Label1 = New System.Windows.Forms.Label()
+        Me.dgvProducts = New System.Windows.Forms.DataGridView()
+        Me.btnRefresh = New System.Windows.Forms.Button()
+        Me.btnDeleteProduct = New System.Windows.Forms.Button()
+        Me.btnEditProduct = New System.Windows.Forms.Button()
+        Me.btnAddProduct = New System.Windows.Forms.Button()
+        CType(Me.dgvProducts, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
-        'Label1
+        'dgvProducts
         '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(363, 217)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(53, 16)
-        Me.Label1.TabIndex = 1
-        Me.Label1.Text = "Product"
+        Me.dgvProducts.AllowUserToAddRows = False
+        Me.dgvProducts.AllowUserToDeleteRows = False
+        Me.dgvProducts.AllowUserToResizeRows = False
+        Me.dgvProducts.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.dgvProducts.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        Me.dgvProducts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvProducts.Location = New System.Drawing.Point(12, 12)
+        Me.dgvProducts.MultiSelect = False
+        Me.dgvProducts.Name = "dgvProducts"
+        Me.dgvProducts.ReadOnly = True
+        Me.dgvProducts.RowHeadersVisible = False
+        Me.dgvProducts.RowHeadersWidth = 51
+        Me.dgvProducts.RowTemplate.Height = 24
+        Me.dgvProducts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.dgvProducts.Size = New System.Drawing.Size(1319, 596)
+        Me.dgvProducts.TabIndex = 3
+        '
+        'btnRefresh
+        '
+        Me.btnRefresh.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnRefresh.BackColor = System.Drawing.Color.White
+        Me.btnRefresh.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnRefresh.Font = New System.Drawing.Font("Segoe UI Semibold", 10.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnRefresh.Location = New System.Drawing.Point(1164, 614)
+        Me.btnRefresh.Name = "btnRefresh"
+        Me.btnRefresh.Size = New System.Drawing.Size(167, 57)
+        Me.btnRefresh.TabIndex = 10
+        Me.btnRefresh.Text = "Refresh"
+        Me.btnRefresh.UseVisualStyleBackColor = False
+        '
+        'btnDeleteProduct
+        '
+        Me.btnDeleteProduct.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnDeleteProduct.BackColor = System.Drawing.Color.Red
+        Me.btnDeleteProduct.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnDeleteProduct.Font = New System.Drawing.Font("Segoe UI Semibold", 10.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnDeleteProduct.ForeColor = System.Drawing.Color.WhiteSmoke
+        Me.btnDeleteProduct.Location = New System.Drawing.Point(991, 614)
+        Me.btnDeleteProduct.Name = "btnDeleteProduct"
+        Me.btnDeleteProduct.Size = New System.Drawing.Size(167, 57)
+        Me.btnDeleteProduct.TabIndex = 9
+        Me.btnDeleteProduct.Text = "Delete Product"
+        Me.btnDeleteProduct.UseVisualStyleBackColor = False
+        '
+        'btnEditProduct
+        '
+        Me.btnEditProduct.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnEditProduct.BackColor = System.Drawing.Color.Lime
+        Me.btnEditProduct.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnEditProduct.Font = New System.Drawing.Font("Segoe UI Semibold", 10.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnEditProduct.Location = New System.Drawing.Point(818, 614)
+        Me.btnEditProduct.Name = "btnEditProduct"
+        Me.btnEditProduct.Size = New System.Drawing.Size(167, 57)
+        Me.btnEditProduct.TabIndex = 8
+        Me.btnEditProduct.Text = "Edit Product"
+        Me.btnEditProduct.UseVisualStyleBackColor = False
+        '
+        'btnAddProduct
+        '
+        Me.btnAddProduct.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnAddProduct.BackColor = System.Drawing.Color.Blue
+        Me.btnAddProduct.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnAddProduct.Font = New System.Drawing.Font("Segoe UI Semibold", 10.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnAddProduct.ForeColor = System.Drawing.Color.WhiteSmoke
+        Me.btnAddProduct.Location = New System.Drawing.Point(645, 614)
+        Me.btnAddProduct.Name = "btnAddProduct"
+        Me.btnAddProduct.Size = New System.Drawing.Size(167, 57)
+        Me.btnAddProduct.TabIndex = 7
+        Me.btnAddProduct.Text = "Add Product"
+        Me.btnAddProduct.UseVisualStyleBackColor = False
         '
         'frmProduct
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1119, 625)
-        Me.Controls.Add(Me.Label1)
+        Me.BackColor = System.Drawing.SystemColors.GrayText
+        Me.ClientSize = New System.Drawing.Size(1343, 770)
+        Me.Controls.Add(Me.btnRefresh)
+        Me.Controls.Add(Me.btnDeleteProduct)
+        Me.Controls.Add(Me.btnEditProduct)
+        Me.Controls.Add(Me.btnAddProduct)
+        Me.Controls.Add(Me.dgvProducts)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.Name = "frmProduct"
         Me.Text = "frmProduct"
+        CType(Me.dgvProducts, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
-        Me.PerformLayout()
 
     End Sub
 
-    Friend WithEvents Label1 As Label
+    Friend WithEvents dgvProducts As DataGridView
+    Friend WithEvents btnRefresh As Button
+    Friend WithEvents btnDeleteProduct As Button
+    Friend WithEvents btnEditProduct As Button
+    Friend WithEvents btnAddProduct As Button
 End Class

@@ -3,6 +3,7 @@
     Private Sub frmAdminDashboard_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ' Show the full name of the logged-in user
         lblUserFullName.Text = LoggedInFullName
+        lblUserRole.Text = LoggedInRole
 
         ' Load Dashboard by default
         HighlightButton(btnDashboard)
@@ -54,6 +55,32 @@
     Private Sub btnUser_Click(sender As Object, e As EventArgs) Handles btnUser.Click
         HighlightButton(btnUser)
         LoadFormInPanel(New frmUser())
+    End Sub
+
+    Private Sub btnTransaction_Click(sender As Object, e As EventArgs) Handles btnTransaction.Click
+        HighlightButton(btnTransaction)
+        LoadFormInPanel(New frmTransaction())
+    End Sub
+
+    Private Sub btnLogout_Click(sender As Object, e As EventArgs) Handles btnLogout.Click
+        Dim result As DialogResult = MessageBox.Show("Are you sure you want to logout?",
+                                                "Logout Confirmation",
+                                                MessageBoxButtons.YesNo,
+                                                MessageBoxIcon.Question)
+
+        If result = DialogResult.Yes Then
+            ' 🔹 Clear session variables
+            LoggedInUserID = 0
+            LoggedInFullName = ""
+            LoggedInRole = ""
+
+            ' 🔹 Show login form again
+            Dim loginForm As New frmLogin()
+            loginForm.Show()
+
+            ' 🔹 Close current dashboard
+            Me.Close()
+        End If
     End Sub
 
 End Class

@@ -1,0 +1,132 @@
+﻿Imports MySql.Data.MySqlClient
+Imports System.Globalization
+
+Public Class frmEditProduct
+    Public Property ProductID As Integer
+
+    ' ✅ Capitalize words
+    ' ✅ Normalize spaces (replace multiple spaces with one, trim, TitleCase)
+    Private Function CleanText(input As String) As String
+        Dim normalized As String = System.Text.RegularExpressions.Regex.Replace(input, "\s+", " ") ' collapse spaces
+        normalized = normalized.Trim()
+        Return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(normalized.ToLower())
+    End Function
+
+    ' ✅ Save changes
+    Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
+        Dim productName As String = txtProductName.Text.Trim()
+        Dim brand As String = txtBrand.Text.Trim()
+        Dim weight As String = txtWeight.Text.Trim()
+        Dim price As String = txtPrice.Text.Trim()
+
+        ' 🔹 Validation
+        If String.IsNullOrWhiteSpace(productName) OrElse
+           String.IsNullOrWhiteSpace(brand) OrElse
+           String.IsNullOrWhiteSpace(weight) OrElse
+           String.IsNullOrWhiteSpace(price) Then
+            MessageBox.Show("All fields are required.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End If
+
+        ' 🔹 Numeric validation
+        Dim weightValue As Decimal
+        Dim priceValue As Decimal
+        If Not Decimal.TryParse(weight, weightValue) OrElse weightValue <= 0 Then
+            MessageBox.Show("Weight must be a valid positive number.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End If
+        If Not Decimal.TryParse(price, priceValue) OrElse priceValue <= 0 Then
+            MessageBox.Show("Price must be a valid positive number.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End If
+
+        ' 🔹 Format names
+        productName = CleanText(productName)
+        brand = CleanText(brand)
+
+        ' 🔹 Confirm update
+        Dim confirmMsg As String = $"Update this product?" & vbCrLf & vbCrLf &
+                                   $"Product Name: {productName}" & vbCrLf &
+                                   $"Brand: {brand}" & vbCrLf &
+                                   $"Weight: {weightValue} kg" & vbCrLf &
+                                   $"Price: ₱{priceValue:F2}"
+        If MessageBox.Show(confirmMsg, "Confirm Update", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
+            Return
+        End If
+
+        Try
+            Using conn As New MySqlConnection(My.Settings.DBConnection)
+                conn.Open()
+
+                ' 🔹 Check for duplicates (excluding the current product)
+                Dim checkQuery As String = "SELECT COUNT(*) FROM PRODUCT WHERE product_name=@name AND brand=@brand AND id<>@id"
+                Using checkCmd As New MySqlCommand(checkQuery, conn)
+                    checkCmd.Parameters.AddWithValue("@name", productName)
+                    checkCmd.Parameters.AddWithValue("@brand", brand)
+                    checkCmd.Parameters.AddWithValue("@id", ProductID)
+                    Dim exists As Integer = Convert.ToInt32(checkCmd.ExecuteScalar())
+                    If exists > 0 Then
+                        MessageBox.Show("Another product with the same name and brand already exists.", "Duplicate Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        Return
+                    End If
+                End Using
+
+                ' 🔹 Safeguard: check if product is already used in transactions
+                Dim refCheckQuery As String = "
+                SELECT COUNT(*) 
+                FROM transaction_item 
+                WHERE product_id=@id"
+                Using refCmd As New MySqlCommand(refCheckQuery, conn)
+                    refCmd.Parameters.AddWithValue("@id", ProductID)
+                    Dim count As Integer = Convert.ToInt32(refCmd.ExecuteScalar())
+                    If count > 0 Then
+                        ' Restrict changes to Name and Brand
+                        Dim getOriginalQuery As String = "SELECT product_name, brand FROM PRODUCT WHERE id=@id"
+                        Using getCmd As New MySqlCommand(getOriginalQuery, conn)
+                            getCmd.Parameters.AddWithValue("@id", ProductID)
+                            Using reader As MySqlDataReader = getCmd.ExecuteReader()
+                                If reader.Read() Then
+                                    Dim originalName As String = reader("product_name").ToString()
+                                    Dim originalBrand As String = reader("brand").ToString()
+
+                                    If productName <> originalName OrElse brand <> originalBrand Then
+                                        MessageBox.Show("This product is already used in transactions. You cannot change its Name or Brand.", "Restriction", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                                        Return
+                                    End If
+                                End If
+                            End Using
+                        End Using
+                    End If
+                End Using
+
+                ' 🔹 Update product
+                Dim updateQuery As String = "
+                UPDATE PRODUCT
+                SET product_name=@name, brand=@brand, unit_weight_kg=@weight, unit_price_php=@price, updated_at=NOW()
+                WHERE id=@id"
+                Using cmd As New MySqlCommand(updateQuery, conn)
+                    cmd.Parameters.AddWithValue("@name", productName)
+                    cmd.Parameters.AddWithValue("@brand", brand)
+                    cmd.Parameters.AddWithValue("@weight", weightValue)
+                    cmd.Parameters.AddWithValue("@price", priceValue)
+                    cmd.Parameters.AddWithValue("@id", ProductID)
+
+                    cmd.ExecuteNonQuery()
+                End Using
+            End Using
+
+            MessageBox.Show("Product updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Me.DialogResult = DialogResult.OK
+            Me.Close()
+
+        Catch ex As Exception
+            MessageBox.Show("Error updating product: " & ex.Message)
+        End Try
+    End Sub
+
+    ' ✅ Cancel button
+    Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
+        Me.DialogResult = DialogResult.Cancel
+        Me.Close()
+    End Sub
+End Class
