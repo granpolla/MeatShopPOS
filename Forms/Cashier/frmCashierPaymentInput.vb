@@ -26,78 +26,16 @@ Public Class frmCashierPaymentInput
         dgvPaymentEntries.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
         dgvPaymentEntries.SelectionMode = DataGridViewSelectionMode.FullRowSelect
         dgvPaymentEntries.ReadOnly = True
+        dgvPaymentEntries.AllowUserToResizeColumns = False
         dgvPaymentEntries.MultiSelect = False
         dgvPaymentEntries.RowHeadersVisible = False
         dgvPaymentEntries.ScrollBars = ScrollBars.None
         dgvPaymentEntries.Columns("Method").FillWeight = 55
         dgvPaymentEntries.Columns("Amount").FillWeight = 70
 
+
         txtChange.ReadOnly = True
         txtRefNum.Enabled = (cboPaymentMethod.SelectedItem.ToString() = "online")
-    End Sub
-
-    ' 🔹 Build Transaction Summary String
-    Private Function BuildTransactionSummary(parentForm As frmCashierDashboard,
-                                             grandTotal As Decimal,
-                                             totalPaid As Decimal,
-                                             status As String,
-                                             unpaidBalance As Decimal,
-                                             customerID As Integer,
-                                             firstName As String,
-                                             lastName As String,
-                                             address As String) As String
-
-        Dim details As String = "=== ORDER ITEMS ===" & Environment.NewLine
-
-        ' 👉 Order Items
-        Dim orderTable As DataTable = CType(parentForm.dgvOrderItemPreview.DataSource, DataTable)
-        If orderTable.Columns.Contains("Product Name") AndAlso orderTable.Columns.Contains("Brand") Then
-            For Each r As DataRow In orderTable.Rows
-                Dim prod As String = If(r("Product Name"), "").ToString()
-                Dim brand As String = If(r("Brand"), "").ToString()
-                r("Product Name") = prod & " - " & brand
-            Next
-        End If
-
-        ' 👉 Settled Balances
-        Dim balanceTotal As Decimal = 0
-        details &= Environment.NewLine & "=== SETTLED BALANCES ===" & Environment.NewLine
-        If parentForm.dgvCustomerBalancePreview.SelectedRows.Count > 0 Then
-            For Each row As DataGridViewRow In parentForm.dgvCustomerBalancePreview.SelectedRows
-                details &= $"{CDate(row.Cells("Date").Value):yyyy-MM-dd} | " &
-                           $"{row.Cells("Description").Value} | " &
-                           $"{Convert.ToDecimal(row.Cells("Balance").Value):N2}" & Environment.NewLine
-                balanceTotal += Convert.ToDecimal(row.Cells("Balance").Value)
-            Next
-        Else
-            details &= "No balances settled (0.00)" & Environment.NewLine
-        End If
-
-        ' 👉 Payments
-        details &= Environment.NewLine & "=== PAYMENTS ENTERED ===" & Environment.NewLine
-        For Each row As DataGridViewRow In dgvPaymentEntries.Rows
-            details &= $"{row.Cells("Method").Value} | {row.Cells("RefNum").Value} | {row.Cells("Amount").Value}" & Environment.NewLine
-        Next
-
-        ' 👉 Customer + Totals
-        details &= Environment.NewLine & $"Customer: {firstName} {lastName}, {address}" & Environment.NewLine
-        details &= $"Order Subtotal: {(grandTotal - balanceTotal):N2}" & Environment.NewLine
-        details &= $"Settled Balances: {balanceTotal:N2}" & Environment.NewLine
-        details &= $"Grand Total: {grandTotal:N2}" & Environment.NewLine
-        details &= $"Total Paid: {totalPaid:N2}" & Environment.NewLine
-        details &= $"Change: {Math.Max(totalPaid - grandTotal, 0):N2}" & Environment.NewLine
-        details &= $"Status: {status}" & Environment.NewLine
-
-        If status = "Partial" Then
-            details &= $"Unpaid Balance (to ledger): {unpaidBalance:N2}" & Environment.NewLine
-        End If
-
-        Return details
-    End Function
-
-    ' 🔹 Show Transaction Summary in MessageBox
-    Private Sub ShowTransactionSummary(details As String)
-        MessageBox.Show(details, "Save + Print", MessageBoxButtons.OK, MessageBoxIcon.Information)
     End Sub
 
     ' Enable RefNum only when Online is selected
@@ -205,10 +143,17 @@ Public Class frmCashierPaymentInput
         If Not ComputePaymentsAndStatus(parentForm, grandTotal, totalPaid, unpaidBalance, status) Then Exit Sub
 
         ' 4️# Show summary + confirm
-        Dim details As String = BuildTransactionSummary(parentForm, grandTotal, totalPaid, status, unpaidBalance,
-                                                    customerID, parentForm.txtFirstName.Text,
-                                                    parentForm.txtLastName.Text,
-                                                    parentForm.txtCustomerAddress.Text)
+        Dim details As String = TransactionSummaryModule.BuildTransactionSummary(
+            CType(parentForm.dgvOrderItemPreview.DataSource, DataTable),
+            parentForm.dgvCustomerBalancePreview,
+            dgvPaymentEntries,
+            grandTotal,
+            totalPaid,
+            status,
+            unpaidBalance,
+            parentForm.txtFirstName.Text,
+            parentForm.txtLastName.Text,
+            parentForm.txtCustomerAddress.Text)
 
         If MessageBox.Show(details & vbCrLf & vbCrLf & "Do you want to SAVE and PRINT this transaction?",
                        "Save + Print Confirmation",

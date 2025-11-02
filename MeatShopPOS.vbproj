@@ -286,6 +286,7 @@
     <Compile Include="Modules\PrinterModule.vb" />
     <Compile Include="Modules\ReceiptGenerator.vb" />
     <Compile Include="Modules\TransactionModule.vb" />
+    <Compile Include="Modules\TransactionSummaryModule.vb" />
     <Compile Include="Modules\ValidationModule.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
