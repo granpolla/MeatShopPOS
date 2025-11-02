@@ -283,8 +283,10 @@
     <Compile Include="Modules\modDatabase.vb" />
     <Compile Include="Modules\modHelpers.vb" />
     <Compile Include="Modules\modSession.vb" />
+    <Compile Include="Modules\PaymentHelpers.vb" />
     <Compile Include="Modules\PrinterModule.vb" />
     <Compile Include="Modules\ReceiptGenerator.vb" />
+    <Compile Include="Modules\ReceiptTableBuilder.vb" />
     <Compile Include="Modules\TransactionModule.vb" />
     <Compile Include="Modules\TransactionSummaryModule.vb" />
     <Compile Include="Modules\ValidationModule.vb" />

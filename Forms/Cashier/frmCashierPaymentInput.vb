@@ -48,23 +48,14 @@ Public Class frmCashierPaymentInput
         End If
     End Sub
 
-    ' Validate only numbers > 0 in Amount
-    Private Function ValidateAmountInput(amountText As String) As Boolean
-        Dim amount As Decimal
-        If Decimal.TryParse(amountText, amount) Then
-            Return amount > 0
-        End If
-        Return False
-    End Function
-
     ' ✅ Add Payment Entry
     Private Sub btnAddPayment_Click(sender As Object, e As EventArgs) Handles btnAddPayment.Click
         Dim method As String = cboPaymentMethod.SelectedItem.ToString().Trim().ToLower()
         Dim refNum As String = txtRefNum.Text.Trim()
         Dim amountText As String = txtAmount.Text.Trim()
 
-        ' Amount validation
-        If Not ValidateAmountInput(amountText) Then
+        ' Amount validation (moved to PaymentHelpers)
+        If Not PaymentHelpers.ValidateAmountInput(amountText) Then
             MessageBox.Show("Please enter a valid amount greater than 0.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
@@ -75,31 +66,10 @@ Public Class frmCashierPaymentInput
             Return
         End If
 
-        ' ✅ Payment method combination rules
-        Dim cashCount As Integer = 0
-        Dim onlineCount As Integer = 0
-        For Each row As DataGridViewRow In dgvPaymentEntries.Rows
-            If row.Cells("Method").Value IsNot Nothing Then
-                Dim existingMethod = row.Cells("Method").Value.ToString().Trim().ToLower()
-                If existingMethod = "cash" Then cashCount += 1
-                If existingMethod = "online" Then onlineCount += 1
-            End If
-        Next
-
-        ' Reject duplicates of same method
-        If method = "cash" AndAlso cashCount >= 1 Then
-            MessageBox.Show("You can only add one CASH payment.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            Return
-        End If
-
-        If method = "online" AndAlso onlineCount >= 1 Then
-            MessageBox.Show("You can only add one ONLINE payment.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            Return
-        End If
-
-        ' ✅ Allow max 1 cash + 1 online (do NOT block the valid combination)
-        If cashCount >= 1 AndAlso onlineCount >= 1 Then
-            MessageBox.Show("You can only have one CASH and one ONLINE payment in total.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        ' ✅ Payment method combination rules (use PaymentHelpers)
+        Dim comboResult = PaymentHelpers.ValidatePaymentCombination(dgvPaymentEntries, method)
+        If Not comboResult.Item1 Then
+            MessageBox.Show(comboResult.Item2, "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
@@ -350,111 +320,8 @@ Public Class frmCashierPaymentInput
                 ' 📋 Original order items table (from dashboard)
                 Dim originalOrderTable As DataTable = CType(parentForm.dgvOrderItemPreview.DataSource, DataTable)
 
-                ' --- BUILD A RECEIPT-FRIENDLY TABLE WITH REQUIRED COLUMNS ---
-                Dim orderTable As New DataTable()
-                orderTable.Columns.Add("QTY", GetType(String))
-                orderTable.Columns.Add("UNIT", GetType(String))
-                orderTable.Columns.Add("ARTICLES", GetType(String))
-                orderTable.Columns.Add("UNIT PRICE", GetType(Decimal))
-                orderTable.Columns.Add("AMOUNT", GetType(Decimal))
-
-                If originalOrderTable IsNot Nothing Then
-                    For Each r As DataRow In originalOrderTable.Rows
-                        ' Map exact column names from frmCashierDashboard InitializeOrderItemPreview:
-                        ' "ProductID", "Product Name", "Brand", "Unit Weight", "Unit Price", "Total Box", "Total Weight", "Total"
-                        Dim qtyVal As String = ""
-                        Dim unitVal As String = ""
-                        Dim articleVal As String = ""
-                        Dim unitPriceVal As Decimal = 0D
-                        Dim amountVal As Decimal = 0D
-                        Dim totalBoxDecimal As Decimal = 0D
-                        Dim totalWeightDecimal As Decimal = 0D
-
-                        ' Read Total Box numeric (for UNIT and for amount fallback)
-                        If originalOrderTable.Columns.Contains("Total Box") Then
-                            If Decimal.TryParse(Convert.ToString(r("Total Box")), totalBoxDecimal) Then
-                                ' parsed successfully
-                            Else
-                                totalBoxDecimal = 0D
-                            End If
-                        End If
-
-                        ' Read Total Weight numeric (for QTY)
-                        If originalOrderTable.Columns.Contains("Total Weight") Then
-                            If Decimal.TryParse(Convert.ToString(r("Total Weight")), totalWeightDecimal) Then
-                                ' parsed successfully
-                            Else
-                                totalWeightDecimal = 0D
-                            End If
-                        End If
-
-                        ' UNIT mapping - set UNIT to Total Box (integer style) so UNIT == Total Box
-                        If totalBoxDecimal > 0D Then
-                            unitVal = totalBoxDecimal.ToString("N0")
-                        ElseIf originalOrderTable.Columns.Contains("UNIT") Then
-                            unitVal = r("UNIT").ToString()
-                        Else
-                            unitVal = ""
-                        End If
-
-                        ' QTY mapping - use Total Weight numeric (so QTY == Total Weight)
-                        If totalWeightDecimal <> 0D Then
-                            If totalWeightDecimal = Math.Truncate(totalWeightDecimal) Then
-                                qtyVal = totalWeightDecimal.ToString("N0")
-                            Else
-                                qtyVal = totalWeightDecimal.ToString("N2")
-                            End If
-                        ElseIf originalOrderTable.Columns.Contains("QTY") Then
-                            qtyVal = r("QTY").ToString()
-                        ElseIf originalOrderTable.Columns.Contains("Quantity") Then
-                            qtyVal = r("Quantity").ToString()
-                        Else
-                            qtyVal = "1"
-                        End If
-
-                        ' ARTICLES mapping (product name / description)
-                        If originalOrderTable.Columns.Contains("ARTICLES") Then
-                            articleVal = r("ARTICLES").ToString()
-                        ElseIf originalOrderTable.Columns.Contains("Product Name") Then
-                            articleVal = r("Product Name").ToString()
-                        ElseIf originalOrderTable.Columns.Contains("ProductName") Then
-                            articleVal = r("ProductName").ToString()
-                        ElseIf originalOrderTable.Columns.Contains("Description") Then
-                            articleVal = r("Description").ToString()
-                        ElseIf originalOrderTable.Columns.Contains("ProductID") Then
-                            articleVal = r("ProductID").ToString()
-                        Else
-                            articleVal = ""
-                        End If
-
-                        ' UNIT PRICE mapping
-                        If originalOrderTable.Columns.Contains("Unit Price") Then
-                            Decimal.TryParse(Convert.ToString(r("Unit Price")), unitPriceVal)
-                        ElseIf originalOrderTable.Columns.Contains("UnitPrice") Then
-                            Decimal.TryParse(Convert.ToString(r("UnitPrice")), unitPriceVal)
-                        Else
-                            unitPriceVal = 0D
-                        End If
-
-                        ' AMOUNT mapping
-                        If originalOrderTable.Columns.Contains("Total") Then
-                            Decimal.TryParse(Convert.ToString(r("Total")), amountVal)
-                        ElseIf originalOrderTable.Columns.Contains("AMOUNT") Then
-                            Decimal.TryParse(Convert.ToString(r("AMOUNT")), amountVal)
-                        ElseIf originalOrderTable.Columns.Contains("Subtotal") Then
-                            Decimal.TryParse(Convert.ToString(r("Subtotal")), amountVal)
-                        Else
-                            ' fallback: unitPrice * totalBoxDecimal (Total Box is treated as unit count)
-                            If totalBoxDecimal > 0D Then
-                                amountVal = unitPriceVal * totalBoxDecimal
-                            Else
-                                amountVal = unitPriceVal
-                            End If
-                        End If
-
-                        orderTable.Rows.Add(qtyVal, unitVal, articleVal, unitPriceVal, amountVal)
-                    Next
-                End If
+                ' Use module to build receipt-friendly table
+                Dim orderTable As DataTable = ReceiptTableBuilder.BuildReceiptTable(originalOrderTable)
 
                 ' 📊 Optional balances list
                 Dim balancesList As New List(Of Tuple(Of String, Decimal))
@@ -527,24 +394,16 @@ Public Class frmCashierPaymentInput
         CleanupForms(parentForm)
     End Sub
 
-    ' 🔹 Simple change calculator (GrandTotal - payments)
+    ' 🔹 Simple change calculator (GrandTotal - payments) — now uses PaymentHelpers
     Private Sub UpdateChange()
-        ' Get grand total from Dashboard
         Dim parentForm As frmCashierDashboard = CType(Me.ParentForm, frmCashierDashboard)
         Dim grandTotal As Decimal = 0
         Decimal.TryParse(parentForm.txtGrandTotal.Text, grandTotal)
 
-        Dim paid As Decimal = 0
-        For Each row As DataGridViewRow In dgvPaymentEntries.Rows
-            paid += Convert.ToDecimal(row.Cells("Amount").Value)
-        Next
+        Dim paid As Decimal = PaymentHelpers.SumPayments(dgvPaymentEntries)
+        Dim change As Decimal = PaymentHelpers.ComputeChange(grandTotal, paid)
 
-        Dim change As Decimal = paid - grandTotal
-        If change >= 0 Then
-            txtChange.Text = change.ToString("N2")
-        Else
-            txtChange.Text = "0.00"
-        End If
+        txtChange.Text = change.ToString("N2")
     End Sub
 
     'HELPERS
