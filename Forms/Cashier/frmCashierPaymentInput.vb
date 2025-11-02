@@ -347,8 +347,114 @@ Public Class frmCashierPaymentInput
                 Dim customerFullName As String = parentForm.txtFirstName.Text.Trim() & " " & parentForm.txtLastName.Text.Trim()
                 Dim customerAddress As String = parentForm.txtCustomerAddress.Text.Trim()
 
-                ' 📋 Order items table (already built earlier)
-                Dim orderTable As DataTable = CType(parentForm.dgvOrderItemPreview.DataSource, DataTable)
+                ' 📋 Original order items table (from dashboard)
+                Dim originalOrderTable As DataTable = CType(parentForm.dgvOrderItemPreview.DataSource, DataTable)
+
+                ' --- BUILD A RECEIPT-FRIENDLY TABLE WITH REQUIRED COLUMNS ---
+                Dim orderTable As New DataTable()
+                orderTable.Columns.Add("QTY", GetType(String))
+                orderTable.Columns.Add("UNIT", GetType(String))
+                orderTable.Columns.Add("ARTICLES", GetType(String))
+                orderTable.Columns.Add("UNIT PRICE", GetType(Decimal))
+                orderTable.Columns.Add("AMOUNT", GetType(Decimal))
+
+                If originalOrderTable IsNot Nothing Then
+                    For Each r As DataRow In originalOrderTable.Rows
+                        ' Map exact column names from frmCashierDashboard InitializeOrderItemPreview:
+                        ' "ProductID", "Product Name", "Brand", "Unit Weight", "Unit Price", "Total Box", "Total Weight", "Total"
+                        Dim qtyVal As String = ""
+                        Dim unitVal As String = ""
+                        Dim articleVal As String = ""
+                        Dim unitPriceVal As Decimal = 0D
+                        Dim amountVal As Decimal = 0D
+                        Dim totalBoxDecimal As Decimal = 0D
+                        Dim totalWeightDecimal As Decimal = 0D
+
+                        ' Read Total Box numeric (for UNIT and for amount fallback)
+                        If originalOrderTable.Columns.Contains("Total Box") Then
+                            If Decimal.TryParse(Convert.ToString(r("Total Box")), totalBoxDecimal) Then
+                                ' parsed successfully
+                            Else
+                                totalBoxDecimal = 0D
+                            End If
+                        End If
+
+                        ' Read Total Weight numeric (for QTY)
+                        If originalOrderTable.Columns.Contains("Total Weight") Then
+                            If Decimal.TryParse(Convert.ToString(r("Total Weight")), totalWeightDecimal) Then
+                                ' parsed successfully
+                            Else
+                                totalWeightDecimal = 0D
+                            End If
+                        End If
+
+                        ' UNIT mapping - set UNIT to Total Box (integer style) so UNIT == Total Box
+                        If totalBoxDecimal > 0D Then
+                            unitVal = totalBoxDecimal.ToString("N0")
+                        ElseIf originalOrderTable.Columns.Contains("UNIT") Then
+                            unitVal = r("UNIT").ToString()
+                        Else
+                            unitVal = ""
+                        End If
+
+                        ' QTY mapping - use Total Weight numeric (so QTY == Total Weight)
+                        If totalWeightDecimal <> 0D Then
+                            If totalWeightDecimal = Math.Truncate(totalWeightDecimal) Then
+                                qtyVal = totalWeightDecimal.ToString("N0")
+                            Else
+                                qtyVal = totalWeightDecimal.ToString("N2")
+                            End If
+                        ElseIf originalOrderTable.Columns.Contains("QTY") Then
+                            qtyVal = r("QTY").ToString()
+                        ElseIf originalOrderTable.Columns.Contains("Quantity") Then
+                            qtyVal = r("Quantity").ToString()
+                        Else
+                            qtyVal = "1"
+                        End If
+
+                        ' ARTICLES mapping (product name / description)
+                        If originalOrderTable.Columns.Contains("ARTICLES") Then
+                            articleVal = r("ARTICLES").ToString()
+                        ElseIf originalOrderTable.Columns.Contains("Product Name") Then
+                            articleVal = r("Product Name").ToString()
+                        ElseIf originalOrderTable.Columns.Contains("ProductName") Then
+                            articleVal = r("ProductName").ToString()
+                        ElseIf originalOrderTable.Columns.Contains("Description") Then
+                            articleVal = r("Description").ToString()
+                        ElseIf originalOrderTable.Columns.Contains("ProductID") Then
+                            articleVal = r("ProductID").ToString()
+                        Else
+                            articleVal = ""
+                        End If
+
+                        ' UNIT PRICE mapping
+                        If originalOrderTable.Columns.Contains("Unit Price") Then
+                            Decimal.TryParse(Convert.ToString(r("Unit Price")), unitPriceVal)
+                        ElseIf originalOrderTable.Columns.Contains("UnitPrice") Then
+                            Decimal.TryParse(Convert.ToString(r("UnitPrice")), unitPriceVal)
+                        Else
+                            unitPriceVal = 0D
+                        End If
+
+                        ' AMOUNT mapping
+                        If originalOrderTable.Columns.Contains("Total") Then
+                            Decimal.TryParse(Convert.ToString(r("Total")), amountVal)
+                        ElseIf originalOrderTable.Columns.Contains("AMOUNT") Then
+                            Decimal.TryParse(Convert.ToString(r("AMOUNT")), amountVal)
+                        ElseIf originalOrderTable.Columns.Contains("Subtotal") Then
+                            Decimal.TryParse(Convert.ToString(r("Subtotal")), amountVal)
+                        Else
+                            ' fallback: unitPrice * totalBoxDecimal (Total Box is treated as unit count)
+                            If totalBoxDecimal > 0D Then
+                                amountVal = unitPriceVal * totalBoxDecimal
+                            Else
+                                amountVal = unitPriceVal
+                            End If
+                        End If
+
+                        orderTable.Rows.Add(qtyVal, unitVal, articleVal, unitPriceVal, amountVal)
+                    Next
+                End If
 
                 ' 📊 Optional balances list
                 Dim balancesList As New List(Of Tuple(Of String, Decimal))
@@ -372,20 +478,28 @@ Public Class frmCashierPaymentInput
                 End Using
 
                 ' === Compute Totals ===
-                Dim totalPurchase As Decimal = orderTable.AsEnumerable().Sum(Function(r) Convert.ToDecimal(r("Total")))
+                Dim totalPurchase As Decimal = 0D
+                If orderTable IsNot Nothing AndAlso orderTable.Rows.Count > 0 Then
+                    totalPurchase = orderTable.AsEnumerable().Sum(Function(rr) Convert.ToDecimal(rr("AMOUNT")))
+                End If
                 Dim totalBalance As Decimal = balancesList.Sum(Function(b) b.Item2)
                 Dim computedGrandTotal As Decimal = totalPurchase + totalBalance
 
                 ' 🖨️ Call receipt generator
                 GenerateReceiptPDF(filePath,
-                   orderNumber,
-                   DateTime.Now.ToString("M/d/yyyy HH:mm"),
-                   customerFullName,
-                   customerAddress,
-                   totalPurchase.ToString("N2"),
-                   computedGrandTotal.ToString("N2"),
-                   orderTable,
-                   balancesList)
+                    orderNumber,
+                    DateTime.Now.ToString("M/d/yyyy HH:mm"),
+                    customerFullName,
+                    customerAddress,
+                    totalPurchase.ToString("N2"),
+                    computedGrandTotal.ToString("N2"),
+                    orderTable,
+                    "", ' tinNumber
+                    "", ' businessStyle 
+                    "", ' preparedBy
+                    "", ' approvedBy  
+                    "", ' receivedBy
+                    balancesList) ' Optional balances parameter which is already properly set up
 
                 ' 🗂️ Update DB with the PDF file name
                 Using conn As New MySqlConnection(My.Settings.DBConnection)
