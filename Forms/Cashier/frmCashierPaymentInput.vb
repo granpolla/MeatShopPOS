@@ -522,26 +522,13 @@ Public Class frmCashierPaymentInput
 
         ' 🔹 Check if customer exists
         Try
-            Using conn As New MySqlConnection(My.Settings.DBConnection)
-                conn.Open()
-                Dim query As String = "
-                SELECT id 
-                FROM customer 
-                WHERE LOWER(TRIM(REPLACE(customer_name,' ',''))) = LOWER(REPLACE(@name,' ','')) 
-                  AND LOWER(TRIM(address)) = LOWER(@address)
-                LIMIT 1"
-                Using cmd As New MySqlCommand(query, conn)
-                    cmd.Parameters.AddWithValue("@name", (firstName & " " & lastName).Replace(" ", ""))
-                    cmd.Parameters.AddWithValue("@address", address.Trim().ToLower())
-                    Dim result = cmd.ExecuteScalar()
-                    If result IsNot Nothing Then
-                        customerID = Convert.ToInt32(result)
-                        Return True
-                    End If
-                End Using
-            End Using
+            customerID = CustomerModule.GetCustomerID(firstName, lastName, address)
+            If customerID <> -1 Then
+                Return True
+            End If
         Catch ex As Exception
-            MessageBox.Show("Error checking customer: " & ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show(ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return False
         End Try
 
         MessageBox.Show("This customer is not yet saved in the database. Please save the customer before proceeding.",

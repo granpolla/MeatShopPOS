@@ -99,6 +99,8 @@ Public Class frmCashierDashboard
         dt.Columns.Add("Total", GetType(Decimal))
 
         dgvOrderItemPreview.DataSource = dt
+        dgvOrderItemPreview.AllowUserToResizeRows = False
+        dgvOrderItemPreview.AllowUserToResizeColumns = False
 
         ' Apply formatting once
         With dgvOrderItemPreview
@@ -134,6 +136,9 @@ Public Class frmCashierDashboard
         dt.Columns.Add("Balance", GetType(Decimal))
 
         dgvCustomerBalancePreview.DataSource = dt
+        dgvCustomerBalancePreview.AllowUserToResizeRows = False
+        dgvCustomerBalancePreview.AllowUserToResizeColumns = False
+
 
         With dgvCustomerBalancePreview
             .AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
@@ -171,6 +176,7 @@ Public Class frmCashierDashboard
                     Dim dt As New DataTable()
                     adapter.Fill(dt)
                     dgvCustomer.DataSource = dt
+                    dgvCustomer.AllowUserToResizeRows = False
                     FormatCustomerGrid()
 
                 End Using
@@ -247,6 +253,7 @@ Public Class frmCashierDashboard
                     Dim dt As New DataTable()
                     adapter.Fill(dt)
                     dgvProductsPreview.DataSource = dt
+                    dgvProductsPreview.AllowUserToResizeRows = False
                     FormatProductsGrid()
 
                 End Using
@@ -592,7 +599,6 @@ Public Class frmCashierDashboard
             Next
         End If
     End Sub
-
 
 
 

@@ -277,6 +277,7 @@
       <DependentUpon>frmMainMenu.vb</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Modules\CustomerModule.vb" />
     <Compile Include="Modules\Helpers.vb" />
     <Compile Include="Modules\modAuth.vb" />
     <Compile Include="Modules\modDatabase.vb" />
@@ -284,6 +285,8 @@
     <Compile Include="Modules\modSession.vb" />
     <Compile Include="Modules\PrinterModule.vb" />
     <Compile Include="Modules\ReceiptGenerator.vb" />
+    <Compile Include="Modules\TransactionModule.vb" />
+    <Compile Include="Modules\ValidationModule.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
