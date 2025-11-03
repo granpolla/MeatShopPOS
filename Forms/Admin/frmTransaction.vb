@@ -1,23 +1,45 @@
 ﻿Imports MySql.Data.MySqlClient
+Imports System.Text
 
 Public Class frmTransaction
 
     Private Sub frmTransaction_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         SetupTransactionGrid()
-        ' Load transactions with an empty search term initially
+        ' Reset controls on load
+        txtSearchTransaction.Clear()
+        ' Attempt to disable date filter on load (requires ShowCheckBox = True)
+        Try
+            dtpDateFilter.Checked = False
+        Catch
+            ' Ignore if .Checked property is not available
+        End Try
         LoadTransactions()
     End Sub
 
     Private Sub btnRefreshTransaction_Click(sender As Object, e As EventArgs) Handles btnRefreshTransaction.Click
         ' 1. Clear the search box
         txtSearchTransaction.Clear()
-        ' 2. Reload all transactions
+
+        ' 2. Reset the date filter (uncheck the box)
+        Try
+            dtpDateFilter.Checked = False
+        Catch
+            ' If Checkbox not available, setting value to now is the usual non-filter state
+            dtpDateFilter.Value = DateTime.Now
+        End Try
+
+        ' 3. Reload all transactions (no filters applied)
         LoadTransactions()
     End Sub
 
+    ' The Search button now just calls LoadTransactions, which reads all filters
     Private Sub btnSearch_Click(sender As Object, e As EventArgs) Handles btnSearch.Click
-        ' Load transactions using the text entered in the search box
-        LoadTransactions(txtSearchTransaction.Text.Trim())
+        LoadTransactions()
+    End Sub
+
+    ' NEW: Automatically reload when the date filter control is interacted with
+    Private Sub dtpDateFilter_ValueChanged(sender As Object, e As EventArgs) Handles dtpDateFilter.ValueChanged
+        LoadTransactions()
     End Sub
 
     Private Sub SetupTransactionGrid()
@@ -31,13 +53,29 @@ Public Class frmTransaction
         End With
     End Sub
 
-    ' Modified to accept an optional search term
-    Private Sub LoadTransactions(Optional searchTerm As String = "")
+    ' Modified to read filtering values directly from controls
+    Private Sub LoadTransactions()
+
+        ' Read the current filter values from the controls
+        Dim searchTerm As String = txtSearchTransaction.Text.Trim()
+
+        ' Check if date filtering should be active
+        Dim useDateFilter As Boolean = False
+        Dim selectedDate As Date = dtpDateFilter.Value
+
+        Try
+            ' Check if the DTP's CheckBox is checked (standard WinForms optional filter)
+            useDateFilter = dtpDateFilter.Checked
+        Catch
+            ' If there's no checkbox, we assume the DTP value is always used for simplicity
+            ' unless the refresh button is used.
+        End Try
+
         Try
             Using conn As New MySqlConnection(My.Settings.DBConnection)
                 conn.Open()
 
-                Dim query As String = "
+                Dim queryBuilder As New StringBuilder("
                     SELECT 
                         st.order_number AS 'Order Number',
                         u.full_name AS 'User',
@@ -46,11 +84,9 @@ Public Class frmTransaction
                         st.cash_received AS 'Cash Received',
                         st.amount_paid AS 'Amount Paid',
                         st.change_given AS 'Change',
-                        -- This logic is correct: returns NULL if balance is zero or negative
                         IF(st.total_amount > st.amount_paid, 
                             st.total_amount - st.amount_paid, 
                             NULL) AS 'Balance', 
-                        -- (Rest of subqueries and joins remain the same)
                         (SELECT IFNULL(SUM(pd.amount), 0)
                             FROM payment_detail pd
                             INNER JOIN payment_method pm ON pd.payment_method_id = pm.id
@@ -75,28 +111,36 @@ Public Class frmTransaction
                     INNER JOIN user u ON st.user_id = u.id
                     INNER JOIN customer c ON st.customer_id = c.id
                     INNER JOIN payment_status ps ON st.payment_status_id = ps.id
-                "
+                ")
 
-                ' Add WHERE clause for searching if a search term is provided
-                If Not String.IsNullOrWhiteSpace(searchTerm) Then
-                    query &= "
-                        WHERE st.order_number LIKE @SearchTerm 
-                        OR c.customer_name LIKE @SearchTerm 
-                        OR u.full_name LIKE @SearchTerm 
-                        OR ps.payment_status_name LIKE @SearchTerm -- <-- FIX: Added Payment Status search
-                    "
+                Dim whereClauses As New List(Of String)
+                Dim cmd As New MySqlCommand()
+                cmd.Connection = conn
+
+                ' 1. DATE FILTER LOGIC
+                If useDateFilter Then
+                    ' We use DATE() to only compare the day, month, and year
+                    whereClauses.Add(" DATE(st.order_datetime) = @FilterDate ")
+                    cmd.Parameters.AddWithValue("@FilterDate", selectedDate.Date)
                 End If
 
-                query &= " ORDER BY st.order_datetime DESC;"
-
-
-                Dim cmd As New MySqlCommand(query, conn)
-
-                ' Add parameter if searching
+                ' 2. SEARCH TERM LOGIC
                 If Not String.IsNullOrWhiteSpace(searchTerm) Then
-                    ' Use LIKE operator to search anywhere in the fields
+                    whereClauses.Add(" (st.order_number LIKE @SearchTerm OR c.customer_name LIKE @SearchTerm OR u.full_name LIKE @SearchTerm OR ps.payment_status_name LIKE @SearchTerm) ")
                     cmd.Parameters.AddWithValue("@SearchTerm", $"%{searchTerm}%")
                 End If
+
+                ' Apply WHERE clause, combining any active filters with AND
+                If whereClauses.Count > 0 Then
+                    queryBuilder.Append(" WHERE ")
+                    queryBuilder.Append(String.Join(" AND ", whereClauses))
+                End If
+
+                ' Add ordering
+                queryBuilder.Append(" ORDER BY st.order_datetime DESC;")
+
+                cmd.CommandText = queryBuilder.ToString()
+
 
                 Dim adapter As New MySqlDataAdapter(cmd)
                 Dim dt As New DataTable()

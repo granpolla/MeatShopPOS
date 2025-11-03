@@ -26,6 +26,7 @@ Partial Class frmTransaction
         Me.btnRefreshTransaction = New System.Windows.Forms.Button()
         Me.txtSearchTransaction = New System.Windows.Forms.TextBox()
         Me.btnSearch = New System.Windows.Forms.Button()
+        Me.dtpDateFilter = New System.Windows.Forms.DateTimePicker()
         CType(Me.dgvTransaction, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -80,12 +81,22 @@ Partial Class frmTransaction
         Me.btnSearch.Text = "Search"
         Me.btnSearch.UseVisualStyleBackColor = True
         '
+        'dtpDateFilter
+        '
+        Me.dtpDateFilter.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.dtpDateFilter.Font = New System.Drawing.Font("Microsoft Sans Serif", 13.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.dtpDateFilter.Location = New System.Drawing.Point(909, 9)
+        Me.dtpDateFilter.Name = "dtpDateFilter"
+        Me.dtpDateFilter.Size = New System.Drawing.Size(422, 34)
+        Me.dtpDateFilter.TabIndex = 8
+        '
         'frmTransaction
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.SystemColors.GrayText
         Me.ClientSize = New System.Drawing.Size(1343, 770)
+        Me.Controls.Add(Me.dtpDateFilter)
         Me.Controls.Add(Me.btnSearch)
         Me.Controls.Add(Me.txtSearchTransaction)
         Me.Controls.Add(Me.btnRefreshTransaction)
@@ -103,4 +114,5 @@ Partial Class frmTransaction
     Friend WithEvents btnRefreshTransaction As Button
     Friend WithEvents txtSearchTransaction As TextBox
     Friend WithEvents btnSearch As Button
+    Friend WithEvents dtpDateFilter As DateTimePicker
 End Class
