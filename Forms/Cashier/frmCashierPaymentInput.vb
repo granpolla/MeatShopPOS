@@ -307,28 +307,50 @@ Public Class frmCashierPaymentInput
                     End If
 
                     ' 🔹 Ledger entries for SETTLED balances
+                    ' 🔹 Ledger entries for SETTLED balances
                     If parentForm.dgvCustomerBalancePreview.SelectedRows.Count > 0 Then
                         For Each row As DataGridViewRow In parentForm.dgvCustomerBalancePreview.SelectedRows
+
                             Dim oldTransId As Integer = Convert.ToInt32(row.Cells("TransactionID").Value)
                             Dim oldOrderNum As String = ""
+                            Dim settledAmount As Decimal = Convert.ToDecimal(row.Cells("Balance").Value) ' The amount being settled
 
                             Using cmdFetch As New MySqlCommand("SELECT order_number FROM sales_transaction WHERE id=@rid LIMIT 1;", conn, tx)
                                 cmdFetch.Parameters.AddWithValue("@rid", oldTransId)
                                 oldOrderNum = Convert.ToString(cmdFetch.ExecuteScalar())
                             End Using
 
+                            ' =========================================================================
+                            ' ✅ NEW: UPDATE THE ORIGINAL sales_transaction ROW
+                            ' =========================================================================
+                            Using cmdUpdateOldTrans As New MySqlCommand("
+                                UPDATE sales_transaction
+                                SET 
+                                    amount_paid = amount_paid + @paid_amt,
+                                    payment_status_id = (SELECT id FROM payment_status WHERE LOWER(payment_status_name) = 'full' LIMIT 1)
+                                WHERE 
+                                    id = @rid;", conn, tx)
+
+                                cmdUpdateOldTrans.Parameters.AddWithValue("@paid_amt", settledAmount)
+                                cmdUpdateOldTrans.Parameters.AddWithValue("@rid", oldTransId)
+                                cmdUpdateOldTrans.ExecuteNonQuery()
+                            End Using
+                            ' =========================================================================
+
                             Dim descText As String = $"Paid old balance from {oldOrderNum} during {orderNumber}"
 
+                            ' 🔹 Now, record the payment in customer_ledger (as a debit/reduction)
                             Using cmd As New MySqlCommand("
-                                    INSERT INTO customer_ledger
-                                        (customer_id, transaction_id, related_transaction_id, description, amount)
-                                    VALUES
-                                        (@cid, @tid, @rid, @desc, @amt);", conn, tx)
+                                INSERT INTO customer_ledger
+                                    (customer_id, transaction_id, related_transaction_id, description, amount)
+                                VALUES
+                                    (@cid, @tid, @rid, @desc, @amt);", conn, tx)
+
                                 cmd.Parameters.AddWithValue("@cid", customerID)
                                 cmd.Parameters.AddWithValue("@tid", transId)
                                 cmd.Parameters.AddWithValue("@rid", oldTransId)
                                 cmd.Parameters.AddWithValue("@desc", descText)
-                                cmd.Parameters.AddWithValue("@amt", -Convert.ToDecimal(row.Cells("Balance").Value))
+                                cmd.Parameters.AddWithValue("@amt", -settledAmount) ' Note the negative sign for payment
                                 cmd.ExecuteNonQuery()
                             End Using
                         Next

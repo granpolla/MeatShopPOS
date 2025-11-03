@@ -35,23 +35,21 @@ Public Class frmTransaction
                         st.cash_received AS 'Cash Received',
                         st.amount_paid AS 'Amount Paid',
                         st.change_given AS 'Change',
-                        -- ✅ BALANCE COLUMN LOGIC: Display balance only if > 0
+                        -- This logic is correct: returns NULL if balance is zero or negative
                         IF(st.total_amount > st.amount_paid, 
                            st.total_amount - st.amount_paid, 
-                           NULL) AS 'Balance',
-                        -- ✅ Cash Payment
+                           NULL) AS 'Balance', 
+                        -- (Rest of subqueries and joins remain the same)
                         (SELECT IFNULL(SUM(pd.amount), 0)
                          FROM payment_detail pd
                          INNER JOIN payment_method pm ON pd.payment_method_id = pm.id
                          WHERE pd.transaction_id = st.id
                            AND pm.payment_method_name = 'Cash') AS 'Cash Payment',
-                        -- ✅ Online Payment
                         (SELECT IFNULL(SUM(pd.amount), 0)
                          FROM payment_detail pd
                          INNER JOIN payment_method pm ON pd.payment_method_id = pm.id
                          WHERE pd.transaction_id = st.id
                            AND pm.payment_method_name <> 'Cash') AS 'Online Payment',
-                        -- ✅ Ref No (only if online exists)
                         (SELECT GROUP_CONCAT(pd.ref_num SEPARATOR ', ')
                          FROM payment_detail pd
                          INNER JOIN payment_method pm ON pd.payment_method_id = pm.id
@@ -61,7 +59,6 @@ Public Class frmTransaction
                            AND pd.ref_num <> ''
                         ) AS 'Ref No',
                         ps.payment_status_name AS 'Payment Status',
-                        -- ❌ REMOVED: st.invoice_pdf AS 'Invoice PDF',
                         DATE_FORMAT(st.order_datetime, '%Y-%m-%d %H:%i') AS 'Order Datetime'
                     FROM sales_transaction st
                     INNER JOIN user u ON st.user_id = u.id
@@ -121,5 +118,7 @@ Public Class frmTransaction
                             MessageBoxIcon.Error)
         End Try
     End Sub
+
+
 
 End Class
