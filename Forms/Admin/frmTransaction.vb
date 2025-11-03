@@ -35,6 +35,10 @@ Public Class frmTransaction
                         st.cash_received AS 'Cash Received',
                         st.amount_paid AS 'Amount Paid',
                         st.change_given AS 'Change',
+                        -- ✅ BALANCE COLUMN LOGIC: Display balance only if > 0
+                        IF(st.total_amount > st.amount_paid, 
+                           st.total_amount - st.amount_paid, 
+                           NULL) AS 'Balance',
                         -- ✅ Cash Payment
                         (SELECT IFNULL(SUM(pd.amount), 0)
                          FROM payment_detail pd
@@ -57,7 +61,7 @@ Public Class frmTransaction
                            AND pd.ref_num <> ''
                         ) AS 'Ref No',
                         ps.payment_status_name AS 'Payment Status',
-                        st.invoice_pdf AS 'Invoice PDF',
+                        -- ❌ REMOVED: st.invoice_pdf AS 'Invoice PDF',
                         DATE_FORMAT(st.order_datetime, '%Y-%m-%d %H:%i') AS 'Order Datetime'
                     FROM sales_transaction st
                     INNER JOIN user u ON st.user_id = u.id
@@ -71,6 +75,8 @@ Public Class frmTransaction
                 adapter.Fill(dt)
 
                 dgvTransaction.DataSource = dt
+
+                ' Set FillWeights (No change needed here, as Invoice PDF didn't have a specific FillWeight)
                 dgvTransaction.Columns("Payment Status").FillWeight = 55
                 dgvTransaction.Columns("Change").FillWeight = 55
                 dgvTransaction.Columns("Total Amount").FillWeight = 65
@@ -81,8 +87,9 @@ Public Class frmTransaction
                 dgvTransaction.Columns("Ref No").FillWeight = 80
                 dgvTransaction.Columns("User").FillWeight = 80
                 dgvTransaction.Columns("Customer").FillWeight = 80
+                dgvTransaction.Columns("Balance").FillWeight = 55
 
-                ' ✅ Format numeric columns
+                ' Format numeric columns
                 If dgvTransaction.Columns.Contains("Total Amount") Then
                     dgvTransaction.Columns("Total Amount").DefaultCellStyle.Format = "N2"
                 End If
@@ -101,6 +108,9 @@ Public Class frmTransaction
                 If dgvTransaction.Columns.Contains("Online Payment") Then
                     dgvTransaction.Columns("Online Payment").DefaultCellStyle.Format = "N2"
                 End If
+                If dgvTransaction.Columns.Contains("Balance") Then
+                    dgvTransaction.Columns("Balance").DefaultCellStyle.Format = "N2"
+                End If
 
             End Using
 
@@ -111,7 +121,5 @@ Public Class frmTransaction
                             MessageBoxIcon.Error)
         End Try
     End Sub
-
-
 
 End Class
