@@ -22,13 +22,14 @@ Partial Class frmDashboard
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim ChartArea3 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
-        Dim Legend3 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
-        Dim Series3 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
-        Dim ChartArea4 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
-        Dim Legend4 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
-        Dim Series4 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
+        Dim ChartArea11 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
+        Dim Legend11 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
+        Dim Series11 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
+        Dim ChartArea12 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
+        Dim Legend12 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
+        Dim Series12 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.dtpSalesDate = New System.Windows.Forms.DateTimePicker()
         Me.btnRefresh = New System.Windows.Forms.Button()
         Me.txtSales = New System.Windows.Forms.TextBox()
         Me.ComboBox1 = New System.Windows.Forms.ComboBox()
@@ -56,6 +57,7 @@ Partial Class frmDashboard
         'Panel1
         '
         Me.Panel1.BackColor = System.Drawing.SystemColors.ControlLight
+        Me.Panel1.Controls.Add(Me.dtpSalesDate)
         Me.Panel1.Controls.Add(Me.btnRefresh)
         Me.Panel1.Controls.Add(Me.txtSales)
         Me.Panel1.Controls.Add(Me.ComboBox1)
@@ -66,6 +68,14 @@ Partial Class frmDashboard
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(341, 770)
         Me.Panel1.TabIndex = 0
+        '
+        'dtpSalesDate
+        '
+        Me.dtpSalesDate.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.dtpSalesDate.Location = New System.Drawing.Point(3, 3)
+        Me.dtpSalesDate.Name = "dtpSalesDate"
+        Me.dtpSalesDate.Size = New System.Drawing.Size(299, 24)
+        Me.dtpSalesDate.TabIndex = 7
         '
         'btnRefresh
         '
@@ -193,16 +203,16 @@ Partial Class frmDashboard
         Me.Chart1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        ChartArea3.Name = "ChartArea1"
-        Me.Chart1.ChartAreas.Add(ChartArea3)
-        Legend3.Name = "Legend1"
-        Me.Chart1.Legends.Add(Legend3)
+        ChartArea11.Name = "ChartArea1"
+        Me.Chart1.ChartAreas.Add(ChartArea11)
+        Legend11.Name = "Legend1"
+        Me.Chart1.Legends.Add(Legend11)
         Me.Chart1.Location = New System.Drawing.Point(12, 542)
         Me.Chart1.Name = "Chart1"
-        Series3.ChartArea = "ChartArea1"
-        Series3.Legend = "Legend1"
-        Series3.Name = "Series1"
-        Me.Chart1.Series.Add(Series3)
+        Series11.ChartArea = "ChartArea1"
+        Series11.Legend = "Legend1"
+        Series11.Name = "Series1"
+        Me.Chart1.Series.Add(Series11)
         Me.Chart1.Size = New System.Drawing.Size(984, 216)
         Me.Chart1.TabIndex = 2
         Me.Chart1.Text = "Chart1"
@@ -211,16 +221,16 @@ Partial Class frmDashboard
         '
         Me.Chart2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        ChartArea4.Name = "ChartArea1"
-        Me.Chart2.ChartAreas.Add(ChartArea4)
-        Legend4.Name = "Legend1"
-        Me.Chart2.Legends.Add(Legend4)
+        ChartArea12.Name = "ChartArea1"
+        Me.Chart2.ChartAreas.Add(ChartArea12)
+        Legend12.Name = "Legend1"
+        Me.Chart2.Legends.Add(Legend12)
         Me.Chart2.Location = New System.Drawing.Point(12, 147)
         Me.Chart2.Name = "Chart2"
-        Series4.ChartArea = "ChartArea1"
-        Series4.Legend = "Legend1"
-        Series4.Name = "Series1"
-        Me.Chart2.Series.Add(Series4)
+        Series12.ChartArea = "ChartArea1"
+        Series12.Legend = "Legend1"
+        Series12.Name = "Series1"
+        Me.Chart2.Series.Add(Series12)
         Me.Chart2.Size = New System.Drawing.Size(984, 389)
         Me.Chart2.TabIndex = 3
         Me.Chart2.Text = "Chart2"
@@ -319,4 +329,5 @@ Partial Class frmDashboard
     Friend WithEvents txtOverallTotalBalance As TextBox
     Friend WithEvents Label5 As Label
     Friend WithEvents btnRefresh As Button
+    Friend WithEvents dtpSalesDate As DateTimePicker
 End Class
