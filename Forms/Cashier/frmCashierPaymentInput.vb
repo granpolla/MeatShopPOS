@@ -3,60 +3,7 @@ Imports MySql.Data.MySqlClient
 Imports System.IO
 Imports System.Diagnostics
 
-
 Public Class frmCashierPaymentInput
-
-    Private Function IsPrinterInstalled(printerName As String) As Boolean
-        For Each installedPrinter As String In Printing.PrinterSettings.InstalledPrinters
-            If installedPrinter.Trim().ToLower() = printerName.Trim().ToLower() Then
-                Return True
-            End If
-        Next
-        Return False
-    End Function
-
-    ' 🔹 Print PDF using SumatraPDF
-    ' 🔹 Print PDF using Foxit Reader
-    Private Function PrintPDFWithFoxit(filePath As String, printerName As String) As Boolean
-        Try
-            If Not File.Exists(filePath) Then
-                MessageBox.Show("PDF file does not exist: " & filePath, "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                Return False
-            End If
-
-            ' 🔹 Foxit Reader paths (update if installed in a different location)
-            Dim foxitPaths As String() = {
-            "C:\Program Files\Foxit Software\Foxit PDF Reader\FoxitPDFReader.exe",
-            "C:\Program Files (x86)\Foxit Software\Foxit PDF Reader\FoxitPDFReader.exe"
-        }
-
-            Dim foxitPath As String = foxitPaths.FirstOrDefault(Function(p) File.Exists(p))
-            If String.IsNullOrEmpty(foxitPath) Then
-                MessageBox.Show("Foxit PDF Reader not found. Please install Foxit.", "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                Return False
-            End If
-
-            ' 🔹 Silent print command
-            ' /t : print PDF to specific printer and close Foxit automatically
-            Dim psi As New ProcessStartInfo(foxitPath) With {
-            .Arguments = $"/t ""{filePath}"" ""{printerName}""",
-            .UseShellExecute = False,
-            .CreateNoWindow = True
-        }
-
-            Using proc As Process = Process.Start(psi)
-                proc.WaitForExit(10000) ' wait max 10 seconds
-            End Using
-
-            Return True
-        Catch ex As Exception
-            MessageBox.Show("Failed to print: " & ex.Message, "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            Return False
-        End Try
-    End Function
-
-
-
 
     Private Sub frmCashierPaymentInput_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ' Populate payment method combo
@@ -79,80 +26,17 @@ Public Class frmCashierPaymentInput
         dgvPaymentEntries.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
         dgvPaymentEntries.SelectionMode = DataGridViewSelectionMode.FullRowSelect
         dgvPaymentEntries.ReadOnly = True
+        dgvPaymentEntries.AllowUserToResizeColumns = False
         dgvPaymentEntries.MultiSelect = False
         dgvPaymentEntries.RowHeadersVisible = False
         dgvPaymentEntries.ScrollBars = ScrollBars.None
         dgvPaymentEntries.Columns("Method").FillWeight = 55
         dgvPaymentEntries.Columns("Amount").FillWeight = 70
 
+
         txtChange.ReadOnly = True
         txtRefNum.Enabled = (cboPaymentMethod.SelectedItem.ToString() = "online")
     End Sub
-
-    ' 🔹 Build Transaction Summary String
-    Private Function BuildTransactionSummary(parentForm As frmCashierDashboard,
-                                             grandTotal As Decimal,
-                                             totalPaid As Decimal,
-                                             status As String,
-                                             unpaidBalance As Decimal,
-                                             customerID As Integer,
-                                             firstName As String,
-                                             lastName As String,
-                                             address As String) As String
-
-        Dim details As String = "=== ORDER ITEMS ===" & Environment.NewLine
-
-        ' 👉 Order Items
-        Dim orderTable As DataTable = CType(parentForm.dgvOrderItemPreview.DataSource, DataTable)
-        If orderTable.Columns.Contains("Product Name") AndAlso orderTable.Columns.Contains("Brand") Then
-            For Each r As DataRow In orderTable.Rows
-                Dim prod As String = If(r("Product Name"), "").ToString()
-                Dim brand As String = If(r("Brand"), "").ToString()
-                r("Product Name") = prod & " - " & brand
-            Next
-        End If
-
-        ' 👉 Settled Balances
-        Dim balanceTotal As Decimal = 0
-        details &= Environment.NewLine & "=== SETTLED BALANCES ===" & Environment.NewLine
-        If parentForm.dgvCustomerBalancePreview.SelectedRows.Count > 0 Then
-            For Each row As DataGridViewRow In parentForm.dgvCustomerBalancePreview.SelectedRows
-                details &= $"{CDate(row.Cells("Date").Value):yyyy-MM-dd} | " &
-                           $"{row.Cells("Description").Value} | " &
-                           $"{Convert.ToDecimal(row.Cells("Balance").Value):N2}" & Environment.NewLine
-                balanceTotal += Convert.ToDecimal(row.Cells("Balance").Value)
-            Next
-        Else
-            details &= "No balances settled (0.00)" & Environment.NewLine
-        End If
-
-        ' 👉 Payments
-        details &= Environment.NewLine & "=== PAYMENTS ENTERED ===" & Environment.NewLine
-        For Each row As DataGridViewRow In dgvPaymentEntries.Rows
-            details &= $"{row.Cells("Method").Value} | {row.Cells("RefNum").Value} | {row.Cells("Amount").Value}" & Environment.NewLine
-        Next
-
-        ' 👉 Customer + Totals
-        details &= Environment.NewLine & $"Customer: {firstName} {lastName}, {address}" & Environment.NewLine
-        details &= $"Order Subtotal: {(grandTotal - balanceTotal):N2}" & Environment.NewLine
-        details &= $"Settled Balances: {balanceTotal:N2}" & Environment.NewLine
-        details &= $"Grand Total: {grandTotal:N2}" & Environment.NewLine
-        details &= $"Total Paid: {totalPaid:N2}" & Environment.NewLine
-        details &= $"Change: {Math.Max(totalPaid - grandTotal, 0):N2}" & Environment.NewLine
-        details &= $"Status: {status}" & Environment.NewLine
-
-        If status = "Partial" Then
-            details &= $"Unpaid Balance (to ledger): {unpaidBalance:N2}" & Environment.NewLine
-        End If
-
-        Return details
-    End Function
-
-    ' 🔹 Show Transaction Summary in MessageBox
-    Private Sub ShowTransactionSummary(details As String)
-        MessageBox.Show(details, "Save + Print", MessageBoxButtons.OK, MessageBoxIcon.Information)
-    End Sub
-
 
     ' Enable RefNum only when Online is selected
     Private Sub cboPaymentMethod_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboPaymentMethod.SelectedIndexChanged
@@ -164,23 +48,14 @@ Public Class frmCashierPaymentInput
         End If
     End Sub
 
-    ' Validate only numbers > 0 in Amount
-    Private Function ValidateAmountInput(amountText As String) As Boolean
-        Dim amount As Decimal
-        If Decimal.TryParse(amountText, amount) Then
-            Return amount > 0
-        End If
-        Return False
-    End Function
-
     ' ✅ Add Payment Entry
     Private Sub btnAddPayment_Click(sender As Object, e As EventArgs) Handles btnAddPayment.Click
         Dim method As String = cboPaymentMethod.SelectedItem.ToString().Trim().ToLower()
         Dim refNum As String = txtRefNum.Text.Trim()
         Dim amountText As String = txtAmount.Text.Trim()
 
-        ' Amount validation
-        If Not ValidateAmountInput(amountText) Then
+        ' Amount validation (moved to PaymentHelpers)
+        If Not PaymentHelpers.ValidateAmountInput(amountText) Then
             MessageBox.Show("Please enter a valid amount greater than 0.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
@@ -191,34 +66,12 @@ Public Class frmCashierPaymentInput
             Return
         End If
 
-        ' ✅ Payment method combination rules
-        Dim cashCount As Integer = 0
-        Dim onlineCount As Integer = 0
-        For Each row As DataGridViewRow In dgvPaymentEntries.Rows
-            If row.Cells("Method").Value IsNot Nothing Then
-                Dim existingMethod = row.Cells("Method").Value.ToString().Trim().ToLower()
-                If existingMethod = "cash" Then cashCount += 1
-                If existingMethod = "online" Then onlineCount += 1
-            End If
-        Next
-
-        ' Reject duplicates of same method
-        If method = "cash" AndAlso cashCount >= 1 Then
-            MessageBox.Show("You can only add one CASH payment.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        ' ✅ Payment method combination rules (use PaymentHelpers)
+        Dim comboResult = PaymentHelpers.ValidatePaymentCombination(dgvPaymentEntries, method)
+        If Not comboResult.Item1 Then
+            MessageBox.Show(comboResult.Item2, "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
-
-        If method = "online" AndAlso onlineCount >= 1 Then
-            MessageBox.Show("You can only add one ONLINE payment.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            Return
-        End If
-
-        ' ✅ Allow max 1 cash + 1 online (do NOT block the valid combination)
-        If cashCount >= 1 AndAlso onlineCount >= 1 Then
-            MessageBox.Show("You can only have one CASH and one ONLINE payment in total.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            Return
-        End If
-
 
         ' ✅ Passed → Add row
         dgvPaymentEntries.Rows.Add(method, refNum, Convert.ToDecimal(amountText).ToString("N2"))
@@ -238,39 +91,12 @@ Public Class frmCashierPaymentInput
         txtChange.Clear()
     End Sub
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     Private Sub btnSaveAndPrint_Click(sender As Object, e As EventArgs) Handles btnSaveAndPrint.Click
-
-        Dim printerName As String = "EPSON LX-310"
-
-        ' ✅ Check printer first
-        If Not IsPrinterInstalled(printerName) Then
-            MessageBox.Show($"Printer '{printerName}' not found. Transaction will not be saved.",
-                        "Printer Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            Return
-        End If
-
         Dim parentForm As frmCashierDashboard = CType(Me.ParentForm, frmCashierDashboard)
 
         If parentForm.dgvCustomerBalancePreview.SelectedRows.Count > 4 Then
             MessageBox.Show("You can only settle up to 4 balances per transaction. Please deselect some balances.",
-                    "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Return
         End If
 
@@ -287,18 +113,38 @@ Public Class frmCashierPaymentInput
         If Not ComputePaymentsAndStatus(parentForm, grandTotal, totalPaid, unpaidBalance, status) Then Exit Sub
 
         ' 4️# Show summary + confirm
-        Dim details As String = BuildTransactionSummary(parentForm, grandTotal, totalPaid, status, unpaidBalance,
-                                                    customerID, parentForm.txtFirstName.Text,
-                                                    parentForm.txtLastName.Text,
-                                                    parentForm.txtCustomerAddress.Text)
+        Dim details As String = TransactionSummaryModule.BuildTransactionSummary(
+        CType(parentForm.dgvOrderItemPreview.DataSource, DataTable),
+        parentForm.dgvCustomerBalancePreview,
+        dgvPaymentEntries,
+        grandTotal,
+        totalPaid,
+        status,
+        unpaidBalance,
+        parentForm.txtFirstName.Text,
+        parentForm.txtLastName.Text,
+        parentForm.txtCustomerAddress.Text)
 
         If MessageBox.Show(details & vbCrLf & vbCrLf & "Do you want to SAVE and PRINT this transaction?",
-                       "Save + Print Confirmation",
-                       MessageBoxButtons.OKCancel, MessageBoxIcon.Question) <> DialogResult.OK Then Exit Sub
+                   "Save + Print Confirmation",
+                   MessageBoxButtons.OKCancel, MessageBoxIcon.Question) <> DialogResult.OK Then Exit Sub
 
-        ' 5️# Save to DB (keep your existing code here unchanged)
+        ' =========================================================================
+        ' ✅ NEW PRINTER CHECK LOGIC
+        ' =========================================================================
+        Const PrinterName As String = "EPSON LX-310" ' <--- **CHANGE THIS TO THE EXACT PRINTER NAME**
+        If Not PrinterModule.IsPrinterReadyNow(PrinterName) Then '<-- Use the consolidated check
+
+            MessageBox.Show($"The printer '{PrinterName}' is not installed or ready...",
+             "Printer Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Exit Sub ' DO NOT PROCEED WITH THE TRANSACTION
+        End If
+        ' =========================================================================
+
+        ' 5️# Save to DB
         Try
             Dim orderNumber As String = ""
+            Dim transId As Integer = -1
 
             Using conn As New MySqlConnection(My.Settings.DBConnection)
                 conn.Open()
@@ -316,7 +162,7 @@ Public Class frmCashierPaymentInput
                         End Using
                     End While
 
-                    ' 🔹 Normalize names to match DB values (handles spaces vs underscores)
+                    ' 🔹 Normalize names to match DB values
                     Dim statusKey As String = ""
                     Select Case status.Trim().ToLower()
                         Case "full", "fully paid", "paid"
@@ -329,21 +175,21 @@ Public Class frmCashierPaymentInput
                     End Select
 
                     ' 🔹 Insert sales_transaction
-                    Dim transId As Integer
+                    'Dim transId As Integer
                     Dim invoicePdf As String = orderNumber & "-receipt"
                     Dim cashReceived As Decimal = totalPaid
                     Dim amountApplied As Decimal = Math.Min(totalPaid, grandTotal)
                     Dim changeGiven As Decimal = Math.Max(totalPaid - grandTotal, 0)
 
                     Using cmd As New MySqlCommand("
-                                INSERT INTO sales_transaction
-                                    (order_number, user_id, customer_id, total_amount, payment_status_id, cash_received, amount_paid, change_given, invoice_pdf)
-                                VALUES
-                                    (
-                                        @ord, @uid, @cid, @total,
-                                        (SELECT id FROM payment_status WHERE LOWER(payment_status_name) = @status_key LIMIT 1),
-                                        @cash, @applied, @chg, @inv
-                                    );", conn, tx)
+                            INSERT INTO sales_transaction
+                                (order_number, user_id, customer_id, total_amount, payment_status_id, cash_received, amount_paid, change_given, invoice_pdf)
+                            VALUES
+                                (
+                                    @ord, @uid, @cid, @total,
+                                    (SELECT id FROM payment_status WHERE LOWER(payment_status_name) = @status_key LIMIT 1),
+                                    @cash, @applied, @chg, @inv
+                                );", conn, tx)
 
                         cmd.Parameters.AddWithValue("@ord", orderNumber)
                         cmd.Parameters.AddWithValue("@uid", modSession.LoggedInUserID)
@@ -357,28 +203,65 @@ Public Class frmCashierPaymentInput
                         cmd.ExecuteNonQuery()
                     End Using
 
-                    ' Get last insert id safely
+                    ' Get last insert id
                     Using cmdGetId As New MySqlCommand("SELECT LAST_INSERT_ID();", conn, tx)
                         transId = Convert.ToInt32(cmdGetId.ExecuteScalar())
                     End Using
 
                     ' 🔹 Insert transaction items
+                    ' 🔹 Insert transaction items
                     Dim orderTable As DataTable = CType(parentForm.dgvOrderItemPreview.DataSource, DataTable)
+
+
                     For Each r As DataRow In orderTable.Rows
-                        Using cmd As New MySqlCommand("
+                        Try
+                            Using cmd As New MySqlCommand("
                                 INSERT INTO transaction_item
                                     (transaction_id, product_id, number_of_box, unit_weight_kg, unit_price_php, total_weight_kg, subtotal)
                                 VALUES
                                     (@tid, @pid, @box, @uw, @up, @tw, @sub);", conn, tx)
-                            cmd.Parameters.AddWithValue("@tid", transId)
-                            cmd.Parameters.AddWithValue("@pid", Convert.ToInt32(r("ProductID")))
-                            cmd.Parameters.AddWithValue("@box", Convert.ToDecimal(r("Total Box")))
-                            cmd.Parameters.AddWithValue("@uw", Convert.ToDecimal(r("Unit Weight")))
-                            cmd.Parameters.AddWithValue("@up", Convert.ToDecimal(r("Unit Price")))
-                            cmd.Parameters.AddWithValue("@tw", Convert.ToDecimal(r("Total Weight")))
-                            cmd.Parameters.AddWithValue("@sub", Convert.ToDecimal(r("Total")))
-                            cmd.ExecuteNonQuery()
-                        End Using
+
+                                cmd.Parameters.AddWithValue("@tid", transId)
+                                cmd.Parameters.AddWithValue("@pid", Convert.ToInt32(r("ProductID")))
+
+                                ' *** FIX APPLIED HERE: Correcting column names based on frmCashierDashboard ***
+                                ' The column names for the DataRow need to match the DataTable definition:
+                                ' number_of_box uses "Unit"
+                                ' subtotal uses "Amount"
+
+                                ' unit_weight_kg -> "Unit Weight"
+                                Dim unitWeightVal As Decimal = If(orderTable.Columns.Contains("Unit Weight"), Convert.ToDecimal(r("Unit Weight")), 0D)
+
+                                ' unit_price_php -> "Unit Price"
+                                Dim unitPriceVal As Decimal = If(orderTable.Columns.Contains("Unit Price"), Convert.ToDecimal(r("Unit Price")), 0D)
+
+                                ' total_weight_kg -> "Total Weight"
+                                Dim totalWeightVal As Decimal = If(orderTable.Columns.Contains("Total Weight"), Convert.ToDecimal(r("Total Weight")), 0D)
+
+                                ' number_of_box -> "Unit" (Must be converted to Integer for DB column)
+                                Dim boxVal As Integer = 0
+                                If orderTable.Columns.Contains("Unit") Then
+                                    boxVal = Convert.ToInt32(r("Unit")) ' Use "Unit" for box count and convert to INT
+                                End If
+
+                                ' subtotal -> "Amount"
+                                Dim totalVal As Decimal = If(orderTable.Columns.Contains("Amount"), Convert.ToDecimal(r("Amount")), 0D)
+                                ' *** END OF FIX ***
+
+                                cmd.Parameters.AddWithValue("@box", boxVal)
+                                cmd.Parameters.AddWithValue("@uw", unitWeightVal)
+                                cmd.Parameters.AddWithValue("@up", unitPriceVal)
+                                cmd.Parameters.AddWithValue("@tw", totalWeightVal)
+                                cmd.Parameters.AddWithValue("@sub", totalVal)
+
+                                cmd.ExecuteNonQuery()
+                            End Using
+                        Catch ex As Exception
+                            MessageBox.Show($"Error saving transaction item for product ID {r("ProductID")}: " & ex.Message,
+                            "Transaction Item Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            tx.Rollback()
+                            Return
+                        End Try
                     Next
 
                     ' 🔹 Insert payments
@@ -389,48 +272,44 @@ Public Class frmCashierPaymentInput
                         Dim methodKey As String = methodRaw.ToLower().Replace(" "c, "_"c)
                         Dim refNumValue As Object = DBNull.Value
 
-                        ' 🔹 Only require RefNum if NOT cash
+                        ' Require RefNum if not cash
                         If Not methodKey.Contains("cash") Then
                             If row.Cells("RefNum").Value IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(row.Cells("RefNum").Value.ToString()) Then
                                 refNumValue = row.Cells("RefNum").Value
                             Else
                                 MessageBox.Show($"Payment method '{methodRaw}' requires a Reference Number.",
-                                "Validation Error",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error)
+                            "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                                 tx.Rollback()
                                 Return
                             End If
                         End If
 
                         Using cmd As New MySqlCommand("
-                                    INSERT INTO payment_detail
-                                        (transaction_id, payment_method_id, ref_num, amount)
-                                    VALUES
-                                        (
-                                            @tid,
-                                            (SELECT id
-                                               FROM payment_method
-                                              WHERE REPLACE(LOWER(payment_method_name),' ','_') = @mkey
-                                              LIMIT 1),
-                                            @ref, @amt
-                                        );", conn, tx)
+                                INSERT INTO payment_detail
+                                    (transaction_id, payment_method_id, ref_num, amount)
+                                VALUES
+                                    (
+                                        @tid,
+                                        (SELECT id FROM payment_method
+                                         WHERE REPLACE(LOWER(payment_method_name),' ','_') = @mkey
+                                         LIMIT 1),
+                                        @ref, @amt
+                                    );", conn, tx)
                             cmd.Parameters.AddWithValue("@tid", transId)
                             cmd.Parameters.AddWithValue("@mkey", methodKey)
-                            cmd.Parameters.AddWithValue("@ref", refNumValue)  ' ✅ CASH → NULL, OTHERS → value
+                            cmd.Parameters.AddWithValue("@ref", refNumValue)
                             cmd.Parameters.AddWithValue("@amt", Convert.ToDecimal(row.Cells("Amount").Value))
                             cmd.ExecuteNonQuery()
                         End Using
                     Next
 
-
                     ' 🔹 Ledger entry for NEW order
                     If status = "Partial" AndAlso unpaidBalance > 0 Then
                         Using cmd As New MySqlCommand("
-                                    INSERT INTO customer_ledger
-                                        (customer_id, transaction_id, related_transaction_id, description, amount)
-                                    VALUES
-                                        (@cid, @tid, NULL, @desc, @amt);", conn, tx)
+                                INSERT INTO customer_ledger
+                                    (customer_id, transaction_id, related_transaction_id, description, amount)
+                                VALUES
+                                    (@cid, @tid, NULL, @desc, @amt);", conn, tx)
                             cmd.Parameters.AddWithValue("@cid", customerID)
                             cmd.Parameters.AddWithValue("@tid", transId)
                             cmd.Parameters.AddWithValue("@desc", $"Balance from purchase {orderNumber}")
@@ -439,109 +318,96 @@ Public Class frmCashierPaymentInput
                         End Using
                     End If
 
-
+                    ' 🔹 Ledger entries for SETTLED balances
                     ' 🔹 Ledger entries for SETTLED balances
                     If parentForm.dgvCustomerBalancePreview.SelectedRows.Count > 0 Then
                         For Each row As DataGridViewRow In parentForm.dgvCustomerBalancePreview.SelectedRows
+
                             Dim oldTransId As Integer = Convert.ToInt32(row.Cells("TransactionID").Value)
                             Dim oldOrderNum As String = ""
+                            Dim settledAmount As Decimal = Convert.ToDecimal(row.Cells("Balance").Value) ' The amount being settled
 
-                            ' Get the old order number
                             Using cmdFetch As New MySqlCommand("SELECT order_number FROM sales_transaction WHERE id=@rid LIMIT 1;", conn, tx)
                                 cmdFetch.Parameters.AddWithValue("@rid", oldTransId)
                                 oldOrderNum = Convert.ToString(cmdFetch.ExecuteScalar())
                             End Using
 
+                            ' =========================================================================
+                            ' ✅ NEW: UPDATE THE ORIGINAL sales_transaction ROW
+                            ' =========================================================================
+                            Using cmdUpdateOldTrans As New MySqlCommand("
+                                UPDATE sales_transaction
+                                SET 
+                                    amount_paid = amount_paid + @paid_amt,
+                                    payment_status_id = (SELECT id FROM payment_status WHERE LOWER(payment_status_name) = 'full' LIMIT 1)
+                                WHERE 
+                                    id = @rid;", conn, tx)
+
+                                cmdUpdateOldTrans.Parameters.AddWithValue("@paid_amt", settledAmount)
+                                cmdUpdateOldTrans.Parameters.AddWithValue("@rid", oldTransId)
+                                cmdUpdateOldTrans.ExecuteNonQuery()
+                            End Using
+                            ' =========================================================================
+
                             Dim descText As String = $"Paid old balance from {oldOrderNum} during {orderNumber}"
 
+                            ' 🔹 Now, record the payment in customer_ledger (as a debit/reduction)
                             Using cmd As New MySqlCommand("
-                                        INSERT INTO customer_ledger
-                                            (customer_id, transaction_id, related_transaction_id, description, amount)
-                                        VALUES
-                                            (@cid, @tid, @rid, @desc, @amt);", conn, tx)
+                                INSERT INTO customer_ledger
+                                    (customer_id, transaction_id, related_transaction_id, description, amount)
+                                VALUES
+                                    (@cid, @tid, @rid, @desc, @amt);", conn, tx)
+
                                 cmd.Parameters.AddWithValue("@cid", customerID)
                                 cmd.Parameters.AddWithValue("@tid", transId)
                                 cmd.Parameters.AddWithValue("@rid", oldTransId)
                                 cmd.Parameters.AddWithValue("@desc", descText)
-                                cmd.Parameters.AddWithValue("@amt", -Convert.ToDecimal(row.Cells("Balance").Value))
+                                cmd.Parameters.AddWithValue("@amt", -settledAmount) ' Note the negative sign for payment
                                 cmd.ExecuteNonQuery()
                             End Using
                         Next
-
                     End If
 
-                    ' ✅ Commit 
+                    ' ✅ Commit transaction
                     tx.Commit()
                 End Using
-
-
-
             End Using
 
             Try
-                ' 📂 Ensure receipts folder exists
-                Dim receiptsFolder As String = "C:\POS_Receipts"
-                If Not Directory.Exists(receiptsFolder) Then
-                    Directory.CreateDirectory(receiptsFolder)
-                End If
+                ' Ensure receipts folder exists
+                PrinterModule.EnsureReceiptsFolderExists()
+                Dim receiptsFolder As String = PrinterModule.ReceiptsFolder
 
-                ' 📝 Build file path using order number
+                ' Build file path
                 Dim filePath As String = Path.Combine(receiptsFolder, orderNumber & ".pdf")
 
-                ' 🏷️ Customer info
+                ' Customer info
                 Dim customerFullName As String = parentForm.txtFirstName.Text.Trim() & " " & parentForm.txtLastName.Text.Trim()
                 Dim customerAddress As String = parentForm.txtCustomerAddress.Text.Trim()
 
-                ' 📋 Order items table (already built earlier)
-                Dim orderTable As DataTable = CType(parentForm.dgvOrderItemPreview.DataSource, DataTable)
-
-                ' 📊 Optional balances list
-                Dim balancesList As New List(Of Tuple(Of String, Decimal))
-                Using conn As New MySqlConnection(My.Settings.DBConnection)
-                    conn.Open()
-                    For Each row As DataGridViewRow In parentForm.dgvCustomerBalancePreview.SelectedRows
-                        If row.IsNewRow Then Continue For
-
-                        Dim oldTransId As Integer = Convert.ToInt32(row.Cells("TransactionID").Value)
-                        Dim bal As Decimal = Convert.ToDecimal(row.Cells("Balance").Value)
-
-                        ' Fetch order number from DB
-                        Dim oldOrderNum As String = ""
-                        Using cmdFetch As New MySqlCommand("SELECT order_number FROM sales_transaction WHERE id=@rid LIMIT 1;", conn)
-                            cmdFetch.Parameters.AddWithValue("@rid", oldTransId)
-                            oldOrderNum = Convert.ToString(cmdFetch.ExecuteScalar())
-                        End Using
-
-                        balancesList.Add(New Tuple(Of String, Decimal)(oldOrderNum, bal))
-                    Next
-                End Using
-
+                ' Order table
+                Dim originalOrderTable As DataTable = CType(parentForm.dgvOrderItemPreview.DataSource, DataTable)
+                Dim orderTable As DataTable = ReceiptTableBuilder.BuildReceiptTable(originalOrderTable)
 
                 ' === Compute Totals ===
-                Dim totalPurchase As Decimal = orderTable.AsEnumerable().Sum(Function(r) Convert.ToDecimal(r("Total")))
-                Dim totalBalance As Decimal = balancesList.Sum(Function(b) b.Item2)
-                Dim computedGrandTotal As Decimal = totalPurchase + totalBalance
-
-                ' 🖨️ Call receipt generator
-                GenerateReceiptPDF(filePath,
-                   orderNumber,
-                   DateTime.Now.ToString("M/d/yyyy HH:mm"),
-                   customerFullName,
-                   customerAddress,
-                   totalPurchase.ToString("N2"),
-                   computedGrandTotal.ToString("N2"),
-                   orderTable,
-                   balancesList)
-
-                ' 🔹 3. After PDF is generated, print it
-                Dim pdfFilePath As String = Path.Combine("C:\POS_Receipts", orderNumber & ".pdf")
-                If Not PrintPDFWithFoxit(pdfFilePath, printerName) Then
-                    MessageBox.Show("Printing failed. Transaction will not be saved.",
-                        "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                    Return
+                Dim totalPurchase As Decimal = 0D
+                If orderTable IsNot Nothing AndAlso orderTable.Rows.Count > 0 Then
+                    totalPurchase = orderTable.AsEnumerable().Sum(Function(rr) Convert.ToDecimal(rr("AMOUNT")))
                 End If
+                Dim computedGrandTotal As Decimal = totalPurchase
 
-                ' 🗂️ Optionally update DB with the actual PDF file name
+                ' 🖨️ Generate receipt
+                GenerateReceiptPDF(filePath,
+                orderNumber,
+                DateTime.Now.ToString("M/d/yyyy HH:mm"),
+                customerFullName,
+                customerAddress,
+                totalPurchase.ToString("N2"),
+                computedGrandTotal.ToString("N2"),
+                orderTable,
+                "", "", "", "", "")
+
+                ' 🗂️ Update DB with the PDF filename
                 Using conn As New MySqlConnection(My.Settings.DBConnection)
                     conn.Open()
                     Using cmd As New MySqlCommand("UPDATE sales_transaction SET invoice_pdf = @pdf WHERE order_number=@ord;", conn)
@@ -551,54 +417,51 @@ Public Class frmCashierPaymentInput
                     End Using
                 End Using
 
-                ' 🔓 Auto-open the PDF for cashier printing
-                'If File.Exists(filePath) Then
-                '    Process.Start(New ProcessStartInfo(filePath) With {.UseShellExecute = True})
-                'End If
+                MessageBox.Show($"Transaction saved successfully. PDF receipt saved to: {filePath}",
+                        "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+
+                ' ============================================
+                ' 🔹 After successful transaction save/print
+                ' ============================================
+                Dim result As DialogResult = MessageBox.Show(
+    "Would the customer like to request an order slip?",
+    "Order Slip Request",
+    MessageBoxButtons.YesNo,
+    MessageBoxIcon.Question
+)
+
+                If result = DialogResult.Yes Then
+                    ' Open the Order Slip Request Form
+                    Dim orderSlipForm As New frmCashierOrderSlipRequest(orderNumber, transId)
+                    orderSlipForm.ShowDialog()
+                End If
+
 
             Catch ex As Exception
                 MessageBox.Show("Transaction saved, but failed to generate receipt PDF: " & ex.Message,
-                            "PDF Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                        "PDF Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             End Try
 
         Catch ex As Exception
             MessageBox.Show("Error saving transaction: " & ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
 
-        ' 6️# After DB + PDF success → cleanup
+        ' 6️# Cleanup after save
         CleanupForms(parentForm)
     End Sub
 
 
-
-
-
-
-
-
-
-
-
-    ' 🔹 Simple change calculator (GrandTotal - payments)
+    ' 🔹 Simple change calculator (GrandTotal - payments) — now uses PaymentHelpers
     Private Sub UpdateChange()
-        ' Get grand total from Dashboard
         Dim parentForm As frmCashierDashboard = CType(Me.ParentForm, frmCashierDashboard)
         Dim grandTotal As Decimal = 0
         Decimal.TryParse(parentForm.txtGrandTotal.Text, grandTotal)
 
-        Dim paid As Decimal = 0
-        For Each row As DataGridViewRow In dgvPaymentEntries.Rows
-            paid += Convert.ToDecimal(row.Cells("Amount").Value)
-        Next
+        Dim paid As Decimal = PaymentHelpers.SumPayments(dgvPaymentEntries)
+        Dim change As Decimal = PaymentHelpers.ComputeChange(grandTotal, paid)
 
-        Dim change As Decimal = paid - grandTotal
-        If change >= 0 Then
-            txtChange.Text = change.ToString("N2")
-        Else
-            txtChange.Text = "0.00"
-        End If
+        txtChange.Text = change.ToString("N2")
     End Sub
-
 
     'HELPERS
     ' 🔹 VALIDATE ORDER & PAYMENTS
@@ -634,26 +497,13 @@ Public Class frmCashierPaymentInput
 
         ' 🔹 Check if customer exists
         Try
-            Using conn As New MySqlConnection(My.Settings.DBConnection)
-                conn.Open()
-                Dim query As String = "
-                SELECT id 
-                FROM customer 
-                WHERE LOWER(TRIM(REPLACE(customer_name,' ',''))) = LOWER(REPLACE(@name,' ','')) 
-                  AND LOWER(TRIM(address)) = LOWER(@address)
-                LIMIT 1"
-                Using cmd As New MySqlCommand(query, conn)
-                    cmd.Parameters.AddWithValue("@name", (firstName & " " & lastName).Replace(" ", ""))
-                    cmd.Parameters.AddWithValue("@address", address.Trim().ToLower())
-                    Dim result = cmd.ExecuteScalar()
-                    If result IsNot Nothing Then
-                        customerID = Convert.ToInt32(result)
-                        Return True
-                    End If
-                End Using
-            End Using
+            customerID = CustomerModule.GetCustomerID(firstName, lastName, address)
+            If customerID <> -1 Then
+                Return True
+            End If
         Catch ex As Exception
-            MessageBox.Show("Error checking customer: " & ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show(ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return False
         End Try
 
         MessageBox.Show("This customer is not yet saved in the database. Please save the customer before proceeding.",
@@ -729,10 +579,8 @@ Public Class frmCashierPaymentInput
             CType(parentForm.dgvCustomerBalancePreview.DataSource, DataTable).Rows.Clear()
         End If
 
-
         parentForm.LoadProducts()
         parentForm.LoadCustomers()
     End Sub
-
 
 End Class
