@@ -62,6 +62,12 @@ Module ReceiptTableBuilder
             ' ARTICLES mapping
             If originalOrderTable.Columns.Contains("ARTICLES") Then
                 articleVal = Convert.ToString(r("ARTICLES"))
+            ElseIf originalOrderTable.Columns.Contains("Article") Then
+                articleVal = Convert.ToString(r("Article"))
+            ElseIf originalOrderTable.Columns.Contains("Product Name") AndAlso originalOrderTable.Columns.Contains("Brand") Then
+                articleVal = $"{r("Product Name")} - {r("Brand")}"
+            ElseIf originalOrderTable.Columns.Contains("ProductName") AndAlso originalOrderTable.Columns.Contains("Brand") Then
+                articleVal = $"{r("ProductName")} - {r("Brand")}"
             ElseIf originalOrderTable.Columns.Contains("Product Name") Then
                 articleVal = Convert.ToString(r("Product Name"))
             ElseIf originalOrderTable.Columns.Contains("ProductName") Then
@@ -73,6 +79,8 @@ Module ReceiptTableBuilder
             Else
                 articleVal = ""
             End If
+
+
 
             ' UNIT PRICE mapping
             If originalOrderTable.Columns.Contains("Unit Price") Then

@@ -33,17 +33,40 @@ Public Class frmCashierDashboard
     End Function
 
     ' ✅ Add order item row to dgvOrderItemPreview
-    Public Sub AddOrderItem(productID As Integer, productName As String, brand As String,
-                        unitWeight As Decimal, unitPrice As Decimal,
-                        totalBox As Decimal, totalWeight As Decimal, total As Decimal)
+    Public Sub AddOrderItem(productId As Integer,
+                        productName As String,
+                        productBrand As String,
+                        unitWeight As Decimal,
+                        unitPrice As Decimal,
+                        totalBox As Decimal,
+                        totalWeight As Decimal,
+                        total As Decimal)
 
+        ' ✅ Combine Product Name + Brand
+        Dim article As String = $"{productName} ({productBrand})"
+
+        ' ✅ Get DataTable bound to dgvOrderItemPreview
         Dim orderTable As DataTable = CType(dgvOrderItemPreview.DataSource, DataTable)
 
-        ' Include ProductID in the row
-        orderTable.Rows.Add(productID, productName, brand, unitWeight, unitPrice, totalBox, totalWeight, total)
+        ' ✅ Create new DataRow
+        Dim row As DataRow = orderTable.NewRow()
+        row("ProductID") = productId
+        row("Article") = article
+        row("Unit Weight") = unitWeight
+        row("Unit Price") = unitPrice
+        row("Unit") = totalBox
+        row("Total Weight") = totalWeight
+        row("Amount") = total
 
+        ' ✅ Add row to table
+        orderTable.Rows.Add(row)
+
+        ' ✅ Refresh totals
         UpdateGrandTotal()
     End Sub
+
+
+
 
     Private Sub UpdateGrandTotal()
         UpdateTotals()
@@ -57,7 +80,7 @@ Public Class frmCashierDashboard
         If dgvOrderItemPreview.DataSource IsNot Nothing Then
             Dim orderTable As DataTable = CType(dgvOrderItemPreview.DataSource, DataTable)
             For Each row As DataRow In orderTable.Rows
-                orderTotal += Convert.ToDecimal(row("Total"))
+                orderTotal += Convert.ToDecimal(row("Amount"))
             Next
         End If
 
@@ -66,10 +89,10 @@ Public Class frmCashierDashboard
             balanceTotal += Convert.ToDecimal(row.Cells("Balance").Value)
         Next
 
-        ' Show totals
         txtCustomerBalanceTotal.Text = balanceTotal.ToString("N2")
         txtGrandTotal.Text = (orderTotal + balanceTotal).ToString("N2")
     End Sub
+
 
     ' ✅ Whenever user changes balance selection → recalc totals
     Private Sub dgvCustomerBalancePreview_SelectionChanged(sender As Object, e As EventArgs) Handles dgvCustomerBalancePreview.SelectionChanged
@@ -89,20 +112,18 @@ Public Class frmCashierDashboard
     ' 🔹 Initialize dgvOrderItemPreview with headers only
     Private Sub InitializeOrderItemPreview()
         Dim dt As New DataTable()
-        dt.Columns.Add("ProductID", GetType(Integer)) ' Add hidden ProductID column for database reference
-        dt.Columns.Add("Product Name", GetType(String))
-        dt.Columns.Add("Brand", GetType(String))
+        dt.Columns.Add("ProductID", GetType(Integer)) ' hidden
+        dt.Columns.Add("Article", GetType(String)) ' Product Name + Brand
         dt.Columns.Add("Unit Weight", GetType(Decimal))
         dt.Columns.Add("Unit Price", GetType(Decimal))
-        dt.Columns.Add("Total Box", GetType(Decimal))
+        dt.Columns.Add("Unit", GetType(Decimal)) ' Total Box
         dt.Columns.Add("Total Weight", GetType(Decimal))
-        dt.Columns.Add("Total", GetType(Decimal))
+        dt.Columns.Add("Amount", GetType(Decimal)) ' Total
 
         dgvOrderItemPreview.DataSource = dt
         dgvOrderItemPreview.AllowUserToResizeRows = False
         dgvOrderItemPreview.AllowUserToResizeColumns = False
 
-        ' Apply formatting once
         With dgvOrderItemPreview
             .AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
             .SelectionMode = DataGridViewSelectionMode.FullRowSelect
@@ -114,19 +135,19 @@ Public Class frmCashierDashboard
 
             .Columns("Unit Price").DefaultCellStyle.Format = "N2"
             .Columns("Unit Weight").DefaultCellStyle.Format = "N2"
-            .Columns("Total Box").DefaultCellStyle.Format = "N0"
+            .Columns("Unit").DefaultCellStyle.Format = "N0"
             .Columns("Total Weight").DefaultCellStyle.Format = "N2"
-            .Columns("Total").DefaultCellStyle.Format = "N2"
+            .Columns("Amount").DefaultCellStyle.Format = "N2"
 
-            .Columns("Unit Price").FillWeight = 70
+            .Columns("Article").FillWeight = 200
             .Columns("Unit Weight").FillWeight = 70
-            .Columns("Total Box").FillWeight = 70
+            .Columns("Unit Price").FillWeight = 70
+            .Columns("Unit").FillWeight = 70
             .Columns("Total Weight").FillWeight = 70
-            .Columns("Total").FillWeight = 90
-            .Columns("Product Name").FillWeight = 200
-            .Columns("Brand").FillWeight = 120
+            .Columns("Amount").FillWeight = 90
         End With
     End Sub
+
 
     ' 🔹 Initialize dgvCustomerBalancePreview with headers only
     Private Sub InitializeCustomerBalancePreview()

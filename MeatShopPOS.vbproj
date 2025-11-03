@@ -246,6 +246,12 @@
     <Compile Include="Forms\Cashier\frmCashierInputOrderItem.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\Cashier\frmCashierOrderSlipRequest.Designer.vb">
+      <DependentUpon>frmCashierOrderSlipRequest.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Cashier\frmCashierOrderSlipRequest.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Cashier\frmCashierPaymentInput.Designer.vb">
       <DependentUpon>frmCashierPaymentInput.vb</DependentUpon>
     </Compile>
@@ -346,6 +352,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Cashier\frmCashierInputOrderItem.resx">
       <DependentUpon>frmCashierInputOrderItem.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Cashier\frmCashierOrderSlipRequest.resx">
+      <DependentUpon>frmCashierOrderSlipRequest.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Cashier\frmCashierPaymentInput.resx">
       <DependentUpon>frmCashierPaymentInput.vb</DependentUpon>
