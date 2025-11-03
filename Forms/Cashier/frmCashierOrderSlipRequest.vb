@@ -16,6 +16,10 @@ Public Class frmCashierOrderSlipRequest
     ' TODO: Replace with your actual logged-in user variable
     Private LoggedInUserID As Integer = 1
 
+    ' *** 🛑 IMPORTANT: Define the name of the Order Slip Printer 🛑 ***
+    ' This must EXACTLY match the name of the printer installed in Windows.
+    Private Const OrderSlipPrinterName As String = "EPSON LX-310" ' <-- CHANGE THIS IF NECESSARY
+
     Private Sub btnPrintOrderSlip_Click(sender As Object, e As EventArgs) Handles btnPrintOrderSlip.Click
         Dim tin As String = txtTin.Text.Trim()
         Dim busStyle As String = txtBusStyle.Text.Trim()
@@ -24,6 +28,18 @@ Public Class frmCashierOrderSlipRequest
             MessageBox.Show("Please fill in both TIN and Business Style.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
+
+        ' =========================================================================
+        ' ✅ PRINTER CHECK LOGIC (Using the function from PrinterModule)
+        ' =========================================================================
+        If PrinterModule.PrintEnabled Then ' Check if printing is globally enabled
+            If Not PrinterModule.IsPrinterReadyNow(OrderSlipPrinterName) Then
+                MessageBox.Show($"The Order Slip printer '{OrderSlipPrinterName}' is not installed or ready. Please check its status (it may be Offline, disconnected, or have an error). The request was NOT saved.",
+                         "Printer Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Return ' DO NOT PROCEED WITH THE TRANSACTION/SAVE
+            End If
+        End If
+        ' =========================================================================
 
         btnPrintOrderSlip.Enabled = False
         Cursor = Cursors.WaitCursor
@@ -47,6 +63,8 @@ Public Class frmCashierOrderSlipRequest
             End Using
 
             ' 🔹 Fetch data again from sales_transaction to print the order slip
+            ' ... (Database fetch code remains here) ...
+
             Dim customerName As String = ""
             Dim customerAddress As String = ""
             Dim totalAmount As Decimal = 0D
@@ -74,10 +92,10 @@ Public Class frmCashierOrderSlipRequest
                 ' Transaction items
                 Using cmd As New MySqlCommand("
                 SELECT p.product_name AS ITEM,
-                       ti.number_of_box AS QTY,
-                       ti.total_weight_kg AS WEIGHT,
-                       ti.unit_price_php AS PRICE,
-                       ti.subtotal AS AMOUNT
+                        ti.number_of_box AS QTY,
+                        ti.total_weight_kg AS WEIGHT,
+                        ti.unit_price_php AS PRICE,
+                        ti.subtotal AS AMOUNT
                 FROM transaction_item ti
                 JOIN product p ON ti.product_id = p.id
                 WHERE ti.transaction_id = @tid", conn)
@@ -139,12 +157,10 @@ Public Class frmCashierOrderSlipRequest
                 normalizedItems.Rows.Add(qty, unit, article, unitPrice, amount)
             Next
 
-
-
-
             ' 🔹 Build and generate order slip (only declare filePath ONCE)
             Dim filePath As String = Path.Combine(OrderSlipFolder, slipId & "-orderslip.pdf")
 
+            ' *** You should call the printing function here ***
             GenerateReceiptPDF(filePath,
             slipId,
             DateTime.Now.ToString("M/d/yyyy HH:mm"),
@@ -156,6 +172,12 @@ Public Class frmCashierOrderSlipRequest
             tin,
             busStyle,
             "", "", "", Nothing)
+
+            ' 🔹 Print the generated PDF 
+            ' Assuming PrintPDFWithFoxit is also in PrinterModule
+            If PrinterModule.PrintEnabled Then
+                PrinterModule.PrintPDFWithFoxit(filePath, OrderSlipPrinterName)
+            End If
 
 
             MessageBox.Show("Order Slip printed successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)

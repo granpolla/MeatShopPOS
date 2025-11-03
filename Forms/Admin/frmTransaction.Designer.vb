@@ -27,6 +27,8 @@ Partial Class frmTransaction
         Me.txtSearchTransaction = New System.Windows.Forms.TextBox()
         Me.btnSearch = New System.Windows.Forms.Button()
         Me.dtpDateFilter = New System.Windows.Forms.DateTimePicker()
+        Me.txtUpdateAmount = New System.Windows.Forms.TextBox()
+        Me.btnUpdateAmount = New System.Windows.Forms.Button()
         CType(Me.dgvTransaction, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -39,7 +41,7 @@ Partial Class frmTransaction
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.dgvTransaction.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.dgvTransaction.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvTransaction.Location = New System.Drawing.Point(12, 56)
+        Me.dgvTransaction.Location = New System.Drawing.Point(12, 49)
         Me.dgvTransaction.MultiSelect = False
         Me.dgvTransaction.Name = "dgvTransaction"
         Me.dgvTransaction.ReadOnly = True
@@ -47,7 +49,7 @@ Partial Class frmTransaction
         Me.dgvTransaction.RowHeadersWidth = 51
         Me.dgvTransaction.RowTemplate.Height = 24
         Me.dgvTransaction.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvTransaction.Size = New System.Drawing.Size(1319, 596)
+        Me.dgvTransaction.Size = New System.Drawing.Size(1319, 481)
         Me.dgvTransaction.TabIndex = 4
         '
         'btnRefreshTransaction
@@ -56,9 +58,9 @@ Partial Class frmTransaction
         Me.btnRefreshTransaction.BackColor = System.Drawing.Color.White
         Me.btnRefreshTransaction.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnRefreshTransaction.Font = New System.Drawing.Font("Segoe UI", 7.8!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnRefreshTransaction.Location = New System.Drawing.Point(1127, 666)
+        Me.btnRefreshTransaction.Location = New System.Drawing.Point(1127, 541)
         Me.btnRefreshTransaction.Name = "btnRefreshTransaction"
-        Me.btnRefreshTransaction.Size = New System.Drawing.Size(204, 72)
+        Me.btnRefreshTransaction.Size = New System.Drawing.Size(204, 43)
         Me.btnRefreshTransaction.TabIndex = 5
         Me.btnRefreshTransaction.Text = "Refresh"
         Me.btnRefreshTransaction.UseVisualStyleBackColor = False
@@ -90,12 +92,32 @@ Partial Class frmTransaction
         Me.dtpDateFilter.Size = New System.Drawing.Size(422, 34)
         Me.dtpDateFilter.TabIndex = 8
         '
+        'txtUpdateAmount
+        '
+        Me.txtUpdateAmount.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.txtUpdateAmount.Font = New System.Drawing.Font("Segoe UI", 13.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtUpdateAmount.Location = New System.Drawing.Point(12, 541)
+        Me.txtUpdateAmount.Name = "txtUpdateAmount"
+        Me.txtUpdateAmount.Size = New System.Drawing.Size(249, 31)
+        Me.txtUpdateAmount.TabIndex = 9
+        '
+        'btnUpdateAmount
+        '
+        Me.btnUpdateAmount.Location = New System.Drawing.Point(272, 541)
+        Me.btnUpdateAmount.Name = "btnUpdateAmount"
+        Me.btnUpdateAmount.Size = New System.Drawing.Size(141, 31)
+        Me.btnUpdateAmount.TabIndex = 10
+        Me.btnUpdateAmount.Text = "Update Amount"
+        Me.btnUpdateAmount.UseVisualStyleBackColor = True
+        '
         'frmTransaction
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.SystemColors.GrayText
         Me.ClientSize = New System.Drawing.Size(1343, 770)
+        Me.Controls.Add(Me.btnUpdateAmount)
+        Me.Controls.Add(Me.txtUpdateAmount)
         Me.Controls.Add(Me.dtpDateFilter)
         Me.Controls.Add(Me.btnSearch)
         Me.Controls.Add(Me.txtSearchTransaction)
@@ -115,4 +137,6 @@ Partial Class frmTransaction
     Friend WithEvents txtSearchTransaction As TextBox
     Friend WithEvents btnSearch As Button
     Friend WithEvents dtpDateFilter As DateTimePicker
+    Friend WithEvents txtUpdateAmount As TextBox
+    Friend WithEvents btnUpdateAmount As Button
 End Class

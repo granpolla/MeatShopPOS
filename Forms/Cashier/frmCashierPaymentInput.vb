@@ -129,6 +129,18 @@ Public Class frmCashierPaymentInput
                    "Save + Print Confirmation",
                    MessageBoxButtons.OKCancel, MessageBoxIcon.Question) <> DialogResult.OK Then Exit Sub
 
+        ' =========================================================================
+        ' ✅ NEW PRINTER CHECK LOGIC
+        ' =========================================================================
+        Const PrinterName As String = "EPSON LX-310" ' <--- **CHANGE THIS TO THE EXACT PRINTER NAME**
+        If Not PrinterModule.IsPrinterReadyNow(PrinterName) Then '<-- Use the consolidated check
+
+            MessageBox.Show($"The printer '{PrinterName}' is not installed or ready...",
+             "Printer Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Exit Sub ' DO NOT PROCEED WITH THE TRANSACTION
+        End If
+        ' =========================================================================
+
         ' 5️# Save to DB
         Try
             Dim orderNumber As String = ""
