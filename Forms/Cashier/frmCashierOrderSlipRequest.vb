@@ -191,27 +191,34 @@ Public Class frmCashierOrderSlipRequest
     ' 🔹 Generate next Order Slip ID (0001–9999)
     ' ========================================
     Private Function GetNextOrderSlipId() As String
-        Dim nextId As String = "0001"
+        Dim nextId As Integer = 1
 
         Try
             Using conn As New MySqlConnection(My.Settings.DBConnection)
                 conn.Open()
 
                 Using cmd As New MySqlCommand("
-                    SELECT LPAD(COALESCE(MAX(CAST(order_slip_id AS UNSIGNED)) + 1, 1), 4, '0') AS next_slip
-                    FROM order_slip_request
-                    WHERE created_date = CURDATE()", conn)
+                SELECT COALESCE(MAX(CAST(order_slip_id AS UNSIGNED)), 0) + 1
+                FROM order_slip_request
+                WHERE created_date = CURDATE()", conn)
 
                     Dim result = cmd.ExecuteScalar()
                     If result IsNot Nothing AndAlso Not IsDBNull(result) Then
-                        nextId = result.ToString()
+                        nextId = Convert.ToInt32(result)
                     End If
                 End Using
             End Using
+
+            ' ✅ Roll over if greater than 9999
+            If nextId > 9999 Then
+                nextId = 1
+            End If
+
         Catch ex As Exception
             MessageBox.Show("Error generating Order Slip ID: " & ex.Message)
         End Try
 
-        Return nextId
+        ' Pad to 4 digits
+        Return nextId.ToString("D4")
     End Function
 End Class
