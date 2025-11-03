@@ -132,6 +132,7 @@ Public Class frmCashierPaymentInput
         ' 5️# Save to DB
         Try
             Dim orderNumber As String = ""
+            Dim transId As Integer = -1
 
             Using conn As New MySqlConnection(My.Settings.DBConnection)
                 conn.Open()
@@ -162,7 +163,7 @@ Public Class frmCashierPaymentInput
                     End Select
 
                     ' 🔹 Insert sales_transaction
-                    Dim transId As Integer
+                    'Dim transId As Integer
                     Dim invoicePdf As String = orderNumber & "-receipt"
                     Dim cashReceived As Decimal = totalPaid
                     Dim amountApplied As Decimal = Math.Min(totalPaid, grandTotal)
@@ -196,6 +197,7 @@ Public Class frmCashierPaymentInput
                     End Using
 
                     ' 🔹 Insert transaction items
+                    ' 🔹 Insert transaction items
                     Dim orderTable As DataTable = CType(parentForm.dgvOrderItemPreview.DataSource, DataTable)
 
 
@@ -210,12 +212,29 @@ Public Class frmCashierPaymentInput
                                 cmd.Parameters.AddWithValue("@tid", transId)
                                 cmd.Parameters.AddWithValue("@pid", Convert.ToInt32(r("ProductID")))
 
-                                ' Defensive column access (to prevent missing/renamed headers)
-                                Dim boxVal As Decimal = If(orderTable.Columns.Contains("Total Box"), Convert.ToDecimal(r("Total Box")), 0D)
+                                ' *** FIX APPLIED HERE: Correcting column names based on frmCashierDashboard ***
+                                ' The column names for the DataRow need to match the DataTable definition:
+                                ' number_of_box uses "Unit"
+                                ' subtotal uses "Amount"
+
+                                ' unit_weight_kg -> "Unit Weight"
                                 Dim unitWeightVal As Decimal = If(orderTable.Columns.Contains("Unit Weight"), Convert.ToDecimal(r("Unit Weight")), 0D)
+
+                                ' unit_price_php -> "Unit Price"
                                 Dim unitPriceVal As Decimal = If(orderTable.Columns.Contains("Unit Price"), Convert.ToDecimal(r("Unit Price")), 0D)
+
+                                ' total_weight_kg -> "Total Weight"
                                 Dim totalWeightVal As Decimal = If(orderTable.Columns.Contains("Total Weight"), Convert.ToDecimal(r("Total Weight")), 0D)
-                                Dim totalVal As Decimal = If(orderTable.Columns.Contains("Total"), Convert.ToDecimal(r("Total")), 0D)
+
+                                ' number_of_box -> "Unit" (Must be converted to Integer for DB column)
+                                Dim boxVal As Integer = 0
+                                If orderTable.Columns.Contains("Unit") Then
+                                    boxVal = Convert.ToInt32(r("Unit")) ' Use "Unit" for box count and convert to INT
+                                End If
+
+                                ' subtotal -> "Amount"
+                                Dim totalVal As Decimal = If(orderTable.Columns.Contains("Amount"), Convert.ToDecimal(r("Amount")), 0D)
+                                ' *** END OF FIX ***
 
                                 cmd.Parameters.AddWithValue("@box", boxVal)
                                 cmd.Parameters.AddWithValue("@uw", unitWeightVal)
@@ -366,6 +385,23 @@ Public Class frmCashierPaymentInput
 
                 MessageBox.Show($"Transaction saved successfully. PDF receipt saved to: {filePath}",
                         "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+
+                ' ============================================
+                ' 🔹 After successful transaction save/print
+                ' ============================================
+                Dim result As DialogResult = MessageBox.Show(
+    "Would the customer like to request an order slip?",
+    "Order Slip Request",
+    MessageBoxButtons.YesNo,
+    MessageBoxIcon.Question
+)
+
+                If result = DialogResult.Yes Then
+                    ' Open the Order Slip Request Form
+                    Dim orderSlipForm As New frmCashierOrderSlipRequest(orderNumber, transId)
+                    orderSlipForm.ShowDialog()
+                End If
+
 
             Catch ex As Exception
                 MessageBox.Show("Transaction saved, but failed to generate receipt PDF: " & ex.Message,
